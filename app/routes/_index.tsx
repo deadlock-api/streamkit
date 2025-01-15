@@ -1,6 +1,6 @@
 import type { MetaFunction } from "@remix-run/node";
 import { useState, useEffect } from "react";
-import useDebouncedState from "~/lib/utils";
+import { useDebouncedState, snakeToPretty } from "~/lib/utils";
 
 export const meta: MetaFunction = () => {
   return [{ title: "Command Builder" }, { name: "description", content: "Build your Deadlock command" }];
@@ -19,6 +19,7 @@ export default function Index() {
   const [region, setRegion] = useState("");
   const [copied, setCopied] = useState(false);
   const [template, debouncedTemplate, setTemplate] = useDebouncedState("", 500);
+  const [extraArgs, setExtraArgs] = useState<{ [key: string]: string }>({});
   const [variables, setVariables] = useState<Variable[]>([]);
   const [preview, setPreview] = useState<string | null>(null);
   const [previewError, setPreviewError] = useState("");
@@ -43,11 +44,26 @@ export default function Index() {
   };
 
   const generateUrl = (steamId: string, region: string, template: string) => {
-    return steamId && region
-      ? `https://data.deadlock-api.com/v1/commands/${region}/${parseSteamId(steamId)}/resolve${
-          template ? `?template=${encodeURIComponent(template)}` : ""
-        }`
-      : "";
+    if (!steamId || !region) {
+      return "";
+    }
+    const baseUrl = "https://data.deadlock-api.com/v1/commands";
+    const url = new URL(`${baseUrl}/${region}/${parseSteamId(steamId)}/resolve`);
+    if (template) {
+      url.searchParams.set("template", template);
+    }
+    for (const [key, value] of Object.entries(extraArgs)) {
+      if (value) url.searchParams.set(key, value);
+    }
+    return url.toString();
+  };
+
+  const usedExtraArgs = () => {
+    const extraArgs: Set<string> = new Set();
+    for (const match of template.matchAll(/{([^}]+)}/g)) {
+      variables.find((v) => v.name === match[1])?.extra_args?.forEach((arg) => extraArgs.add(arg));
+    }
+    return Array.from(extraArgs);
   };
 
   const generatedUrl = generateUrl(steamId, region, template);
@@ -81,7 +97,7 @@ export default function Index() {
           return res.text(); // Assuming the response is text
         })
         .then((data) => setPreview(data))
-        .catch((err) => setPreviewError("Failed to load preview. Check the URL or try again."));
+        .catch((err) => setPreviewError("Failed to load preview. Please check the generated URL."));
     } else {
       setPreview(null);
     }
@@ -161,6 +177,25 @@ export default function Index() {
                 ))}
               </div>
             </div>
+
+            {usedExtraArgs().length > 0 && (
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Extra Arguments</label>
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
+                  {usedExtraArgs().map((arg) => (
+                    <div key={arg} className="flex items-center space-x-2">
+                      <span className="text-sm text-gray-700">{snakeToPretty(arg)}</span>
+                      <input
+                        type="text"
+                        value={extraArgs[arg] || ""}
+                        onChange={(e) => setExtraArgs({ ...extraArgs, [arg]: e.target.value })}
+                        className="w-24 rounded-md border border-gray-300 px-2 py-1 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
 
             <div className="mt-2">
               <label className="block text-sm font-medium text-gray-700">Generated URL</label>

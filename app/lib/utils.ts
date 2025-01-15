@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-export default function useDebouncedState<S>(initialState: S, delay: number): [S, S, (state: S) => void] {
+export function useDebouncedState<S>(initialState: S, delay: number): [S, S, (state: S) => void] {
   const [state, setState] = useState(initialState);
   const [debouncedState, setDebouncedState] = useState(initialState);
 
@@ -10,4 +10,11 @@ export default function useDebouncedState<S>(initialState: S, delay: number): [S
   }, [state]);
 
   return [state, debouncedState, setState];
+}
+
+export function snakeToPretty(str: string): string {
+  return str
+    .split("_")
+    .map((w) => w[0].toUpperCase() + w.slice(1))
+    .join(" ");
 }
