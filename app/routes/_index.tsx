@@ -8,19 +8,25 @@ export const meta: MetaFunction = () => {
 
 const regions = ["Europe", "Asia", "NAmerica", "SAmerica", "Oceania"] as const;
 
+interface Variable {
+  name: string;
+  description: string;
+  extra_args?: string[];
+}
+
 export default function Index() {
   const [steamId, setSteamId] = useState("");
   const [region, setRegion] = useState("");
   const [copied, setCopied] = useState(false);
   const [template, debouncedTemplate, setTemplate] = useDebouncedState("", 500);
-  const [variables, setVariables] = useState<string[]>([]);
+  const [variables, setVariables] = useState<Variable[]>([]);
   const [preview, setPreview] = useState<string | null>(null);
   const [previewError, setPreviewError] = useState("");
 
   useEffect(() => {
     fetch("https://data.deadlock-api.com/v1/commands/available-variables")
       .then((res) => res.json())
-      .then((data) => setVariables(data))
+      .then((data: Variable[]) => setVariables(data))
       .catch((err) => console.error("Failed to fetch available variables:", err));
   }, []);
 
@@ -145,11 +151,12 @@ export default function Index() {
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
                 {variables.map((variable) => (
                   <button
-                    key={variable}
-                    onClick={() => insertVariable(variable)}
+                    key={variable.name}
+                    onClick={() => insertVariable(variable.name)}
                     className="text-left p-2 rounded-md hover:bg-gray-100 transition-colors text-blue-600 text-sm"
+                    title={variable.description}
                   >
-                    {variable}
+                    {variable.name}
                   </button>
                 ))}
               </div>
