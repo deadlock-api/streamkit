@@ -3,7 +3,14 @@ import { useState, useEffect } from "react";
 import { useDebouncedState, snakeToPretty } from "~/lib/utils";
 
 export const meta: MetaFunction = () => {
-  return [{ title: "Command Builder" }, { name: "description", content: "Build customized deadlock commands for your chat bot. We support StreamElements, Fossabot, Nightbot, and more." }];
+  return [
+    { title: "Deadlock API - Chat Command Builder" },
+    {
+      name: "description",
+      content:
+        "Create custom deadlock commands for your chatbot. Works with StreamElements, Fossabot, Nightbot, and more!",
+    },
+  ];
 };
 
 const regions = ["Europe", "Asia", "NAmerica", "SAmerica", "Oceania"] as const;
