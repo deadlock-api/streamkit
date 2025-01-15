@@ -1,5 +1,6 @@
 import type { MetaFunction } from "@remix-run/node";
 import { useState, useEffect } from "react";
+import useDebouncedState from "~/lib/utils";
 
 export const meta: MetaFunction = () => {
   return [{ title: "Command Builder" }, { name: "description", content: "Build your Deadlock command" }];
@@ -11,7 +12,7 @@ export default function Index() {
   const [steamId, setSteamId] = useState("");
   const [region, setRegion] = useState("");
   const [copied, setCopied] = useState(false);
-  const [template, setTemplate] = useState("");
+  const [template, debouncedTemplate, setTemplate] = useDebouncedState("", 500);
   const [variables, setVariables] = useState<string[]>([]);
   const [preview, setPreview] = useState<string | null>(null);
   const [previewError, setPreviewError] = useState("");
@@ -35,12 +36,16 @@ export default function Index() {
     }
   };
 
-  const generatedUrl =
-    steamId && region
+  const generateUrl = (steamId: string, region: string, template: string) => {
+    return steamId && region
       ? `https://data.deadlock-api.com/v1/commands/${region}/${parseSteamId(steamId)}/resolve${
           template ? `?template=${encodeURIComponent(template)}` : ""
         }`
       : "";
+  };
+
+  const generatedUrl = generateUrl(steamId, region, template);
+  const debouncedGeneratedUrl = generateUrl(steamId, region, debouncedTemplate);
 
   const copyToClipboard = async (text: string, setCopiedState: (value: boolean) => void) => {
     try {
@@ -59,10 +64,10 @@ export default function Index() {
   };
 
   useEffect(() => {
-    if (generatedUrl) {
+    if (debouncedGeneratedUrl) {
       setPreview(null); // Reset preview before fetching
       setPreviewError("");
-      fetch(generatedUrl)
+      fetch(debouncedGeneratedUrl)
         .then((res) => {
           if (!res.ok) {
             throw new Error("Failed to fetch preview");
@@ -74,7 +79,7 @@ export default function Index() {
     } else {
       setPreview(null);
     }
-  }, [generatedUrl]);
+  }, [debouncedGeneratedUrl]);
 
   return (
     <div className="min-h-screen bg-gray-50 p-4">
