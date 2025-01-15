@@ -220,10 +220,6 @@ export default function Index() {
                     </li>
                   ))}
                 </ul>
-                <p className="mt-3">
-                  Replace the placeholder in these examples with the actual generated URL once it's created. Your bot
-                  will fetch and display the resolved command in chat dynamically.
-                </p>
               </div>
             </div>
           </div>
