@@ -23,11 +23,21 @@ export default function Index() {
       .catch((err) => console.error("Failed to fetch available variables:", err));
   }, []);
 
-  const parsedSteamId = steamId.replace(/\[U:\d+:/g, "").replace(/]/g, "");
+  const parseSteamId = (steamId: string) => {
+    try {
+      let extractedSteamId = BigInt(steamId.replace(/\[U:\d+:/g, "").replace(/]/g, ""));
+      // Convert SteamID64 to SteamID3
+      if (extractedSteamId > 76561197960265728n) extractedSteamId -= 76561197960265728n;
+      return extractedSteamId.toString();
+    } catch (err) {
+      console.error("Failed to parse Steam ID:", err);
+      return steamId;
+    }
+  };
 
   const generatedUrl =
     steamId && region
-      ? `https://data.deadlock-api.com/v1/commands/${region}/${parsedSteamId}/resolve${
+      ? `https://data.deadlock-api.com/v1/commands/${region}/${parseSteamId(steamId)}/resolve${
           template ? `?template=${encodeURIComponent(template)}` : ""
         }`
       : "";
@@ -85,6 +95,9 @@ export default function Index() {
                 className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                 placeholder="Enter your Steam ID3"
               />
+              <p className="mt-2 text-sm text-gray-500">
+                You can find your Steam ID3 from your Steam profile URL or by using a Steam ID finder tool.
+              </p>
             </div>
 
             <div>
