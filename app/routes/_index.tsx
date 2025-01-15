@@ -116,6 +116,14 @@ export default function Index() {
         {/* Command Builder Section */}
         <div className="rounded-lg bg-white p-8 shadow-md">
           <h1 className="mb-6 text-2xl font-bold text-gray-900">Command Builder</h1>
+          <h2>
+            Part of the{" "}
+            <a href="https://deadlock-api.com" className="text-primary-600">
+              Deadlock API
+            </a>{" "}
+            project.
+          </h2>
+          <br />
           <div className="space-y-4">
             <div>
               <label htmlFor="steamid" className="block text-sm font-medium text-gray-700">
@@ -179,7 +187,7 @@ export default function Index() {
                     className="text-left p-2 rounded-md hover:bg-gray-100 transition-colors text-blue-600 text-sm"
                     title={variable.description}
                   >
-                    {variable.name}
+                    {snakeToPretty(variable.name)}
                   </button>
                 ))}
               </div>
