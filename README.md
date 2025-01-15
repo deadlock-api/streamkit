@@ -1,6 +1,6 @@
-# deadlock-api showcase
+# deadlock-api streamkit
 
-See https://showcase.deadlock-api.com
+See https://streamkit.deadlock-api.com
 
 ## Development
 
