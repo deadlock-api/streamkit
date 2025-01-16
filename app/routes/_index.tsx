@@ -118,7 +118,7 @@ export default function Index() {
           <h1 className="mb-6 text-2xl font-bold text-gray-900">Command Builder</h1>
           <h2>
             Part of the{" "}
-            <a href="https://deadlock-api.com" className="text-primary-600">
+            <a href="https://deadlock-api.com" className="text-blue-600 hover:underline" target="_blank">
               Deadlock API
             </a>{" "}
             project.
