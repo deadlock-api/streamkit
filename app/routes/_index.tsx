@@ -159,7 +159,7 @@ export default function Index() {
                   id="template"
                   value={template}
                   onChange={(e) => setTemplate(e.target.value)}
-                  className="block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 text-black bg-gray-200"
+                  className="block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 text-black"
                   placeholder="Example: {steam_account_name} has {wins_today}W - {losses_today}L today"
                   rows={3}
                 />
