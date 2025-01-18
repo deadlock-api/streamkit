@@ -116,7 +116,7 @@ export default function Index() {
         {/* Command Builder Section */}
         <div className="rounded-lg bg-white p-8 shadow-md">
           <h1 className="mb-6 text-2xl font-bold text-gray-900">Command Builder</h1>
-          <h2>
+          <h2 className="text-black">
             Part of the{" "}
             <a href="https://deadlock-api.com" className="text-blue-600 hover:underline" target="_blank">
               Deadlock API
@@ -134,7 +134,7 @@ export default function Index() {
                 id="steamid"
                 value={steamId}
                 onChange={(e) => setSteamId(e.target.value)}
-                className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 text-black bg-gray-200"
                 placeholder="Enter your Steam ID3"
               />
               <p className="mt-2 text-sm text-gray-500">
@@ -150,7 +150,7 @@ export default function Index() {
                 id="region"
                 value={region}
                 onChange={(e) => setRegion(e.target.value)}
-                className="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                className="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 text-black bg-gray-200"
               >
                 <option value="">Select a region</option>
                 {regions.map((region) => (
@@ -170,7 +170,7 @@ export default function Index() {
                   id="template"
                   value={template}
                   onChange={(e) => setTemplate(e.target.value)}
-                  className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  className="block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 text-black bg-gray-200"
                   placeholder="Example: {steam_account_name} has {wins_today}W - {losses_today}L today"
                   rows={3}
                 />
