@@ -24,7 +24,6 @@ interface Variable {
 export default function Index() {
   const [steamId, setSteamId] = useState("");
   const [region, setRegion] = useState("");
-  const [copied, setCopied] = useState(false);
   const [template, debouncedTemplate, setTemplate] = useDebouncedState("", 500);
   const [extraArgs, setExtraArgs] = useState<{ [key: string]: string }>({});
   const [variables, setVariables] = useState<Variable[]>([]);
@@ -75,16 +74,6 @@ export default function Index() {
 
   const generatedUrl = generateUrl(steamId, region, template);
   const debouncedGeneratedUrl = generateUrl(steamId, region, debouncedTemplate);
-
-  const copyToClipboard = async (text: string, setCopiedState: (value: boolean) => void) => {
-    try {
-      await navigator.clipboard.writeText(text);
-      setCopiedState(true);
-      setTimeout(() => setCopiedState(false), 2000);
-    } catch (err) {
-      console.error("Failed to copy:", err);
-    }
-  };
 
   const insertVariable = (varName: string) => {
     const cursorPos = (document.getElementById("template") as HTMLTextAreaElement)?.selectionStart || template.length;
@@ -220,10 +209,10 @@ export default function Index() {
                     {generatedUrl}
                   </div>
                   <button
-                    onClick={() => copyToClipboard(generatedUrl, setCopied)}
+                    onClick={() => navigator.clipboard.writeText(generatedUrl)}
                     className="absolute right-2 top-1/2 -translate-y-1/2 rounded-md bg-blue-500 px-3 py-1 text-sm font-medium text-white transition hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                   >
-                    {copied ? "Copied!" : "Copy"}
+                    Copy
                   </button>
                 </div>
               )}
