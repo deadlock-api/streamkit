@@ -123,7 +123,7 @@ export default function Index() {
                 id="steamid"
                 value={steamId}
                 onChange={(e) => setSteamId(e.target.value)}
-                className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 text-black bg-gray-200"
+                className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 text-black"
                 placeholder="Enter your Steam ID3"
               />
               <p className="mt-2 text-sm text-gray-500">
@@ -139,7 +139,7 @@ export default function Index() {
                 id="region"
                 value={region}
                 onChange={(e) => setRegion(e.target.value)}
-                className="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 text-black bg-gray-200"
+                className="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 text-black"
               >
                 <option value="">Select a region</option>
                 {regions.map((region) => (
