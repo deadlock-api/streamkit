@@ -7,25 +7,38 @@ export const meta: MetaFunction = () => {
   return [{ title: "Deadlock Stats Widget" }, { name: "description", content: "Stats widget powered by Deadlock API" }];
 };
 
+const DEFAULT_VARIABLES = ["leaderboard_place", "wins_today", "losses_today"];
+
+const UPDATE_INTERVAL_MS = 2 * 60 * 1000;
+
 interface StatDisplay {
   value: string;
   label: string;
 }
 
-const UPDATE_INTERVAL_MS = 2 * 60 * 1000;
+type DeadlockWidgetProps = {
+  region?: string;
+  accountId?: string;
+  variables?: string[];
+  labels?: string[];
+};
 
-export default function DeadlockWidget() {
-  const { region, accountId } = useParams();
+export default function DeadlockWidget({
+  region: propRegion,
+  accountId: propAccountId,
+  variables: propVariables,
+  labels: propLabels,
+}: DeadlockWidgetProps) {
+  const { region: paramRegion, accountId: paramAccountId } = useParams();
   const [searchParams] = useSearchParams();
   const [stats, setStats] = useState<{ [key: string]: string } | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Get variables from query parameters or use defaults
-  const variables = searchParams.get("vars")?.split(",") ?? ["leaderboard_place", "wins_today", "losses_today"];
-
-  // Get labels from query parameters or use defaults
-  const labels = searchParams.get("labels")?.split(",") ?? variables.map(snakeToPretty);
+  const region = propRegion ?? paramRegion;
+  const accountId = propAccountId ?? paramAccountId;
+  const variables = propVariables ?? searchParams.get("vars")?.split(",") ?? DEFAULT_VARIABLES;
+  const labels = propLabels ?? searchParams.get("labels")?.split(",") ?? variables.map(snakeToPretty);
 
   // Create mapping of variables to their display properties
   const getStatDisplays = (): StatDisplay[] => {
