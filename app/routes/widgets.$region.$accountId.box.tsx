@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import type { MetaFunction } from "@remix-run/node";
 import { useParams, useSearchParams } from "@remix-run/react";
+import { snakeToPretty } from "~/lib/utils";
 
 export const meta: MetaFunction = () => {
   return [{ title: "Deadlock Stats Widget" }, { name: "description", content: "Stats widget powered by Deadlock API" }];
@@ -9,8 +10,9 @@ export const meta: MetaFunction = () => {
 interface StatDisplay {
   value: string;
   label: string;
-  color?: string;
 }
+
+const UPDATE_INTERVAL_MS = 2 * 60 * 1000;
 
 export default function DeadlockWidget() {
   const { region, accountId } = useParams();
@@ -23,7 +25,7 @@ export default function DeadlockWidget() {
   const variables = searchParams.get("vars")?.split(",") ?? ["leaderboard_place", "wins_today", "losses_today"];
 
   // Get labels from query parameters or use defaults
-  const labels = searchParams.get("labels")?.split(",") ?? ["Rank", "Wins", "Losses"];
+  const labels = searchParams.get("labels")?.split(",") ?? variables.map(snakeToPretty);
 
   // Create mapping of variables to their display properties
   const getStatDisplays = (): StatDisplay[] => {
@@ -31,19 +33,10 @@ export default function DeadlockWidget() {
 
     return variables.map((variable, index) => {
       const label = labels[index] || variable;
-      let color = "text-gray-900";
-
-      // Apply specific colors based on variable type
-      if (variable.includes("wins")) {
-        color = "text-green-600";
-      } else if (variable.includes("losses") || variable.includes("deaths")) {
-        color = "text-red-600";
-      }
 
       return {
         value: variable.includes("leaderboard") ? `#${stats[variable]}` : stats[variable],
         label,
-        color,
       };
     });
   };
@@ -81,51 +74,58 @@ export default function DeadlockWidget() {
     fetchStats();
 
     // Set up interval for subsequent fetches (every 2 minutes)
-    const intervalId = setInterval(fetchStats, 2 * 60 * 1000);
+    const intervalId = setInterval(fetchStats, UPDATE_INTERVAL_MS);
 
     // Cleanup interval on component unmount
     return () => clearInterval(intervalId);
-  }, [stats, region, accountId, variables.join(",")]); // Add variables to dependencies
+  }, [region, accountId, variables.join(",")]);
 
   const statDisplays = getStatDisplays();
 
-  return (
-    <div className="fixed left-4 top-4">
-      <div className="w-80 overflow-hidden rounded-lg bg-white/90 shadow-lg backdrop-blur-sm">
-        {/* Header */}
-        <div className="bg-gray-800/95 px-4 py-2 text-center">
-          <p className="text-sm text-gray-300">
-            Widget made by{" "}
-            <a
-              href="https://deadlock-api.com"
-              className="font-medium text-blue-400 hover:text-blue-300"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              deadlock-api.com
-            </a>
-          </p>
-        </div>
+  useEffect(() => {
+    document.body.style.backgroundColor = "transparent";
+    document.documentElement.style.backgroundColor = "transparent";
+    return () => {
+      document.documentElement.style.backgroundColor = ""; // Reset when navigating away
+      document.body.style.backgroundColor = ""; // Reset when navigating away
+    };
+  }, []);
 
-        {/* Content */}
-        <div className="p-4">
-          {loading && !stats ? (
-            <div className="flex justify-center py-8">
-              <div className="h-6 w-6 animate-spin rounded-full border-2 border-gray-300 border-t-blue-600"></div>
-            </div>
-          ) : error ? (
-            <div className="py-8 text-center text-red-500">{error}</div>
-          ) : stats ? (
-            <div className={`grid gap-4 ${statDisplays.length > 3 ? "grid-cols-2" : "grid-cols-3"}`}>
-              {statDisplays.map((stat, index) => (
-                <div key={index} className="text-center">
-                  <p className="text-sm font-medium text-gray-500">{stat.label}</p>
-                  <p className={`mt-1 text-xl font-semibold ${stat.color}`}>{stat.value}</p>
-                </div>
-              ))}
-            </div>
-          ) : null}
-        </div>
+  return (
+    <div className="inline-block min-w-[200px] max-w-[600px] overflow-hidden rounded-lg bg-white/90 shadow-lg backdrop-blur-sm">
+      {/* Header */}
+      <div className="bg-gray-800/95 px-4 py-2 text-center">
+        <p className="text-sm text-gray-300">
+          Widget made by{" "}
+          <a
+            href="https://deadlock-api.com"
+            className="font-medium text-blue-400 hover:text-blue-300"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            deadlock-api.com
+          </a>
+        </p>
+      </div>
+
+      {/* Content */}
+      <div className="p-4">
+        {loading && !stats ? (
+          <div className="flex justify-center py-8">
+            <div className="h-6 w-6 animate-spin rounded-full border-2 border-gray-300 border-t-blue-600"></div>
+          </div>
+        ) : error ? (
+          <div className="py-8 text-center text-red-500">{error}</div>
+        ) : stats ? (
+          <div className={`grid gap-4 ${statDisplays.length > 3 ? "grid-cols-2" : "grid-cols-3"}`}>
+            {statDisplays.map((stat, index) => (
+              <div key={index} className="text-center">
+                <p className="text-sm font-medium text-gray-500">{stat.label}</p>
+                <p className="mt-1 text-xl font-semibold text-gray-900">{stat.value}</p>
+              </div>
+            ))}
+          </div>
+        ) : null}
       </div>
     </div>
   );
