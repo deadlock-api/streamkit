@@ -8,8 +8,6 @@ export const meta: MetaFunction = () => {
   return [{ title: "Deadlock Stats Widget" }, { name: "description", content: "Stats widget powered by Deadlock API" }];
 };
 
-const DEFAULT_VARIABLES = ["leaderboard_place", "wins_today", "losses_today"];
-
 export default function Widget() {
   const { region, accountId, widgetType } = useParams();
   const [searchParams] = useSearchParams();
@@ -29,8 +27,8 @@ export default function Widget() {
 
   switch (widgetType) {
     case "box": {
-      const variables = searchParams.get("vars")?.split(",") ?? DEFAULT_VARIABLES;
-      const labels = searchParams.get("labels")?.split(",") ?? variables.map(snakeToPretty);
+      const variables = searchParams.get("vars")?.split(",");
+      const labels = searchParams.get("labels")?.split(",") ?? variables?.map(snakeToPretty);
       return <BoxWidget region={region} accountId={accountId} variables={variables} labels={labels} />;
     }
     default:

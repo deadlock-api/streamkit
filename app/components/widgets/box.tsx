@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { snakeToPretty } from "~/lib/utils";
 
 const UPDATE_INTERVAL_MS = 2 * 60 * 1000;
+const DEFAULT_VARIABLES = ["leaderboard_place", "wins_today", "losses_today"];
 
 interface StatDisplay {
   value: string;
@@ -11,7 +12,7 @@ interface StatDisplay {
 type DeadlockWidgetProps = {
   region: string;
   accountId: string;
-  variables: string[];
+  variables?: string[];
   labels?: string[];
 };
 
@@ -20,6 +21,7 @@ export default function BoxWidget({ region, accountId, variables, labels }: Dead
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  variables = variables ?? DEFAULT_VARIABLES;
   labels = labels ?? variables.map(snakeToPretty);
 
   // Create mapping of variables to their display properties
@@ -55,6 +57,7 @@ export default function BoxWidget({ region, accountId, variables, labels }: Dead
         if (JSON.stringify(data) !== JSON.stringify(stats)) {
           setStats(data);
         }
+        setError(null);
       } catch (err) {
         setError(err instanceof Error ? err.message : "Failed to fetch stats");
       } finally {
