@@ -1,13 +1,5 @@
-import type { MetaFunction } from "@remix-run/node";
-import { useParams, useSearchParams } from "@remix-run/react";
 import { useEffect, useState } from "react";
 import { snakeToPretty } from "~/lib/utils";
-
-export const meta: MetaFunction = () => {
-  return [{ title: "Deadlock Stats Widget" }, { name: "description", content: "Stats widget powered by Deadlock API" }];
-};
-
-const DEFAULT_VARIABLES = ["leaderboard_place", "wins_today", "losses_today"];
 
 const UPDATE_INTERVAL_MS = 2 * 60 * 1000;
 
@@ -17,41 +9,27 @@ interface StatDisplay {
 }
 
 type DeadlockWidgetProps = {
-  region?: string;
-  accountId?: string;
-  variables?: string[];
+  region: string;
+  accountId: string;
+  variables: string[];
   labels?: string[];
 };
 
-export default function DeadlockWidget({
-  region: propRegion,
-  accountId: propAccountId,
-  variables: propVariables,
-  labels: propLabels,
-}: DeadlockWidgetProps) {
-  const { region: paramRegion, accountId: paramAccountId } = useParams();
-  const [searchParams] = useSearchParams();
+export default function BoxWidget({ region, accountId, variables, labels }: DeadlockWidgetProps) {
   const [stats, setStats] = useState<{ [key: string]: string } | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const region = propRegion ?? paramRegion;
-  const accountId = propAccountId ?? paramAccountId;
-  const variables = propVariables ?? searchParams.get("vars")?.split(",") ?? DEFAULT_VARIABLES;
-  const labels = propLabels ?? searchParams.get("labels")?.split(",") ?? variables.map(snakeToPretty);
+  labels = labels ?? variables.map(snakeToPretty);
 
   // Create mapping of variables to their display properties
   const getStatDisplays = (): StatDisplay[] => {
     if (!stats) return [];
 
-    return variables.map((variable, index) => {
-      const label = labels[index] || variable;
-
-      return {
-        value: variable.includes("leaderboard") ? `#${stats[variable]}` : stats[variable],
-        label,
-      };
-    });
+    return variables.map((variable, index) => ({
+      value: (variable.includes("leaderboard") ? "#" : "") + stats[variable],
+      label: labels[index],
+    }));
   };
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: stats is not a dependency
@@ -95,15 +73,6 @@ export default function DeadlockWidget({
   }, [region, accountId, variables]);
 
   const statDisplays = getStatDisplays();
-
-  useEffect(() => {
-    document.body.style.backgroundColor = "transparent";
-    document.documentElement.style.backgroundColor = "transparent";
-    return () => {
-      document.documentElement.style.backgroundColor = ""; // Reset when navigating away
-      document.body.style.backgroundColor = ""; // Reset when navigating away
-    };
-  }, []);
 
   return (
     <div className="inline-block min-w-[200px] max-w-[600px] overflow-hidden rounded-lg bg-white/90 shadow-lg backdrop-blur-sm">
