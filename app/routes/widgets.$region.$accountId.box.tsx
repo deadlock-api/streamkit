@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
 import type { MetaFunction } from "@remix-run/node";
 import { useParams, useSearchParams } from "@remix-run/react";
+import { useEffect, useState } from "react";
 import { snakeToPretty } from "~/lib/utils";
 
 export const meta: MetaFunction = () => {
@@ -54,6 +54,7 @@ export default function DeadlockWidget({
     });
   };
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: stats is not a dependency
   useEffect(() => {
     const fetchStats = async () => {
       if (!region || !accountId) {
@@ -91,7 +92,7 @@ export default function DeadlockWidget({
 
     // Cleanup interval on component unmount
     return () => clearInterval(intervalId);
-  }, [region, accountId, variables.join(",")]);
+  }, [region, accountId, variables]);
 
   const statDisplays = getStatDisplays();
 
@@ -125,14 +126,14 @@ export default function DeadlockWidget({
       <div className="p-4">
         {loading && !stats ? (
           <div className="flex justify-center py-8">
-            <div className="h-6 w-6 animate-spin rounded-full border-2 border-gray-300 border-t-blue-600"></div>
+            <div className="h-6 w-6 animate-spin rounded-full border-2 border-gray-300 border-t-blue-600" />
           </div>
         ) : error ? (
           <div className="py-8 text-center text-red-500">{error}</div>
         ) : stats ? (
           <div className={`grid gap-4 ${statDisplays.length > 3 ? "grid-cols-2" : "grid-cols-3"}`}>
-            {statDisplays.map((stat, index) => (
-              <div key={index} className="text-center">
+            {statDisplays.map((stat) => (
+              <div key={stat.label} className="text-center">
                 <p className="text-sm font-medium text-gray-500">{stat.label}</p>
                 <p className="mt-1 text-xl font-semibold text-gray-900">{stat.value}</p>
               </div>
