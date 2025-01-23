@@ -23,6 +23,7 @@ export default function BoxWidget({ region, accountId, variables, labels }: Dead
 
   variables = variables ?? DEFAULT_VARIABLES;
   labels = labels ?? variables.map(snakeToPretty);
+  labels = labels.map((l, i) => l || snakeToPretty(variables[i]));
 
   // Create mapping of variables to their display properties
   const getStatDisplays = (): StatDisplay[] => {
@@ -78,7 +79,7 @@ export default function BoxWidget({ region, accountId, variables, labels }: Dead
   const statDisplays = getStatDisplays();
 
   return (
-    <div className="inline-block min-w-[200px] max-w-[600px] overflow-hidden rounded-lg bg-white/90 shadow-lg backdrop-blur-xs">
+    <div className="inline-block min-w-[200px] overflow-hidden rounded-lg bg-white/90 shadow-lg backdrop-blur-xs">
       {/* Header */}
       <div className="bg-gray-800/95 px-4 py-2 text-center">
         <p className="text-sm text-gray-300">
@@ -103,13 +104,15 @@ export default function BoxWidget({ region, accountId, variables, labels }: Dead
         ) : error ? (
           <div className="py-8 text-center text-red-500">{error}</div>
         ) : stats ? (
-          <div className={`grid gap-4 ${statDisplays.length > 3 ? "grid-cols-2" : "grid-cols-3"}`}>
-            {statDisplays.map((stat) => (
-              <div key={stat.label} className="text-center">
-                <p className="text-sm font-medium text-gray-500">{stat.label}</p>
-                <p className="mt-1 text-xl font-semibold text-gray-900">{stat.value}</p>
-              </div>
-            ))}
+          <div className="flex gap-4 flex-nowrap">
+            {statDisplays
+              .filter((stat) => stat.label && stat.value)
+              .map((stat) => (
+                <div key={stat.label} className="text-center">
+                  <p className="text-sm font-medium text-gray-500 whitespace-nowrap overflow-hidden">{stat.label}</p>
+                  <p className="mt-1 text-xl font-semibold text-gray-900">{stat.value}</p>
+                </div>
+              ))}
           </div>
         ) : null}
       </div>

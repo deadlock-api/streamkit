@@ -7,14 +7,15 @@ export function useDebouncedState<S>(initialState: S, delay: number): [S, S, (st
   useEffect(() => {
     const timer = setTimeout(() => setDebouncedState(state), delay);
     return () => clearTimeout(timer);
-  }, [state]);
+  }, [state, delay]);
 
   return [state, debouncedState, setState];
 }
 
 export function snakeToPretty(str: string): string {
+  if (!str) return str;
   return str
     .split("_")
-    .map((w) => w[0].toUpperCase() + w.slice(1))
+    .map((w) => w[0]?.toUpperCase() + w.slice(1))
     .join(" ");
 }
