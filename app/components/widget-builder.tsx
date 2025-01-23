@@ -1,5 +1,6 @@
 import { type ReactElement, useEffect, useState } from "react";
 import type { Variable } from "~/components/command/CommandBuilder";
+import { ExtraArguments } from "~/components/widgets/ExtraArguments";
 import BoxWidget from "~/components/widgets/box";
 import { snakeToPretty } from "~/lib/utils";
 
@@ -16,6 +17,7 @@ export default function WidgetBuilder({ region, accountId }: WidgetBuilderProps)
   const [widgetPreview, setWidgetPreview] = useState<ReactElement | null>(null);
   const [variables, setVariables] = useState<string[]>(["leaderboard_place", "wins_today", "losses_today"]);
   const [labels, setLabels] = useState<string[]>(["Leaderboard Place", "Wins Today", "Losses Today"]);
+  const [extraArgs, setExtraArgs] = useState<{ [key: string]: string }>({});
   const [availableVariables, setAvailableVariables] = useState<Variable[]>([]);
 
   useEffect(() => {
@@ -31,15 +33,26 @@ export default function WidgetBuilder({ region, accountId }: WidgetBuilderProps)
     const url = new URL(`https://streamkit.deadlock-api.com/widgets/${region}/${accountId}/${widgetType}`);
     if (variables.length > 0) url.searchParams.set("vars", variables.join(","));
     if (labels.length > 0) url.searchParams.set("labels", labels.join(","));
+    for (const [arg, value] of Object.entries(extraArgs)) {
+      if (value) url.searchParams.set(arg, value);
+    }
     setWidgetUrl(url.toString());
     switch (widgetType) {
       case "box":
-        setWidgetPreview(<BoxWidget region={region} accountId={accountId} variables={variables} labels={labels} />);
+        setWidgetPreview(
+          <BoxWidget
+            region={region}
+            accountId={accountId}
+            variables={variables}
+            labels={labels}
+            extraArgs={extraArgs}
+          />,
+        );
         break;
       default:
         setWidgetPreview(null);
     }
-  }, [region, accountId, widgetType, variables, labels]);
+  }, [region, accountId, widgetType, variables, labels, extraArgs]);
 
   return (
     <div className="mt-4 space-y-6">
@@ -74,53 +87,59 @@ export default function WidgetBuilder({ region, accountId }: WidgetBuilderProps)
                 <div className="space-y-3">
                   {variables.map((variable, index) => (
                     // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-                    <div key={index} className="flex gap-3">
-                      <select
-                        value={variable}
-                        onChange={(e) => {
-                          const newVariables = [...variables];
-                          newVariables[index] = e.target.value;
-                          const newLabels = [...labels];
-                          newLabels[index] = e.target.value ? snakeToPretty(e.target.value) : "";
-                          setVariables(newVariables);
-                          setLabels(newLabels);
-                        }}
-                        className="block w-1/2 rounded-md border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-                      >
-                        <option value="">Select a variable</option>
-                        {availableVariables.map((v) => (
-                          <option key={v.name} value={v.name} title={v.description}>
-                            {v.name}
-                          </option>
-                        ))}
-                      </select>
-                      <input
-                        type="text"
-                        value={labels[index]}
-                        onChange={(e) => {
-                          const newLabels = [...labels];
-                          newLabels[index] = e.target.value;
-                          setLabels(newLabels);
-                        }}
-                        className="block w-1/2 rounded-md border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-                        placeholder="Label (optional)"
-                      />
-                      {variables.length > 1 && (
+                    <div key={index}>
+                      <div className="flex gap-3">
+                        <select
+                          value={variable}
+                          onChange={(e) => {
+                            const newVariables = [...variables];
+                            newVariables[index] = e.target.value;
+                            const newLabels = [...labels];
+                            newLabels[index] = e.target.value ? snakeToPretty(e.target.value) : "";
+
+                            setVariables(newVariables);
+                            setLabels(newLabels);
+                          }}
+                          className="block w-1/2 rounded-md border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                        >
+                          <option value="">Select a variable</option>
+                          {availableVariables.map((v) => (
+                            <option key={v.name} value={v.name} title={v.description}>
+                              {v.name}
+                            </option>
+                          ))}
+                        </select>
+                        <input
+                          type="text"
+                          value={labels[index]}
+                          onChange={(e) => {
+                            const newLabels = [...labels];
+                            newLabels[index] = e.target.value;
+                            setLabels(newLabels);
+                          }}
+                          className="block w-1/2 rounded-md border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                          placeholder="Label (optional)"
+                        />
                         <button
                           type="button"
                           onClick={() => {
-                            const newVariables = variables.filter((_, i) => i !== index);
-                            const newLabels = labels.filter((_, i) => i !== index);
-                            setVariables(newVariables);
-                            setLabels(newLabels);
+                            setVariables(variables.filter((_, i) => i !== index));
+                            setLabels(labels.filter((_, i) => i !== index));
                           }}
                           className="rounded-md bg-red-500 px-3 py-2 text-white hover:bg-red-600"
                         >
                           Remove
                         </button>
-                      )}
+                      </div>
                     </div>
                   ))}
+                  <ExtraArguments
+                    extraArgs={availableVariables
+                      .filter((v) => variables.includes(v.name))
+                      .flatMap((v) => v.extra_args ?? [])}
+                    extraValues={extraArgs || {}}
+                    onChange={(arg, value) => setExtraArgs({ ...extraArgs, [arg]: value })}
+                  />
                 </div>
                 <button
                   type="button"

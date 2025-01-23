@@ -14,9 +14,10 @@ type DeadlockWidgetProps = {
   accountId: string;
   variables?: string[];
   labels?: string[];
+  extraArgs?: { [key: string]: string };
 };
 
-export default function BoxWidget({ region, accountId, variables, labels }: DeadlockWidgetProps) {
+export default function BoxWidget({ region, accountId, variables, labels, extraArgs }: DeadlockWidgetProps) {
   const [stats, setStats] = useState<{ [key: string]: string } | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -45,9 +46,12 @@ export default function BoxWidget({ region, accountId, variables, labels }: Dead
       }
 
       try {
-        const response = await fetch(
-          `https://data.deadlock-api.com/v1/commands/${region}/${accountId}/resolve-variables?variables=${variables.join(",")}`,
-        );
+        const url = new URL(`https://data.deadlock-api.com/v1/commands/${region}/${accountId}/resolve-variables`);
+        url.searchParams.append("variables", variables.join(","));
+        for (const [key, value] of Object.entries(extraArgs ?? {})) {
+          url.searchParams.append(key, value);
+        }
+        const response = await fetch(url);
 
         if (!response.ok) {
           throw new Error("Failed to fetch stats");
@@ -74,7 +78,7 @@ export default function BoxWidget({ region, accountId, variables, labels }: Dead
 
     // Cleanup interval on component unmount
     return () => clearInterval(intervalId);
-  }, [region, accountId, variables]);
+  }, [region, accountId, variables, extraArgs]);
 
   const statDisplays = getStatDisplays();
 

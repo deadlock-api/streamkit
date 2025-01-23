@@ -29,7 +29,12 @@ export default function Widget() {
     case "box": {
       const variables = searchParams.get("vars")?.split(",");
       const labels = searchParams.get("labels")?.split(",") ?? variables?.map(snakeToPretty);
-      return <BoxWidget region={region} accountId={accountId} variables={variables} labels={labels} />;
+      const extraArgs = Object.fromEntries(
+        Array.from(searchParams.entries()).filter(([key]) => key !== "vars" && key !== "labels"),
+      );
+      return (
+        <BoxWidget region={region} accountId={accountId} variables={variables} labels={labels} extraArgs={extraArgs} />
+      );
     }
     default:
       return <div className="text-red-500">Invalid widget type</div>;
