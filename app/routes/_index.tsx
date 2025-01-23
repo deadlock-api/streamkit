@@ -1,6 +1,6 @@
 import type { MetaFunction } from "@remix-run/node";
 import { useState } from "react";
-import CommandBuilder from "~/components/command-builder";
+import CommandBuilder from "~/components/command/CommandBuilder";
 import WidgetBuilder from "~/components/widget-builder";
 
 export const meta: MetaFunction = () => {
