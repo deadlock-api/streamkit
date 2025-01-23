@@ -31,7 +31,7 @@ export default function BoxWidget({ region, accountId, variables, labels, extraA
     if (!stats) return [];
 
     return variables.map((variable, index) => ({
-      value: (variable.includes("leaderboard") ? "#" : "") + stats[variable],
+      value: stats[variable],
       label: labels[index],
     }));
   };
