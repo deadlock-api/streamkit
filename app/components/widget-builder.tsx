@@ -37,7 +37,7 @@ export default function WidgetBuilder({ region, accountId }: WidgetBuilderProps)
           id="type"
           value={widgetType}
           onChange={(e) => setWidgetType(e.target.value)}
-          className="mt-1 block rounded-md border border-gray-300 bg-white px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 text-black pr-6"
+          className="mt-1 block rounded-md border border-gray-300 bg-white px-3 py-2 shadow-xs focus:border-blue-500 focus:outline-hidden focus:ring-1 focus:ring-blue-500 text-black pr-6"
         >
           {widgetTypes.map((w) => (
             <option key={w} value={w}>
@@ -57,7 +57,7 @@ export default function WidgetBuilder({ region, accountId }: WidgetBuilderProps)
             <button
               type="button"
               onClick={() => navigator.clipboard.writeText(widgetUrl)}
-              className="absolute right-2 top-1/2 -translate-y-1/2 rounded-md bg-blue-500 px-3 py-1 text-sm font-medium text-white transition hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+              className="absolute right-2 top-1/2 -translate-y-1/2 rounded-md bg-blue-500 px-3 py-1 text-sm font-medium text-white transition hover:bg-blue-600 focus:outline-hidden focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
             >
               Copy
             </button>

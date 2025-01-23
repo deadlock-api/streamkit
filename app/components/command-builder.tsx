@@ -89,7 +89,7 @@ export default function CommandBuilder({ region, accountId }: CommandBuilderProp
             id="template"
             value={template}
             onChange={(e) => setTemplate(e.target.value)}
-            className="block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 text-black bg-white"
+            className="block w-full rounded-md border border-gray-300 px-3 py-2 shadow-xs focus:border-blue-500 focus:outline-hidden focus:ring-1 focus:ring-blue-500 text-black bg-white"
             placeholder="Example: {steam_account_name} has {wins_today}W - {losses_today}L today"
             rows={3}
           />
@@ -124,7 +124,7 @@ export default function CommandBuilder({ region, accountId }: CommandBuilderProp
                   type="text"
                   value={extraArgs[arg] || ""}
                   onChange={(e) => setExtraArgs({ ...extraArgs, [arg]: e.target.value })}
-                  className="w-24 rounded-md border border-gray-300 px-2 py-1 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  className="w-24 rounded-md border border-gray-300 px-2 py-1 shadow-xs focus:border-blue-500 focus:outline-hidden focus:ring-1 focus:ring-blue-500"
                 />
               </div>
             ))}
@@ -142,7 +142,7 @@ export default function CommandBuilder({ region, accountId }: CommandBuilderProp
             <button
               type="button"
               onClick={() => navigator.clipboard.writeText(generatedUrl)}
-              className="absolute right-2 top-1/2 -translate-y-1/2 rounded-md bg-blue-500 px-3 py-1 text-sm font-medium text-white transition hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+              className="absolute right-2 top-1/2 -translate-y-1/2 rounded-md bg-blue-500 px-3 py-1 text-sm font-medium text-white transition hover:bg-blue-600 focus:outline-hidden focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
             >
               Copy
             </button>
@@ -182,7 +182,7 @@ export default function CommandBuilder({ region, accountId }: CommandBuilderProp
               { name: "Fossabot", command: `$(customapi ${generatedUrl || "https://your-command-url"})` },
               { name: "Nightbot", command: `$(urlfetch ${generatedUrl || "https://your-command-url"})` },
             ].map(({ name, command }) => (
-              <li key={name} className="flex items-center justify-between rounded-md bg-white p-3 shadow">
+              <li key={name} className="flex items-center justify-between rounded-md bg-white p-3 shadow-sm">
                 <div>
                   <strong>{name}:</strong> <code className="text-blue-600">{command}</code>
                 </div>
@@ -190,7 +190,7 @@ export default function CommandBuilder({ region, accountId }: CommandBuilderProp
                   id={`copy-${name}`}
                   type="button"
                   onClick={() => navigator.clipboard.writeText(command)}
-                  className="ml-4 rounded bg-blue-500 px-3 py-1 text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                  className="ml-4 rounded bg-blue-500 px-3 py-1 text-white hover:bg-blue-600 focus:outline-hidden focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                 >
                   Copy
                 </button>
