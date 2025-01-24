@@ -83,7 +83,7 @@ export default function BoxWidget({ region, accountId, variables, labels, extraA
   const statDisplays = getStatDisplays();
 
   return (
-    <div className="inline-block min-w-[200px] overflow-hidden rounded-lg bg-white/90 shadow-lg backdrop-blur-xs">
+    <div className="inline-block min-w-[200px] overflow-hidden rounded-lg bg-white/90 shadow-lg backdrop-blur-xs bg-white">
       {/* Header */}
       <div className="bg-gray-800/95 px-4 py-2 text-center">
         <p className="text-sm text-gray-300">
