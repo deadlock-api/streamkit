@@ -21,7 +21,7 @@ export function ChatBotInstructions({ generatedUrl }: ChatBotInstructionsProps) 
           {chatBots.map(({ name, command }) => (
             <li key={name} className="flex items-center justify-between rounded-md bg-white p-3 shadow-sm">
               <div>
-                <strong>{name}:</strong> <code className="text-blue-600">{command}</code>
+                <strong>{name}:</strong> <code className="text-blue-600 whitespace-pre-wrap break-all">{command}</code>
               </div>
               <button
                 id={`copy-${name}`}

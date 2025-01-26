@@ -12,7 +12,11 @@ export function CommandPreview({ preview, previewError }: CommandPreviewProps) {
           <div className="text-red-600">{previewError}</div>
         ) : (
           <div>
-            {preview ? <pre>{preview}</pre> : "No preview available yet. Fill in the fields to generate a preview."}
+            {preview ? (
+              <pre className="whitespace-pre-wrap">{preview}</pre>
+            ) : (
+              "No preview available yet. Fill in the fields to generate a preview."
+            )}
           </div>
         )}
       </div>
