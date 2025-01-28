@@ -2,11 +2,19 @@ import { useEffect, useState } from "react";
 import { snakeToPretty } from "~/lib/utils";
 
 const UPDATE_INTERVAL_MS = 2 * 60 * 1000;
-const DEFAULT_VARIABLES = ["leaderboard_place", "wins_today", "losses_today"];
+const DEFAULT_VARIABLES = ["leaderboard_place", "wins_today", "losses_today", "highest_death_count"]; //todo update highest_death_count to heroes_results_today
+let HERO_RESULT_INDEX = 0;
 
 interface StatDisplay {
   value: string;
   label: string;
+}
+
+interface HeroResultDisplay {
+  index: number;
+  hero: string;
+  result: string;
+  image: string;
 }
 
 type DeadlockWidgetProps = {
@@ -30,10 +38,45 @@ export default function BoxWidget({ region, accountId, variables, labels, extraA
   const getStatDisplays = (): StatDisplay[] => {
     if (!stats) return [];
 
-    return variables.map((variable, index) => ({
-      value: stats[variable],
-      label: labels[index],
-    }));
+    return variables
+        .filter((variable) => variable !== "highest_death_count")
+        .map((variable, index) => ({
+          value: stats[variable],
+          label: labels[index],
+        }));
+  };
+
+  const getHeroResultDisplays = (): HeroResultDisplay[] => {
+    if (!stats) return [];
+
+    const updatedVariables = [...variables, "[('a', 'b', 'c'), ('d', 'e', 'f')]"];
+
+
+    return updatedVariables
+        .filter((variable) => variable === "highest_death_count") // Filter for "highest_death_count"
+        .flatMap((variable) => {
+          // Parse the stats[variable] string into a list
+          const tupleString = "[('haze', 'win', 'https://fastly.picsum.photos/id/1016/100/100.jpg?hmac=adJwHEH7ZEvDBjdxV_yT9rULbuibQymMiXk1DBWW158')," +
+              " ('seven', 'lose', 'https://fastly.picsum.photos/id/832/100/100.jpg?hmac=ljDmLhxVQEAf9zoEZRnNTo9L3HypLa3fOgcXaFxeX_0')," +
+              "('haze', 'win', 'https://fastly.picsum.photos/id/1016/100/100.jpg?hmac=adJwHEH7ZEvDBjdxV_yT9rULbuibQymMiXk1DBWW158')]"
+
+          const parsedTuples = tupleString
+              .replace(/\(/g, "[") // Replace "(" with "["
+              .replace(/\)/g, "]") // Replace ")" with "]"
+              .replace(/'/g, '"')  // Replace single quotes with double quotes
+              .trim();
+
+          // Convert the string into an actual array
+          const tupleArray = JSON.parse(parsedTuples);
+          // Map over each tuple and simply extract the first, second, and third elements
+
+          return tupleArray.map((tuple: any[]) => ({
+            index: HERO_RESULT_INDEX++,
+            hero: tuple[0],  // The first element of the tuple
+            result: tuple[1], // The second element of the tuple
+            image: tuple[2],  // The third element of the tuple
+          }));
+        });
   };
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: stats is not a dependency
@@ -81,6 +124,8 @@ export default function BoxWidget({ region, accountId, variables, labels, extraA
   }, [region, accountId, variables, extraArgs]);
 
   const statDisplays = getStatDisplays();
+  const heroResultDisplays = getHeroResultDisplays();
+  console.log("HERO RESULT DISPLAYS: ", heroResultDisplays);
 
   return (
     <div className="inline-block min-w-[200px] overflow-hidden rounded-lg bg-white/90 shadow-lg backdrop-blur-xs bg-white">
@@ -102,22 +147,36 @@ export default function BoxWidget({ region, accountId, variables, labels, extraA
       {/* Content */}
       <div className="p-4">
         {loading && !stats ? (
-          <div className="flex justify-center py-8">
-            <div className="h-6 w-6 animate-spin rounded-full border-2 border-gray-300 border-t-blue-600" />
-          </div>
+            <div className="flex justify-center py-8">
+              <div className="h-6 w-6 animate-spin rounded-full border-2 border-gray-300 border-t-blue-600" />
+            </div>
         ) : error ? (
-          <div className="py-8 text-center text-red-500">{error}</div>
-        ) : stats ? (
-          <div className="flex gap-4 flex-nowrap">
-            {statDisplays
-              .filter((stat) => stat.label && stat.value)
-              .map((stat) => (
-                <div key={stat.label} className="text-center">
-                  <p className="text-sm font-medium text-gray-500 whitespace-nowrap overflow-hidden">{stat.label}</p>
-                  <p className="mt-1 text-xl font-semibold text-gray-900">{stat.value}</p>
-                </div>
-              ))}
-          </div>
+            <div className="py-8 text-center text-red-500">{error}</div>
+        ) : stats ? ( // Single check for `stats`
+            <>
+              {/* First div with its own logic */}
+              <div className="flex gap-4 flex-nowrap">
+                {statDisplays
+                    .filter((stat) => stat.label && stat.value)
+                    .map((stat) => (
+                        <div key={stat.label} className="text-center">
+                          <p className="text-sm font-medium text-gray-500 whitespace-nowrap overflow-hidden">{stat.label}</p>
+                          <p className="mt-1 text-xl font-semibold text-gray-900">{stat.value}</p>
+                        </div>
+                    ))}
+              </div>
+
+              {/* Second div with different logic */}
+              <div className="mt-4 flex flex-row gap-4">
+                {heroResultDisplays
+                    // .filter((stat) => stat.label && stat.value)
+                    .map((stat) => (
+                        <div key={stat.index} className="text-sm text-gray-700 flex-shrink-0">
+                          {stat.hero}: {stat.result}
+                        </div>
+                    ))}
+              </div>
+            </>
         ) : null}
       </div>
     </div>
