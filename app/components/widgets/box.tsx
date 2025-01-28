@@ -125,7 +125,6 @@ export default function BoxWidget({ region, accountId, variables, labels, extraA
 
   const statDisplays = getStatDisplays();
   const heroResultDisplays = getHeroResultDisplays();
-  console.log("HERO RESULT DISPLAYS: ", heroResultDisplays);
 
   return (
     <div className="inline-block min-w-[200px] overflow-hidden rounded-lg bg-white/90 shadow-lg backdrop-blur-xs bg-white">
@@ -166,27 +165,25 @@ export default function BoxWidget({ region, accountId, variables, labels, extraA
                 ))}
             </div>
 
-              {/* Second div with different logic */}
+            {/* Second div with different logic */}
+            {heroResultDisplays.length === 0 ? (
+              <p className="text-center text-gray-500" /> // Fallback content
+            ) : (
               <div className="mt-4 flex flex-row gap-4">
-                {heroResultDisplays
-                    // .filter((stat) => stat.label && stat.value)
-                    .map((stat) => (
-                        <div key={stat.index} className="text-sm text-gray-700 flex-shrink-0 text-center">
-                          <img
-                              src={stat.image}
-                              alt={stat.hero}
-                              className="w-12 h-12 mx-auto rounded-full object-cover"
-                          />
-                          <div
-                              className={`w-3 h-3 mt-2 mx-auto rounded-full ${
-                                  stat.result === "win" ? "bg-green-500" : "bg-red-500"
-                              }`}
-                              title={stat.result} // Tooltip to provide context
-                          ></div>
-                        </div>
-                    ))}
+                {heroResultDisplays.map((stat) => (
+                  <div key={stat.index} className="text-sm text-gray-700 flex-shrink-0 text-center">
+                    <img src={stat.image} alt={stat.hero} className="w-12 h-12 mx-auto rounded-full object-cover" />
+                    <div
+                      className={`w-3 h-3 mt-2 mx-auto rounded-full ${
+                        stat.result === "win" ? "bg-green-500" : "bg-red-500"
+                      }`}
+                      title={stat.result}
+                    />
+                  </div>
+                ))}
               </div>
-            </>
+            )}
+          </>
         ) : null}
       </div>
     </div>
