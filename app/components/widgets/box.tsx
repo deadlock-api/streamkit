@@ -171,8 +171,18 @@ export default function BoxWidget({ region, accountId, variables, labels, extraA
                 {heroResultDisplays
                     // .filter((stat) => stat.label && stat.value)
                     .map((stat) => (
-                        <div key={stat.index} className="text-sm text-gray-700 flex-shrink-0">
-                          {stat.hero}: {stat.result}
+                        <div key={stat.index} className="text-sm text-gray-700 flex-shrink-0 text-center">
+                          <img
+                              src={stat.image}
+                              alt={stat.hero}
+                              className="w-12 h-12 mx-auto rounded-full object-cover"
+                          />
+                          <div
+                              className={`w-3 h-3 mt-2 mx-auto rounded-full ${
+                                  stat.result === "win" ? "bg-green-500" : "bg-red-500"
+                              }`}
+                              title={stat.result} // Tooltip to provide context
+                          ></div>
                         </div>
                     ))}
               </div>
