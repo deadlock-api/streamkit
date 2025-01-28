@@ -56,9 +56,9 @@ export default function BoxWidget({ region, accountId, variables, labels, extraA
       .flatMap((variable) => {
         // Parse the stats[variable] string into a list
         const tupleString =
-          "[('haze', 'win', 'https://fastly.picsum.photos/id/1016/100/100.jpg?hmac=adJwHEH7ZEvDBjdxV_yT9rULbuibQymMiXk1DBWW158')," +
-          " ('seven', 'lose', 'https://fastly.picsum.photos/id/832/100/100.jpg?hmac=ljDmLhxVQEAf9zoEZRnNTo9L3HypLa3fOgcXaFxeX_0')," +
-          "('haze', 'win', 'https://fastly.picsum.photos/id/1016/100/100.jpg?hmac=adJwHEH7ZEvDBjdxV_yT9rULbuibQymMiXk1DBWW158')]";
+          "[('haze', 'win', 'https://assets.deadlock-api.com/images/heroes/haze_card.png')," +
+          " ('seven', 'win', 'https://assets.deadlock-api.com/images/heroes/gigawatt_card.png')," +
+          "('haze', 'lose', 'https://assets.deadlock-api.com/images/heroes/haze_card.png')]";
 
         const parsedTuples = tupleString
           .replace(/\(/g, "[") // Replace "(" with "["
@@ -172,9 +172,13 @@ export default function BoxWidget({ region, accountId, variables, labels, extraA
               <div className="mt-4 flex flex-row gap-4">
                 {heroResultDisplays.map((stat) => (
                   <div key={stat.index} className="text-sm text-gray-700 flex-shrink-0 text-center">
-                    <img src={stat.image} alt={stat.hero} className="w-12 h-12 mx-auto rounded-full object-cover" />
+                    <img
+                      src={stat.image}
+                      alt={stat.hero}
+                      className="w-12 h-12 mx-auto rounded-2xl object-cover" // Updated to rounded-lg
+                    />
                     <div
-                      className={`w-3 h-3 mt-2 mx-auto rounded-full ${
+                      className={`w-6 h-3 mt-2 mx-auto rounded-full ${
                         stat.result === "win" ? "bg-green-500" : "bg-red-500"
                       }`}
                       title={stat.result}
