@@ -15,8 +15,13 @@ export default function WidgetBuilder({ region, accountId }: WidgetBuilderProps)
   const [widgetType, setWidgetType] = useState<string>(widgetTypes[0]);
   const [widgetUrl, setWidgetUrl] = useState<string | null>(null);
   const [widgetPreview, setWidgetPreview] = useState<ReactElement | null>(null);
-  const [variables, setVariables] = useState<string[]>(["leaderboard_place", "wins_today", "losses_today"]);
-  const [labels, setLabels] = useState<string[]>(["Leaderboard Place", "Wins Today", "Losses Today"]);
+  const [variables, setVariables] = useState<string[]>([
+    "leaderboard_place",
+    "wins_today",
+    "losses_today",
+    "highest_death_count",
+  ]); //todo update highest_death_count to heroes_results_today
+  const [labels, setLabels] = useState<string[]>(["Leaderboard Place", "Wins Today", "Losses Today", ""]);
   const [extraArgs, setExtraArgs] = useState<{ [key: string]: string }>({});
   const [availableVariables, setAvailableVariables] = useState<Variable[]>([]);
 
