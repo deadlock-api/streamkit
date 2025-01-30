@@ -22,7 +22,14 @@ export default function Index() {
 
   const parseSteamId = (steamId: string) => {
     try {
-      let extractedSteamId = BigInt(steamId.replace(/\[U:\d+:/g, "").replace(/]/g, ""));
+      let extractedSteamId = BigInt(
+        steamId
+          .replace(/\[U:\d+:/g, "")
+          .replace(/U:\d+:/g, "")
+          .replace(/\[STEAM_0:\d+:/g, "")
+          .replace(/STEAM_0:\d+:/g, "")
+          .replace(/]/g, ""),
+      );
       // Convert SteamID64 to SteamID3
       if (extractedSteamId > 76561197960265728n) extractedSteamId -= 76561197960265728n;
       return extractedSteamId.toString();
