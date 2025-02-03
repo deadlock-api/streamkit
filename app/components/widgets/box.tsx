@@ -3,7 +3,6 @@ import { snakeToPretty } from "~/lib/utils";
 
 const UPDATE_INTERVAL_MS = 2 * 60 * 1000;
 const DEFAULT_VARIABLES = ["leaderboard_place", "wins_today", "losses_today"];
-let HERO_RESULT_INDEX = 0;
 
 interface StatDisplay {
   value: string;
