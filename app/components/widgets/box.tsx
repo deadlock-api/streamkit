@@ -49,6 +49,7 @@ export default function BoxWidget({ region, accountId, variables, labels, extraA
   const getHeroResultDisplay = (): HeroResultDisplay[] => {
     if (!heroResults) return [];
     let counter = 0
+    console.log("HERO RESULT: " + heroResults);
     return heroResults.map((item) => ({
       index: counter++,
       hero: item[0],
@@ -118,7 +119,7 @@ export default function BoxWidget({ region, accountId, variables, labels, extraA
               } catch (err) {
                 setError(err instanceof Error ? err.message : "Failed to fetch hero data");
               }
-              heroResults.push([heroName, String(match["match_result"] == match["player_team"]), heroImage]);
+              heroResults.push([heroName, match["match_result"] == match["player_team"] ? "win" : "loss", heroImage]);
             }
           }
           setHeroResults(heroResults);
