@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { snakeToPretty } from "~/lib/utils";
 
 const UPDATE_INTERVAL_MS = 2 * 60 * 1000;
-const DEFAULT_VARIABLES = ["leaderboard_place", "wins_today", "losses_today", "highest_death_count"]; //todo update highest_death_count to heroes_results_today
+const DEFAULT_VARIABLES = ["leaderboard_place", "wins_today", "losses_today"];
 let HERO_RESULT_INDEX = 0;
 
 interface StatDisplay {
@@ -27,6 +27,8 @@ type DeadlockWidgetProps = {
 
 export default function BoxWidget({ region, accountId, variables, labels, extraArgs }: DeadlockWidgetProps) {
   const [stats, setStats] = useState<{ [key: string]: string } | null>(null);
+  const [matchStats, setMatchStats] = useState<string[] | null>(null);
+  const [heroResults, setHeroResults] = useState<(string)[][] | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -38,45 +40,22 @@ export default function BoxWidget({ region, accountId, variables, labels, extraA
   const getStatDisplays = (): StatDisplay[] => {
     if (!stats) return [];
 
-    return variables
-        .filter((variable) => variable !== "highest_death_count")
-        .map((variable, index) => ({
-          value: stats[variable],
-          label: labels[index],
-        }));
+    return variables.map((variable, index) => ({
+      value: stats[variable],
+      label: labels[index],
+    }));
   };
 
-  const getHeroResultDisplays = (): HeroResultDisplay[] => {
-    if (!stats) return [];
-
-    const updatedVariables = [...variables, "[('a', 'b', 'c'), ('d', 'e', 'f')]"];
-
-
-    return updatedVariables
-        .filter((variable) => variable === "highest_death_count") // Filter for "highest_death_count"
-        .flatMap((variable) => {
-          // Parse the stats[variable] string into a list
-          const tupleString = "[('haze', 'win', 'https://assets.deadlock-api.com/images/heroes/haze_card.png')," +
-              " ('seven', 'win', 'https://assets.deadlock-api.com/images/heroes/gigawatt_card.png')," +
-              "('haze', 'lose', 'https://assets.deadlock-api.com/images/heroes/haze_card.png')]"
-
-          const parsedTuples = tupleString
-              .replace(/\(/g, "[") // Replace "(" with "["
-              .replace(/\)/g, "]") // Replace ")" with "]"
-              .replace(/'/g, '"')  // Replace single quotes with double quotes
-              .trim();
-
-          // Convert the string into an actual array
-          const tupleArray = JSON.parse(parsedTuples);
-          // Map over each tuple and simply extract the first, second, and third elements
-
-          return tupleArray.map((tuple: any[]) => ({
-            index: HERO_RESULT_INDEX++,
-            hero: tuple[0],  // The first element of the tuple
-            result: tuple[1], // The second element of the tuple
-            image: tuple[2],  // The third element of the tuple
-          }));
-        });
+  // Create mapping of match results to their display properties
+  const getHeroResultDisplay = (): HeroResultDisplay[] => {
+    if (!heroResults) return [];
+    let counter = 0
+    return heroResults.map((item) => ({
+      index: counter++,
+      hero: item[0],
+      result: item[1],
+      image: item[2],
+    }));
   };
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: stats is not a dependency
@@ -105,6 +84,47 @@ export default function BoxWidget({ region, accountId, variables, labels, extraA
         if (JSON.stringify(data) !== JSON.stringify(stats)) {
           setStats(data);
         }
+
+        const matchHistoryUrl = new URL(`https://data.deadlock-api.com/v2/players/${accountId}/match-history`);
+        const matchHistoryResponse = await fetch(matchHistoryUrl);
+
+        if (!matchHistoryResponse.ok) {
+          throw new Error("Failed to fetch match history");
+        }
+
+        const matchHistoryData = await matchHistoryResponse.json();
+        // Only update if data has changed
+        if (JSON.stringify(matchHistoryData) !== JSON.stringify(matchStats)) {
+          setMatchStats(matchHistoryData);
+          let matchList = matchHistoryData["matches"]
+          let heroResults = []
+          for (const match of matchList) {
+            // If the first match is older than 8 hours ago, we can assume that the player has no matches today
+            let eightHoursAgo = Math.floor((new Date().getTime() - 8 * 60 * 60 * 1000) / 1000)
+            if (match["start_time"] < eightHoursAgo) {
+              break;
+            }
+            else {
+              let heroImage = ""
+              let heroName = ""
+              try {
+                const url = new URL(`https://assets.deadlock-api.com/v2/heroes/${match["hero_id"]}`);
+                const response = await fetch(url);
+                if (!response.ok) {
+                  throw new Error("Failed to fetch hero data");
+                }
+                const data = await response.json();
+                heroImage = data["images"]["icon_hero_card"]
+                heroName = data["name"]
+              } catch (err) {
+                setError(err instanceof Error ? err.message : "Failed to fetch hero data");
+              }
+              heroResults.push([heroName, String(match["match_result"] == match["player_team"]), heroImage]);
+            }
+          }
+          setHeroResults(heroResults);
+        }
+
         setError(null);
       } catch (err) {
         setError(err instanceof Error ? err.message : "Failed to fetch stats");
@@ -124,7 +144,7 @@ export default function BoxWidget({ region, accountId, variables, labels, extraA
   }, [region, accountId, variables, extraArgs]);
 
   const statDisplays = getStatDisplays();
-  const heroResultDisplays = getHeroResultDisplays();
+  const heroResultDisplays = getHeroResultDisplay();
 
   return (
     <div className="inline-block min-w-[200px] overflow-hidden rounded-lg bg-white/90 shadow-lg backdrop-blur-xs bg-white">
@@ -170,7 +190,7 @@ export default function BoxWidget({ region, accountId, variables, labels, extraA
                   <p className="text-center text-gray-500"></p> // Fallback content
               ) : (
                   <div className="mt-4 flex flex-row gap-4">
-                    {heroResultDisplays.map((stat) => (
+                    {heroResultDisplays.map((stat: any) => (
                         <div key={stat.index} className="text-sm text-gray-700 flex-shrink-0 text-center">
                           <img
                               src={stat.image}
