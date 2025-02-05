@@ -189,16 +189,16 @@ export default function BoxWidget({ region, accountId, variables, labels, extraA
               {heroResultDisplays.length === 0 ? (
                   <p className="text-center text-gray-500"></p> // Fallback content
               ) : (
-                  <div className="mt-4 flex flex-row gap-4">
+                  <div className="mt-4 flex flex-row gap-1">
                     {heroResultDisplays.map((stat: any) => (
                         <div key={stat.index} className="text-sm text-gray-700 flex-shrink-0 text-center">
                           <img
                               src={stat.image}
                               alt={stat.hero}
-                              className="w-12 h-12 mx-auto rounded-2xl object-cover" // Updated to rounded-lg
+                              className="w-12 h-12 mx-auto object-cover"
                           />
                           <div
-                              className={`w-6 h-3 mt-2 mx-auto rounded-full ${
+                              className={`w-12 h-1.5 mx-auto ${
                                   stat.result === "win" ? "bg-green-500" : "bg-red-500"
                               }`}
                               title={stat.result}
