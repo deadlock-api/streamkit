@@ -3,6 +3,7 @@ import type { Variable } from "~/components/command/CommandBuilder";
 import { ExtraArguments } from "~/components/widgets/ExtraArguments";
 import BoxWidget from "~/components/widgets/box";
 import { snakeToPretty } from "~/lib/utils";
+import type { Theme } from "~/types/widget";
 
 const widgetTypes: string[] = ["box"];
 
@@ -13,12 +14,16 @@ interface WidgetBuilderProps {
 
 export default function WidgetBuilder({ region, accountId }: WidgetBuilderProps) {
   const [widgetType, setWidgetType] = useState<string>(widgetTypes[0]);
+  const [theme, setTheme] = useState<Theme>("dark");
   const [widgetUrl, setWidgetUrl] = useState<string | null>(null);
   const [widgetPreview, setWidgetPreview] = useState<ReactElement | null>(null);
   const [variables, setVariables] = useState<string[]>(["leaderboard_place", "wins_today", "losses_today"]);
   const [labels, setLabels] = useState<string[]>(["Leaderboard Place", "Wins Today", "Losses Today"]);
   const [extraArgs, setExtraArgs] = useState<{ [key: string]: string }>({});
   const [availableVariables, setAvailableVariables] = useState<Variable[]>([]);
+  const [showHeader, setShowHeader] = useState(true);
+  const [showBranding, setShowBranding] = useState(true);
+  const [showMatchHistory, setShowMatchHistory] = useState(true);
 
   useEffect(() => {
     fetch("https://data.deadlock-api.com/v1/commands/available-variables")
@@ -33,6 +38,10 @@ export default function WidgetBuilder({ region, accountId }: WidgetBuilderProps)
     const url = new URL(`https://streamkit.deadlock-api.com/widgets/${region}/${accountId}/${widgetType}`);
     if (variables.length > 0) url.searchParams.set("vars", variables.join(","));
     if (labels.length > 0) url.searchParams.set("labels", labels.join(","));
+    url.searchParams.set("theme", theme);
+    url.searchParams.set("showHeader", showHeader.toString());
+    url.searchParams.set("showBranding", showBranding.toString());
+    url.searchParams.set("showMatchHistory", showMatchHistory.toString());
     for (const [arg, value] of Object.entries(extraArgs)) {
       if (value) url.searchParams.set(arg, value);
     }
@@ -46,13 +55,23 @@ export default function WidgetBuilder({ region, accountId }: WidgetBuilderProps)
             variables={variables}
             labels={labels}
             extraArgs={extraArgs}
+            theme={theme}
+            showHeader={showHeader}
+            showBranding={showBranding}
+            showMatchHistory={showMatchHistory}
           />,
         );
         break;
       default:
         setWidgetPreview(null);
     }
-  }, [region, accountId, widgetType, variables, labels, extraArgs]);
+  }, [region, accountId, widgetType, variables, labels, extraArgs, theme, showHeader, showBranding, showMatchHistory]);
+
+  const themes: { value: Theme; label: string }[] = [
+    { value: "dark", label: "Dark Theme" },
+    { value: "light", label: "Light Theme" },
+    { value: "glass", label: "Glass Theme" },
+  ];
 
   return (
     <div className="mt-4 space-y-6">
@@ -73,6 +92,65 @@ export default function WidgetBuilder({ region, accountId }: WidgetBuilderProps)
               </option>
             ))}
           </select>
+        </div>
+
+        <div>
+          <label htmlFor="theme" className="block text-sm font-medium text-gray-700">
+            Theme
+          </label>
+          <select
+            id="theme"
+            value={theme}
+            onChange={(e) => setTheme(e.target.value as Theme)}
+            className="mt-1 block rounded-md border border-gray-300 bg-white px-3 py-2 shadow-xs focus:border-blue-500 focus:outline-hidden focus:ring-1 focus:ring-blue-500 text-black pr-6"
+          >
+            {themes.map(({ value, label }) => (
+              <option key={value} value={value}>
+                {label}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className="space-y-4">
+          <div className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              id="showHeader"
+              checked={showHeader}
+              onChange={(e) => setShowHeader(e.target.checked)}
+              className="rounded border-gray-300 text-blue-500 focus:ring-blue-500"
+            />
+            <label htmlFor="showHeader" className="text-sm font-medium text-gray-700">
+              Show Player Name Header
+            </label>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              id="showBranding"
+              checked={showBranding}
+              onChange={(e) => setShowBranding(e.target.checked)}
+              className="rounded border-gray-300 text-blue-500 focus:ring-blue-500"
+            />
+            <label htmlFor="showBranding" className="text-sm font-medium text-gray-700">
+              Show "Widget by deadlock-api.com"
+            </label>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              id="showMatchHistory"
+              checked={showMatchHistory}
+              onChange={(e) => setShowMatchHistory(e.target.checked)}
+              className="rounded border-gray-300 text-blue-500 focus:ring-blue-500"
+            />
+            <label htmlFor="showMatchHistory" className="text-sm font-medium text-gray-700">
+              Show Recent Matches
+            </label>
+          </div>
         </div>
 
         <div>
@@ -179,16 +257,9 @@ export default function WidgetBuilder({ region, accountId }: WidgetBuilderProps)
         )}
       </div>
 
-      <div>
-        <h3 className="block text-sm font-medium text-gray-700">Widget Preview</h3>
-
-        {widgetPreview ? (
-          <div className="relative mt-1">{widgetPreview}</div>
-        ) : (
-          <div className="rounded-md border border-gray-300 bg-gray-50 p-3 text-sm text-gray-600">
-            No preview available yet. Fill in the fields to generate a preview.
-          </div>
-        )}
+      <div className="space-y-2">
+        <h3 className="text-sm font-medium text-gray-700">Preview</h3>
+        <div className="p-4 rounded-lg bg-gray-100 flex items-center justify-center">{widgetPreview}</div>
       </div>
     </div>
   );

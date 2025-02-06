@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import { type ClassValue, clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
 
 export function useDebouncedState<S>(initialState: S, delay: number): [S, S, (state: S) => void] {
   const [state, setState] = useState(initialState);
@@ -10,6 +12,10 @@ export function useDebouncedState<S>(initialState: S, delay: number): [S, S, (st
   }, [state, delay]);
 
   return [state, debouncedState, setState];
+}
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
 }
 
 export function snakeToPretty(str: string): string {
