@@ -22,7 +22,7 @@ export const StatDisplay: FC<StatDisplayProps> = ({ stat, theme = "default", cla
         className,
       )}
     >
-      {variable.endsWith("_img") ? (
+      {variable.endsWith("_img") && value ? (
         <img src={value as string} alt={label} className="w-10 h-10 rounded-full object-cover" />
       ) : (
         <>
