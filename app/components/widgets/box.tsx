@@ -39,6 +39,7 @@ export default function BoxWidget({ region, accountId, variables, labels, extraA
   // biome-ignore lint/correctness/useExhaustiveDependencies: stats is not a dependency
   useEffect(() => {
     const fetchStats = async () => {
+      setLoading(true);
       if (!region || !accountId) {
         setError("Region and Account ID are required");
         setLoading(false);
@@ -101,7 +102,7 @@ export default function BoxWidget({ region, accountId, variables, labels, extraA
 
       {/* Content */}
       <div className="p-4">
-        {loading && !stats ? (
+        {loading ? (
           <div className="flex justify-center py-8">
             <div className="h-6 w-6 animate-spin rounded-full border-2 border-gray-300 border-t-blue-600" />
           </div>
@@ -110,11 +111,11 @@ export default function BoxWidget({ region, accountId, variables, labels, extraA
         ) : stats ? (
           <div className="flex gap-4 flex-nowrap">
             {statDisplays
-              .filter((stat) => stat.label && stat.value)
+              .filter((stat) => stat.label)
               .map((stat) => (
                 <div key={stat.label} className="text-center">
                   <p className="text-sm font-medium text-gray-500 whitespace-nowrap overflow-hidden">{stat.label}</p>
-                  <p className="mt-1 text-xl font-semibold text-gray-900">{stat.value}</p>
+                  <p className="mt-1 text-xl font-semibold text-gray-900">{stat.value ?? "-"}</p>
                 </div>
               ))}
           </div>
