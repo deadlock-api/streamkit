@@ -28,7 +28,7 @@ export default function CommandBuilder({ region, accountId }: CommandBuilderProp
   useEffect(() => {
     fetch("https://data.deadlock-api.com/v1/commands/available-variables")
       .then((res) => res.json())
-      .then((data: Variable[]) => setVariables(data))
+      .then((data: Variable[]) => setVariables(data.filter((v) => !v.name.endsWith("_img"))))
       .catch((err) => console.error("Failed to fetch available variables:", err));
   }, []);
 
