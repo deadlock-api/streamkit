@@ -1,8 +1,7 @@
 import type { FC } from "react";
 import { useEffect, useState } from "react";
 import { cn } from "~/lib/utils";
-import type { Theme } from "~/types/widget";
-import type { Match, Hero, MatchHistoryProps } from "~/types/match-history";
+import type { Hero, Match, MatchHistoryProps } from "~/types/match-history";
 
 export const MatchHistory: FC<MatchHistoryProps> = ({ theme, accountId }) => {
   const [matches, setMatches] = useState<Match[]>([]);
@@ -40,21 +39,16 @@ export const MatchHistory: FC<MatchHistoryProps> = ({ theme, accountId }) => {
   if (loading || matches.length === 0) return null;
 
   return (
-    <div
-      className={cn(
-        "absolute left-0 right-0 flex items-center gap-2",
-        theme === "glass" ? "-top-[28px]" : "-top-[29px]",
-      )}
-    >
+    <div className={cn("flex items-center gap-2", theme === "glass" ? "-top-[28px]" : "-top-[29px]")}>
       <div className="flex justify-start gap-0.5">
-        {[...matches].map((match, index) => {
+        {[...matches].map((match) => {
           const heroImage = heroes.get(match.hero_id);
           if (!heroImage) return null;
 
           const isWin = match.match_result === match.player_team;
 
           return (
-            <div key={index} className="relative w-7 h-7">
+            <div key={match.match_id} className="relative w-7 h-7">
               <img
                 src={heroImage}
                 alt={`Match ${isWin ? "Win" : "Loss"}`}

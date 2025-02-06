@@ -24,21 +24,3 @@ export const THEME_STYLES = {
     stat: "bg-white/5 hover:bg-white/10",
   },
 } as const;
-
-export const SIZE_STYLES = {
-  sm: {
-    container: "w-fit",
-    stat: "text-xs",
-    value: "text-sm",
-  },
-  md: {
-    container: "w-fit",
-    stat: "text-sm",
-    value: "text-base",
-  },
-  lg: {
-    container: "w-fit",
-    stat: "text-base",
-    value: "text-lg",
-  },
-} as const;

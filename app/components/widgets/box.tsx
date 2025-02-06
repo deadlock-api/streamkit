@@ -1,9 +1,9 @@
-import { useEffect, useState, type FC } from "react";
+import { type FC, useEffect, useState } from "react";
+import { DEFAULT_VARIABLES, THEME_STYLES, UPDATE_INTERVAL_MS } from "~/constants/widget";
 import { cn, snakeToPretty } from "~/lib/utils";
-import type { BoxWidgetProps, Stat } from "~/types/widget";
-import { StatDisplay } from "./StatDisplay";
-import { DEFAULT_VARIABLES, SIZE_STYLES, THEME_STYLES, UPDATE_INTERVAL_MS } from "~/constants/widget";
+import type { BoxWidgetProps, Region, Stat } from "~/types/widget";
 import { MatchHistory } from "./MatchHistory";
+import { StatDisplay } from "./StatDisplay";
 
 export const BoxWidget: FC<BoxWidgetProps> = ({
   region,
@@ -12,11 +12,7 @@ export const BoxWidget: FC<BoxWidgetProps> = ({
   labels,
   extraArgs = {},
   theme = "default",
-  size = "md",
   showHeader = true,
-  customHeader,
-  className,
-  statClassName,
   refreshInterval = UPDATE_INTERVAL_MS,
   showBranding = true,
   showMatchHistory = false,
@@ -34,7 +30,12 @@ export const BoxWidget: FC<BoxWidgetProps> = ({
     ? labels.filter((_, i) => variables[i] !== "steam_account_name")
     : displayVariables.map(snakeToPretty);
 
-  const fetchStats = async () => {
+  const fetchStats = async (
+    region: Region,
+    accountId: string,
+    apiVariables: string[],
+    extraArgs: Record<string, string>,
+  ) => {
     if (!region || !accountId) {
       setError("Region and Account ID are required");
       setLoading(false);
@@ -45,33 +46,36 @@ export const BoxWidget: FC<BoxWidgetProps> = ({
       const url = new URL(`https://data.deadlock-api.com/v1/commands/${region}/${accountId}/resolve-variables`);
       url.searchParams.append("variables", apiVariables.join(","));
 
+      // biome-ignore lint/complexity/noForEach: <explanation>
       Object.entries(extraArgs).forEach(([key, value]) => {
         if (value) url.searchParams.append(key, value);
       });
 
       const response = await fetch(url);
-      if (!response.ok) {
-        throw new Error("Failed to fetch stats");
+      if (response.ok) {
+        setStats(await response.json());
+        setError(null);
+      } else {
+        setStats(null);
+        setError(`Failed to fetch stats: ${response.status} ${response.statusText}`);
       }
-
-      const data = await response.json();
-      setStats(data);
-      setError(null);
     } catch (err) {
+      setStats(null);
       setError(err instanceof Error ? err.message : "Failed to fetch stats");
     } finally {
       setLoading(false);
     }
   };
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
-    fetchStats();
+    fetchStats(region, accountId, apiVariables, extraArgs);
 
     if (refreshInterval > 0) {
-      const intervalId = setInterval(fetchStats, refreshInterval);
+      const intervalId = setInterval(() => fetchStats(region, accountId, apiVariables, extraArgs), refreshInterval);
       return () => clearInterval(intervalId);
     }
-  }, [region, accountId, apiVariables.join(","), JSON.stringify(extraArgs), refreshInterval]);
+  }, [region, accountId, apiVariables, extraArgs, refreshInterval]);
 
   const getStatDisplays = (): Stat[] => {
     if (!stats) return [];
@@ -86,10 +90,9 @@ export const BoxWidget: FC<BoxWidgetProps> = ({
 
   return (
     <div className="inline-block">
+      {showMatchHistory && <MatchHistory theme={theme} accountId={accountId} />}
       <div
         className={cn(
-          "relative",
-          "mt-8",
           "inline-flex flex-col",
           "rounded-lg transition-all duration-300",
           theme === "light"
@@ -100,21 +103,8 @@ export const BoxWidget: FC<BoxWidgetProps> = ({
           theme !== "glass" && "border",
           "shadow-lg",
           THEME_STYLES[theme].container,
-          SIZE_STYLES[size].container,
-          className,
         )}
       >
-        {theme !== "glass" && (
-          <div
-            className={cn(
-              "absolute inset-x-0 bottom-0 h-[2px]",
-              theme === "light"
-                ? "bg-gradient-to-r from-blue-400/30 via-purple-400/30 to-blue-400/30"
-                : "bg-gradient-to-r from-blue-500/50 via-purple-500/50 to-blue-500/50",
-            )}
-          />
-        )}
-
         {shouldShowHeader && (
           <div
             className={cn(
@@ -128,22 +118,20 @@ export const BoxWidget: FC<BoxWidgetProps> = ({
               THEME_STYLES[theme].header,
             )}
           >
-            {customHeader || (
-              <div className="flex items-center justify-between">
-                <span
-                  className={cn(
-                    "text-[13px] font-medium tracking-wide",
-                    theme === "light" ? "text-gray-900" : "text-white/90",
-                  )}
-                >
-                  {stats.steam_account_name}
-                </span>
-                <div className="flex items-center gap-1.5">
-                  <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
-                  <span className="text-[11px] font-medium text-green-500/90">LIVE</span>
-                </div>
+            <div className="flex items-center justify-between">
+              <span
+                className={cn(
+                  "text-[13px] font-medium tracking-wide",
+                  theme === "light" ? "text-gray-900" : "text-white/90",
+                )}
+              >
+                {stats.steam_account_name}
+              </span>
+              <div className="flex items-center gap-1.5">
+                <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
+                <span className="text-[11px] font-medium text-green-500/90">LIVE</span>
               </div>
-            )}
+            </div>
           </div>
         )}
 
@@ -159,7 +147,8 @@ export const BoxWidget: FC<BoxWidgetProps> = ({
             <div className="text-center py-2">
               <p className="text-red-400 font-medium text-xs">{error}</p>
               <button
-                onClick={fetchStats}
+                type="button"
+                onClick={() => fetchStats(region, accountId, apiVariables, extraArgs)}
                 className="mt-2 px-3 py-1 text-xs font-medium text-white bg-red-500/20 hover:bg-red-500/30 rounded-md transition-colors"
               >
                 Retry
@@ -169,21 +158,9 @@ export const BoxWidget: FC<BoxWidgetProps> = ({
             <>
               <div className="flex gap-2 w-fit">
                 {getStatDisplays().map((stat) => (
-                  <StatDisplay
-                    key={stat.label}
-                    stat={stat}
-                    theme={theme}
-                    size={size}
-                    className={cn("flex-none", statClassName)}
-                  />
+                  <StatDisplay key={stat.label} stat={stat} theme={theme} className={"flex-none"} />
                 ))}
               </div>
-
-              {showMatchHistory && (
-                <>
-                  <MatchHistory theme={theme} accountId={accountId} />
-                </>
-              )}
 
               {showBranding && (
                 <div className="flex items-center justify-center gap-1.5 pt-1">

@@ -1,5 +1,3 @@
-import type { ReactNode } from "react";
-
 export type StatValue = string | number | null;
 
 export type Stat = {
@@ -13,22 +11,16 @@ export type Stat = {
 
 export type Theme = "default" | "dark" | "glass" | "light";
 
-export type WidgetSize = "sm" | "md" | "lg";
+export type Region = "Europe" | "Asia" | "NAmerica" | "SAmerica" | "Oceania";
 
 export type BoxWidgetProps = {
-  region: string;
+  region: Region;
   accountId: string;
   variables?: string[];
   labels?: string[];
   extraArgs?: Record<string, string>;
   theme?: Theme;
-  size?: WidgetSize;
   showHeader?: boolean;
-  customHeader?: ReactNode;
-  className?: string;
-  statClassName?: string;
-  loading?: boolean;
-  error?: string | null;
   refreshInterval?: number;
   showBranding?: boolean;
   showMatchHistory?: boolean;
@@ -36,7 +28,6 @@ export type BoxWidgetProps = {
 
 export type StatDisplayProps = {
   stat: Stat;
-  size?: WidgetSize;
   className?: string;
   theme?: Theme;
 };

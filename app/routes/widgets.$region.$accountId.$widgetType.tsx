@@ -1,7 +1,7 @@
 import type { MetaFunction } from "@remix-run/node";
 import { useParams, useSearchParams } from "@remix-run/react";
 import { useEffect } from "react";
-import BoxWidget from "~/components/widgets/box";
+import { BoxWidget } from "~/components/widgets/box";
 import { snakeToPretty } from "~/lib/utils";
 import type { Theme } from "~/types/widget";
 

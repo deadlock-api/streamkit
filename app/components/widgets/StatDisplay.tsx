@@ -1,10 +1,10 @@
 import type { FC } from "react";
+import { THEME_STYLES } from "~/constants/widget";
 import { cn } from "~/lib/utils";
 import type { StatDisplayProps } from "~/types/widget";
-import { SIZE_STYLES, THEME_STYLES } from "~/constants/widget";
 
-export const StatDisplay: FC<StatDisplayProps> = ({ stat, size = "md", theme = "default", className }) => {
-  const { label, value, icon, prefix, suffix } = stat;
+export const StatDisplay: FC<StatDisplayProps> = ({ stat, theme = "default", className }) => {
+  const { label, value, prefix, suffix } = stat;
 
   return (
     <div
@@ -19,7 +19,6 @@ export const StatDisplay: FC<StatDisplayProps> = ({ stat, size = "md", theme = "
         "relative",
         "min-w-fit",
         THEME_STYLES[theme].stat,
-        SIZE_STYLES[size].stat,
         className,
       )}
     >
@@ -31,7 +30,7 @@ export const StatDisplay: FC<StatDisplayProps> = ({ stat, size = "md", theme = "
       >
         {label}
       </span>
-      <div className={cn("mt-0.5 flex items-baseline justify-center gap-1", SIZE_STYLES[size].value)}>
+      <div className={cn("mt-0.5 flex items-baseline justify-center gap-1")}>
         {prefix && (
           <span className={cn("text-xs font-medium", theme === "light" ? "text-gray-500" : "text-white/60")}>
             {prefix}

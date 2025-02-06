@@ -1,4 +1,7 @@
+import type { Theme } from "~/types/widget";
+
 export type Match = {
+  match_id: number;
   hero_id: number;
   match_result: number;
   player_team: number;
