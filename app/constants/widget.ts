@@ -1,6 +1,8 @@
 export const UPDATE_INTERVAL_MS = 2 * 60 * 1000;
 
-export const DEFAULT_VARIABLES = ["leaderboard_place", "wins_today", "losses_today", "winrate_today"];
+export const DEFAULT_VARIABLES = ["leaderboard_place", "leaderboard_rank", "wins_losses_today", "total_kd"];
+
+export const DEFAULT_LABELS = ["Place", "Rank", "Daily W-L", "K/D"];
 
 export const THEME_STYLES = {
   default: {

@@ -2,6 +2,7 @@ import { type ReactElement, useEffect, useState } from "react";
 import type { Variable } from "~/components/command/CommandBuilder";
 import { ExtraArguments } from "~/components/widgets/ExtraArguments";
 import { BoxWidget } from "~/components/widgets/box";
+import { DEFAULT_LABELS, DEFAULT_VARIABLES } from "~/constants/widget";
 import { snakeToPretty } from "~/lib/utils";
 import type { Region, Theme } from "~/types/widget";
 
@@ -17,8 +18,8 @@ export default function WidgetBuilder({ region, accountId }: WidgetBuilderProps)
   const [theme, setTheme] = useState<Theme>("dark");
   const [widgetUrl, setWidgetUrl] = useState<string | null>(null);
   const [widgetPreview, setWidgetPreview] = useState<ReactElement | null>(null);
-  const [variables, setVariables] = useState<string[]>(["leaderboard_place", "wins_today", "losses_today"]);
-  const [labels, setLabels] = useState<string[]>(["Leaderboard Place", "Wins Today", "Losses Today"]);
+  const [variables, setVariables] = useState<string[]>(DEFAULT_VARIABLES);
+  const [labels, setLabels] = useState<string[]>(DEFAULT_LABELS);
   const [extraArgs, setExtraArgs] = useState<{ [key: string]: string }>({});
   const [availableVariables, setAvailableVariables] = useState<Variable[]>([]);
   const [showHeader, setShowHeader] = useState(true);

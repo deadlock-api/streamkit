@@ -1,5 +1,5 @@
 import { type FC, useEffect, useState } from "react";
-import { DEFAULT_VARIABLES, THEME_STYLES, UPDATE_INTERVAL_MS } from "~/constants/widget";
+import { DEFAULT_LABELS, DEFAULT_VARIABLES, THEME_STYLES, UPDATE_INTERVAL_MS } from "~/constants/widget";
 import { cn, snakeToPretty } from "~/lib/utils";
 import type { BoxWidgetProps, Region, Stat } from "~/types/widget";
 import { MatchHistory } from "./MatchHistory";
@@ -9,7 +9,7 @@ export const BoxWidget: FC<BoxWidgetProps> = ({
   region,
   accountId,
   variables = DEFAULT_VARIABLES,
-  labels,
+  labels = DEFAULT_LABELS,
   extraArgs = {},
   theme = "default",
   showHeader = true,
