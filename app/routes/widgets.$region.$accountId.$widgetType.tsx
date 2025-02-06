@@ -3,7 +3,7 @@ import { useParams, useSearchParams } from "@remix-run/react";
 import { useEffect } from "react";
 import { BoxWidget } from "~/components/widgets/box";
 import { snakeToPretty } from "~/lib/utils";
-import type { Theme } from "~/types/widget";
+import type { Region, Theme } from "~/types/widget";
 
 export const meta: MetaFunction = () => {
   return [{ title: "Deadlock Stats Widget" }, { name: "description", content: "Stats widget powered by Deadlock API" }];
@@ -33,6 +33,7 @@ export default function Widget() {
       const theme = (searchParams.get("theme") || "dark") as Theme;
       const showHeader = searchParams.get("showHeader") !== "false";
       const showBranding = searchParams.get("showBranding") !== "false";
+      const showMatchHistory = searchParams.get("showMatchHistory") !== "false";
       const extraArgs = Object.fromEntries(
         Array.from(searchParams.entries()).filter(
           ([key]) => !["vars", "labels", "theme", "showHeader", "showBranding"].includes(key),
@@ -41,7 +42,7 @@ export default function Widget() {
 
       return (
         <BoxWidget
-          region={region}
+          region={region as Region}
           accountId={accountId}
           variables={variables}
           labels={labels}
@@ -49,6 +50,7 @@ export default function Widget() {
           theme={theme}
           showHeader={showHeader}
           showBranding={showBranding}
+          showMatchHistory={showMatchHistory}
         />
       );
     }

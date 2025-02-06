@@ -20,6 +20,7 @@ export const BoxWidget: FC<BoxWidgetProps> = ({
   const [stats, setStats] = useState<Record<string, string> | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [refreshChildren, setRefreshChildren] = useState(0);
 
   // Always include steam_account_name in API call if showHeader is true
   const apiVariables = showHeader ? Array.from(new Set([...variables, "steam_account_name"])) : variables;
@@ -53,7 +54,10 @@ export const BoxWidget: FC<BoxWidgetProps> = ({
 
       const response = await fetch(url);
       if (response.ok) {
-        setStats(await response.json());
+        const data = await response.json();
+        if (JSON.stringify(data) === JSON.stringify(stats)) return;
+        setRefreshChildren((prev) => prev + 1);
+        setStats(data);
         setError(null);
       } else {
         setStats(null);
@@ -90,7 +94,7 @@ export const BoxWidget: FC<BoxWidgetProps> = ({
 
   return (
     <div className="inline-block">
-      {showMatchHistory && <MatchHistory theme={theme} accountId={accountId} />}
+      {showMatchHistory && <MatchHistory refresh={refreshChildren} theme={theme} accountId={accountId} />}
       <div
         className={cn(
           "inline-flex flex-col",
@@ -217,5 +221,3 @@ export const BoxWidget: FC<BoxWidgetProps> = ({
     </div>
   );
 };
-
-export default BoxWidget;

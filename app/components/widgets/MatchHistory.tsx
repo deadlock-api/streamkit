@@ -3,11 +3,14 @@ import { useEffect, useState } from "react";
 import { cn } from "~/lib/utils";
 import type { Hero, Match, MatchHistoryProps } from "~/types/match-history";
 
-export const MatchHistory: FC<MatchHistoryProps> = ({ theme, accountId }) => {
+const MATCHES_TO_SHOW = 10;
+
+export const MatchHistory: FC<MatchHistoryProps> = ({ theme, accountId, refresh }) => {
   const [matches, setMatches] = useState<Match[]>([]);
   const [heroes, setHeroes] = useState<Map<number, string>>(new Map());
   const [loading, setLoading] = useState(true);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: Refresh is used to trigger a refresh from the parent
   useEffect(() => {
     const fetchHeroes = async () => {
       try {
@@ -24,7 +27,7 @@ export const MatchHistory: FC<MatchHistoryProps> = ({ theme, accountId }) => {
       try {
         const response = await fetch(`https://data.deadlock-api.com/v2/players/${accountId}/match-history`);
         const data = await response.json();
-        const recentMatches = data.matches.slice(0, 10).reverse();
+        const recentMatches = data.matches.slice(0, MATCHES_TO_SHOW).reverse();
         setMatches(recentMatches);
       } catch (error) {
         console.error("Failed to fetch match history:", error);
@@ -34,7 +37,7 @@ export const MatchHistory: FC<MatchHistoryProps> = ({ theme, accountId }) => {
     };
 
     fetchHeroes().then(() => fetchMatches());
-  }, [accountId]);
+  }, [refresh, accountId]);
 
   if (loading || matches.length === 0) return null;
 

@@ -1,9 +1,9 @@
 import { type ReactElement, useEffect, useState } from "react";
 import type { Variable } from "~/components/command/CommandBuilder";
 import { ExtraArguments } from "~/components/widgets/ExtraArguments";
-import BoxWidget from "~/components/widgets/box";
+import { BoxWidget } from "~/components/widgets/box";
 import { snakeToPretty } from "~/lib/utils";
-import type { Theme } from "~/types/widget";
+import type { Region, Theme } from "~/types/widget";
 
 const widgetTypes: string[] = ["box"];
 
@@ -50,7 +50,7 @@ export default function WidgetBuilder({ region, accountId }: WidgetBuilderProps)
       case "box":
         setWidgetPreview(
           <BoxWidget
-            region={region}
+            region={region as Region}
             accountId={accountId}
             variables={variables}
             labels={labels}
@@ -135,7 +135,7 @@ export default function WidgetBuilder({ region, accountId }: WidgetBuilderProps)
               className="rounded border-gray-300 text-blue-500 focus:ring-blue-500"
             />
             <label htmlFor="showBranding" className="text-sm font-medium text-gray-700">
-              Show "Widget by deadlock-api.com"
+              Show &#34;Widget by deadlock-api.com&#34;
             </label>
           </div>
 
