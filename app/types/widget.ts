@@ -1,6 +1,7 @@
 export type StatValue = string | number | null;
 
 export type Stat = {
+  variable: string;
   value: StatValue;
   label: string;
   icon?: string;

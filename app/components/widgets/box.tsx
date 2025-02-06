@@ -85,6 +85,7 @@ export const BoxWidget: FC<BoxWidgetProps> = ({
     if (!stats) return [];
 
     return displayVariables.map((variable, index) => ({
+      variable,
       value: stats[variable],
       label: displayLabels[index] || snakeToPretty(variable),
     }));

@@ -4,7 +4,7 @@ import { cn } from "~/lib/utils";
 import type { StatDisplayProps } from "~/types/widget";
 
 export const StatDisplay: FC<StatDisplayProps> = ({ stat, theme = "default", className }) => {
-  const { label, value, prefix, suffix } = stat;
+  const { variable, label, value, prefix, suffix } = stat;
 
   return (
     <div
@@ -22,29 +22,35 @@ export const StatDisplay: FC<StatDisplayProps> = ({ stat, theme = "default", cla
         className,
       )}
     >
-      <span
-        className={cn(
-          "text-[11px] font-medium tracking-wide uppercase text-center",
-          theme === "light" ? "text-gray-500" : "text-white/60",
-        )}
-      >
-        {label}
-      </span>
-      <div className={cn("mt-0.5 flex items-baseline justify-center gap-1")}>
-        {prefix && (
-          <span className={cn("text-xs font-medium", theme === "light" ? "text-gray-500" : "text-white/60")}>
-            {prefix}
+      {variable.endsWith("_img") ? (
+        <img src={value as string} alt={label} className="w-10 h-10 rounded-full object-cover" />
+      ) : (
+        <>
+          <span
+            className={cn(
+              "text-[11px] font-medium tracking-wide uppercase text-center",
+              theme === "light" ? "text-gray-500" : "text-white/60",
+            )}
+          >
+            {label}
           </span>
-        )}
-        <span className={cn("font-bold tracking-tight", theme === "light" ? "text-gray-900" : "text-white")}>
-          {value ?? "-"}
-        </span>
-        {suffix && (
-          <span className={cn("text-xs font-medium", theme === "light" ? "text-gray-500" : "text-white/60")}>
-            {suffix}
-          </span>
-        )}
-      </div>
+          <div className={cn("mt-0.5 flex items-baseline justify-center gap-1")}>
+            {prefix && (
+              <span className={cn("text-xs font-medium", theme === "light" ? "text-gray-500" : "text-white/60")}>
+                {prefix}
+              </span>
+            )}
+            <span className={cn("font-bold tracking-tight", theme === "light" ? "text-gray-900" : "text-white")}>
+              {value ?? "-"}
+            </span>
+            {suffix && (
+              <span className={cn("text-xs font-medium", theme === "light" ? "text-gray-500" : "text-white/60")}>
+                {suffix}
+              </span>
+            )}
+          </div>
+        </>
+      )}
     </div>
   );
 };
