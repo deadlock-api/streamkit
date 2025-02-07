@@ -42,7 +42,7 @@ export const MatchHistory: FC<MatchHistoryProps> = ({ theme, accountId, refresh 
   if (loading || matches.length === 0) return null;
 
   return (
-    <div className={cn("flex items-center gap-2", theme === "glass" ? "-top-[28px]" : "-top-[29px]")}>
+    <div className={cn("flex items-center gap-2")}>
       <div className="flex justify-start gap-0.5">
         {[...matches].map((match) => {
           const heroImage = heroes.get(match.hero_id);

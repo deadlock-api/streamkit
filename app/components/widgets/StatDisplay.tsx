@@ -8,7 +8,7 @@ export const StatDisplay: FC<StatDisplayProps> = ({ stat, theme = "default", cla
 
   return (
     <div
-      className={cn(
+      className={!variable.endsWith("_img") ? cn(
         "flex flex-col items-center p-2.5 rounded-lg transition-all duration-200",
         theme === "light"
           ? "bg-gradient-to-br from-gray-50 to-white border-gray-200/50"
@@ -20,10 +20,12 @@ export const StatDisplay: FC<StatDisplayProps> = ({ stat, theme = "default", cla
         "min-w-fit",
         THEME_STYLES[theme].stat,
         className,
+      ) : cn(
+        "flex flex-col items-center p-2.5 rounded-lg transition-all duration-200",
       )}
     >
       {variable.endsWith("_img") && value ? (
-        <img src={value as string} alt={label} className="w-10 h-10 rounded-full object-cover" />
+        <img src={value as string} alt={label} className="w-16" />
       ) : (
         <>
           <span

@@ -99,7 +99,8 @@ export const BoxWidget: FC<BoxWidgetProps> = ({
       <div
         className={cn(
           "inline-flex flex-col",
-          "rounded-lg transition-all duration-300",
+          "rounded-b-xl transition-all duration-300",
+          !showMatchHistory && "rounded-t-xl",
           theme === "light"
             ? "bg-gradient-to-br from-white via-gray-50 to-white border-gray-200/50"
             : theme === "glass"
@@ -113,6 +114,7 @@ export const BoxWidget: FC<BoxWidgetProps> = ({
         {shouldShowHeader && (
           <div
             className={cn(
+              !showMatchHistory && "rounded-t-xl",
               "px-4 py-3",
               theme === "light"
                 ? "bg-gradient-to-r from-white to-gray-50 border-b border-gray-200/50"
@@ -161,9 +163,9 @@ export const BoxWidget: FC<BoxWidgetProps> = ({
             </div>
           ) : stats ? (
             <>
-              <div className="flex gap-2 w-fit">
+              <div className="flex gap-2 w-fit items-center">
                 {getStatDisplays().map((stat) => (
-                  <StatDisplay key={stat.label} stat={stat} theme={theme} className={"flex-none"} />
+                  <StatDisplay key={stat.label} stat={stat} theme={theme} className="flex-none" />
                 ))}
               </div>
 
