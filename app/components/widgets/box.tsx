@@ -95,7 +95,13 @@ export const BoxWidget: FC<BoxWidgetProps> = ({
 
   return (
     <div className="inline-block">
-      {showMatchHistory && <MatchHistory refresh={refreshChildren} theme={theme} accountId={accountId} />}
+      {showMatchHistory && (
+        <div className="flex">
+          <div className="grow-1 w-0 overflow-clip">
+            <MatchHistory refresh={refreshChildren} theme={theme} accountId={accountId} />
+          </div>
+        </div>
+      )}
       <div
         className={cn(
           "inline-flex flex-col",
