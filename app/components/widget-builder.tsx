@@ -31,6 +31,7 @@ export default function WidgetBuilder({ region, accountId }: WidgetBuilderProps)
   const [showHeader, setShowHeader] = useState(true);
   const [showBranding, setShowBranding] = useState(true);
   const [showMatchHistory, setShowMatchHistory] = useState(true);
+  const [numMatches, setNumMatches] = useState(10);
 
   useEffect(() => {
     fetch("https://data.deadlock-api.com/v1/commands/available-variables")
@@ -49,6 +50,7 @@ export default function WidgetBuilder({ region, accountId }: WidgetBuilderProps)
     url.searchParams.set("showHeader", showHeader.toString());
     url.searchParams.set("showBranding", showBranding.toString());
     url.searchParams.set("showMatchHistory", showMatchHistory.toString());
+    url.searchParams.set("numMatches", numMatches.toString());
     for (const [arg, value] of Object.entries(extraArgs)) {
       if (value) url.searchParams.set(arg, value);
     }
@@ -66,13 +68,26 @@ export default function WidgetBuilder({ region, accountId }: WidgetBuilderProps)
             showHeader={showHeader}
             showBranding={showBranding}
             showMatchHistory={showMatchHistory}
+            numMatches={numMatches}
           />,
         );
         break;
       default:
         setWidgetPreview(null);
     }
-  }, [region, accountId, widgetType, variables, labels, extraArgs, theme, showHeader, showBranding, showMatchHistory]);
+  }, [
+    region,
+    accountId,
+    widgetType,
+    variables,
+    labels,
+    extraArgs,
+    theme,
+    showHeader,
+    showBranding,
+    showMatchHistory,
+    numMatches,
+  ]);
 
   const themes: { value: Theme; label: string }[] = [
     { value: "dark", label: "Dark Theme" },
@@ -157,6 +172,17 @@ export default function WidgetBuilder({ region, accountId }: WidgetBuilderProps)
             <label htmlFor="showMatchHistory" className="text-sm font-medium text-gray-700">
               Show Recent Matches
             </label>
+            <input
+              type="range"
+              min={1}
+              max={50}
+              disabled={!showMatchHistory}
+              id="numMatches"
+              value={numMatches}
+              onChange={(e) => setNumMatches(e.target.valueAsNumber)}
+              className="rounded border-gray-300 bg-gray-200 w-min"
+            />
+            <span className="text-sm font-medium text-gray-700">{numMatches} Matches</span>
           </div>
         </div>
 

@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { cn } from "~/lib/utils";
 import type { Hero, Match, MatchHistoryProps } from "~/types/match-history";
 
-export const MatchHistory: FC<MatchHistoryProps> = ({ theme, accountId, refresh }) => {
+export const MatchHistory: FC<MatchHistoryProps> = ({ numMatches, accountId, refresh }) => {
   const [matches, setMatches] = useState<Match[]>([]);
   const [heroes, setHeroes] = useState<Map<number, string>>(new Map());
   const [loading, setLoading] = useState(true);
@@ -25,7 +25,7 @@ export const MatchHistory: FC<MatchHistoryProps> = ({ theme, accountId, refresh 
       try {
         const response = await fetch(`https://data.deadlock-api.com/v2/players/${accountId}/match-history`);
         const data = await response.json();
-        const recentMatches = data.matches.reverse();
+        const recentMatches = data.matches.slice(0, numMatches ?? 10).reverse();
         setMatches(recentMatches);
       } catch (error) {
         console.error("Failed to fetch match history:", error);
@@ -35,7 +35,7 @@ export const MatchHistory: FC<MatchHistoryProps> = ({ theme, accountId, refresh 
     };
 
     fetchHeroes().then(() => fetchMatches());
-  }, [refresh, accountId]);
+  }, [refresh, accountId, numMatches]);
 
   if (loading || matches.length === 0) return null;
 

@@ -16,6 +16,7 @@ export const BoxWidget: FC<BoxWidgetProps> = ({
   refreshInterval = UPDATE_INTERVAL_MS,
   showBranding = true,
   showMatchHistory = false,
+  numMatches = 10,
 }) => {
   const [stats, setStats] = useState<Record<string, string> | null>(null);
   const [loading, setLoading] = useState(true);
@@ -98,7 +99,7 @@ export const BoxWidget: FC<BoxWidgetProps> = ({
       {showMatchHistory && (
         <div className="flex">
           <div className="grow-1 w-0 overflow-clip">
-            <MatchHistory refresh={refreshChildren} theme={theme} accountId={accountId} />
+            <MatchHistory refresh={refreshChildren} numMatches={numMatches} accountId={accountId} />
           </div>
         </div>
       )}
