@@ -8,21 +8,23 @@ export const StatDisplay: FC<StatDisplayProps> = ({ stat, theme = "default", cla
 
   return (
     <div
-      className={!variable.endsWith("_img") ? cn(
-        "flex flex-col items-center p-2.5 rounded-lg transition-all duration-200",
-        theme === "light"
-          ? "bg-gradient-to-br from-gray-50 to-white border-gray-200/50"
-          : theme === "glass"
-            ? "bg-white/5 hover:bg-white/10 backdrop-blur-sm border border-white/[0.05]"
-            : "bg-gradient-to-br from-[#25262B] to-[#2C2E33] border-white/[0.03]",
-        theme === "light" && "border",
-        "relative",
-        "min-w-fit",
-        THEME_STYLES[theme].stat,
-        className,
-      ) : cn(
-        "flex flex-col items-center p-2.5 rounded-lg transition-all duration-200",
-      )}
+      className={
+        !variable.endsWith("_img")
+          ? cn(
+              "flex flex-col items-center p-2.5 rounded-lg transition-all duration-200",
+              theme === "light"
+                ? "bg-gradient-to-br from-gray-50 to-white border-gray-200/50"
+                : theme === "glass"
+                  ? "bg-white/5 hover:bg-white/10 backdrop-blur-sm border border-white/[0.05]"
+                  : "bg-gradient-to-br from-[#25262B] to-[#2C2E33] border-white/[0.03]",
+              theme === "light" && "border",
+              "relative",
+              "min-w-fit",
+              THEME_STYLES[theme].stat,
+              className,
+            )
+          : cn("flex flex-col items-center p-2.5 rounded-lg transition-all duration-200")
+      }
     >
       {variable.endsWith("_img") && value ? (
         <img src={value as string} alt={label} className="w-16" />
