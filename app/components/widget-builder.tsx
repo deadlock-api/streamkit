@@ -32,7 +32,7 @@ export default function WidgetBuilder({ region, accountId }: WidgetBuilderProps)
   const [showHeader, setShowHeader] = useState(true);
   const [showBranding, setShowBranding] = useState(true);
   const [showMatchHistory, setShowMatchHistory] = useState(true);
-  const [matchHistoryShowsToday, setMatchHistoryShowsToday] = useState(true);
+  const [matchHistoryShowsToday, setMatchHistoryShowsToday] = useState(false);
   const [numMatches, setNumMatches] = useState(10);
 
   const { data, error } = useQuery<Variable[]>({
