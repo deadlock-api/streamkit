@@ -38,7 +38,17 @@ export default function Widget() {
       const numMatches = Number.parseInt(searchParams.get("numMatches") ?? "10", 10);
       const extraArgs = Object.fromEntries(
         Array.from(searchParams.entries()).filter(
-          ([key]) => !["vars", "labels", "theme", "showHeader", "showBranding"].includes(key),
+          ([key]) =>
+            ![
+              "vars",
+              "labels",
+              "theme",
+              "showHeader",
+              "showBranding",
+              "numMatches",
+              "matchHistoryShowsToday",
+              "showMatchHistory",
+            ].includes(key),
         ),
       );
 

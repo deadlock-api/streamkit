@@ -108,8 +108,8 @@ export const BoxWidget: FC<BoxWidgetProps> = ({
     <div className="inline-block">
       {showMatchHistory && (
         <div className="flex">
-          <div className="grow-1 w-0 overflow-clip max-w-min">
-            <MatchHistory refresh={refreshChildren} numMatches={numMatchesToShow} accountId={accountId} />
+          <div className="grow-1 w-0 overflow-clip">
+            <MatchHistory theme={theme} refresh={refreshChildren} numMatches={numMatchesToShow} accountId={accountId} />
           </div>
         </div>
       )}
@@ -160,7 +160,7 @@ export const BoxWidget: FC<BoxWidgetProps> = ({
           </div>
         )}
 
-        <div className="p-3 w-fit space-y-3">
+        <div className="p-2 w-fit space-y-1">
           {loading ? (
             <div className="flex justify-center items-center py-4">
               <div className="relative w-8 h-8">
