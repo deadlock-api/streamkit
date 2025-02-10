@@ -107,13 +107,14 @@ export const BoxWidget: FC<BoxWidgetProps> = ({
         className={cn(
           "inline-flex flex-col",
           "rounded-b-xl transition-all duration-300",
-          !showMatchHistory && "rounded-t-xl",
           theme === "light"
             ? "bg-gradient-to-br from-white via-gray-50 to-white border-gray-200/50"
             : theme === "glass"
               ? "bg-black/10 backdrop-blur-md"
               : "bg-gradient-to-br from-[#1A1B1E] via-[#1E1F23] to-[#25262B] border-white/[0.03]",
           theme !== "glass" && "border",
+          !showMatchHistory && "rounded-t-xl",
+          showMatchHistory && "border-t-0",
           "shadow-lg",
           THEME_STYLES[theme].container,
         )}
