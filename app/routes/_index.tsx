@@ -1,4 +1,5 @@
 import type { MetaFunction } from "@remix-run/node";
+import { useSearchParams } from "@remix-run/react";
 import { useState } from "react";
 import CommandBuilder from "~/components/command/CommandBuilder";
 import WidgetBuilder from "~/components/widget-builder";
@@ -17,8 +18,9 @@ export const meta: MetaFunction = () => {
 const regions = ["Europe", "Asia", "NAmerica", "SAmerica", "Oceania"] as const;
 
 export default function Index() {
-  const [steamId, setSteamId] = useState("");
-  const [region, setRegion] = useState("");
+  const [searchParams] = useSearchParams();
+  const [steamId, setSteamId] = useState(searchParams.get("steamid") ?? "");
+  const [region, setRegion] = useState(searchParams.get("region") ?? "");
 
   const parseSteamId = (steamId: string) => {
     try {
