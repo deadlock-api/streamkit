@@ -22,30 +22,23 @@ export const BoxWidget: FC<BoxWidgetProps> = ({
 }) => {
   const [stats, setStats] = useState<Record<string, string> | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const [refreshChildren, setRefreshChildren] = useState(0);
 
   // Always include steam_account_name in API call if showHeader is true
-  const apiVariables = showHeader ? Array.from(new Set([...variables, "steam_account_name"])) : variables;
+  const auxiliaryVariables: string[] = [];
+  if (showHeader) auxiliaryVariables.push("steam_account_name");
+  if (matchHistoryShowsToday) auxiliaryVariables.push("matches_today");
 
-  if (matchHistoryShowsToday) {
-    apiVariables.push("matches_today");
-  }
-
-  // Filter out steam_account_name from display variables
-  const displayVariables = variables.filter((v) => v !== "steam_account_name");
-  const displayLabels = labels
-    ? labels.filter((_, i) => variables[i] !== "steam_account_name")
-    : displayVariables.map(snakeToPretty);
+  const displayLabels = labels ? labels : variables.map(snakeToPretty);
 
   const fetchStats = async (
     region: Region,
     accountId: string,
-    apiVariables: string[],
+    variables: string[],
     extraArgs: Record<string, string>,
   ) => {
     const url = new URL(`https://data.deadlock-api.com/v1/commands/${region}/${accountId}/resolve-variables`);
-    url.searchParams.append("variables", apiVariables.join(","));
+    url.searchParams.append("variables", [...variables, ...auxiliaryVariables].join(","));
 
     // biome-ignore lint/complexity/noForEach: <explanation>
     Object.entries(extraArgs).forEach(([key, value]) => {
@@ -60,8 +53,8 @@ export const BoxWidget: FC<BoxWidgetProps> = ({
     isLoading: statsLoading,
     error: statsError,
   } = useQuery<Record<string, string>>({
-    queryKey: ["stats", region, accountId, apiVariables, extraArgs],
-    queryFn: () => fetchStats(region, accountId, apiVariables, extraArgs),
+    queryKey: ["stats", region, accountId, variables, extraArgs],
+    queryFn: () => fetchStats(region, accountId, variables, extraArgs),
     staleTime: refreshInterval - 10000,
     refetchInterval: refreshInterval,
   });
@@ -71,18 +64,17 @@ export const BoxWidget: FC<BoxWidgetProps> = ({
     if (data) {
       setRefreshChildren((prev) => prev + 1);
       setStats(data);
-      setError(null);
     }
     if (statsError) {
       setStats(null);
-      setError(`Failed to fetch stats: ${statsError.message}`);
+      console.error(`Failed to fetch stats: ${statsError}`);
     }
   }, [data, statsLoading, statsError]);
 
   const getStatDisplays = (): Stat[] => {
     if (!stats) return [];
 
-    return displayVariables.map((variable, index) => ({
+    return variables.map((variable, index) => ({
       variable,
       value: stats[variable],
       label: displayLabels[index] || snakeToPretty(variable),
