@@ -123,8 +123,7 @@ export const BoxWidget: FC<BoxWidgetProps> = ({
               ? "bg-black/10 backdrop-blur-md"
               : "bg-gradient-to-br from-[#1A1B1E] via-[#1E1F23] to-[#25262B] border-white/[0.03]",
           theme !== "glass" && "border",
-          !showMatchHistory && "rounded-t-xl",
-          showMatchHistory && "border-t-0",
+          showMatchHistory ? "border-t-0" : "rounded-t-xl",
           "shadow-lg",
           THEME_STYLES[theme].container,
         )}
