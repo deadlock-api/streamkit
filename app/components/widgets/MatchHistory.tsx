@@ -66,22 +66,6 @@ export const MatchHistory: FC<MatchHistoryProps> = ({ numMatches, accountId, ref
           </div>
         );
       })}
-
-      <div className="relative min-w-7 w-7 h-z">
-        <svg
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-4 h-4 text-gray-800"
-          role="img"
-          aria-hidden="true"
-        >
-          <path d="M15 18l-6-6 6-6" />
-        </svg>
-      </div>
     </div>
   );
 };
