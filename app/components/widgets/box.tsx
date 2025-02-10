@@ -98,7 +98,7 @@ export const BoxWidget: FC<BoxWidgetProps> = ({
     <div className="inline-block">
       {showMatchHistory && (
         <div className="flex">
-          <div className="grow-1 w-0 overflow-clip">
+          <div className="grow-1 w-0 overflow-clip max-w-min">
             <MatchHistory refresh={refreshChildren} numMatches={numMatches} accountId={accountId} />
           </div>
         </div>
