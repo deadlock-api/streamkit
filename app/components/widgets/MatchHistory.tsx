@@ -58,7 +58,7 @@ export const MatchHistory: FC<MatchHistoryProps> = ({ numMatches, accountId, ref
             <div
               className={cn(
                 "absolute inset-x-0 bottom-0 h-8",
-                "bg-gradient-to-t from-current to-transparent opacity-30  rounded-t-xl",
+                "bg-gradient-to-t from-current to-transparent opacity-30",
                 isWin ? "text-emerald-500" : "text-red-500",
               )}
             />
