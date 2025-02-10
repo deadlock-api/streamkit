@@ -1,6 +1,6 @@
 import type { FC } from "react";
 import { useEffect, useState } from "react";
-import { cn } from "~/lib/utils";
+import { cn, fetchWithRetry } from "~/lib/utils";
 import type { Hero, Match, MatchHistoryProps } from "~/types/match-history";
 
 export const MatchHistory: FC<MatchHistoryProps> = ({ numMatches, accountId, refresh }) => {
@@ -12,7 +12,7 @@ export const MatchHistory: FC<MatchHistoryProps> = ({ numMatches, accountId, ref
   useEffect(() => {
     const fetchHeroes = async () => {
       try {
-        const response = await fetch("https://assets.deadlock-api.com/v2/heroes");
+        const response = await fetchWithRetry("https://assets.deadlock-api.com/v2/heroes");
         const heroesData: Hero[] = await response.json();
         const heroMap = new Map(heroesData.map((hero) => [hero.id, hero.images.icon_hero_card_webp]));
         setHeroes(heroMap);
@@ -23,7 +23,7 @@ export const MatchHistory: FC<MatchHistoryProps> = ({ numMatches, accountId, ref
 
     const fetchMatches = async () => {
       try {
-        const response = await fetch(`https://data.deadlock-api.com/v2/players/${accountId}/match-history`);
+        const response = await fetchWithRetry(`https://data.deadlock-api.com/v2/players/${accountId}/match-history`);
         const data = await response.json();
         const recentMatches = data.matches.slice(0, numMatches ?? 10).reverse();
         setMatches(recentMatches);

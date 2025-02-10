@@ -3,7 +3,7 @@ import type { Variable } from "~/components/command/CommandBuilder";
 import { ExtraArguments } from "~/components/widgets/ExtraArguments";
 import { BoxWidget } from "~/components/widgets/box";
 import { DEFAULT_LABELS, DEFAULT_VARIABLES } from "~/constants/widget";
-import { snakeToPretty } from "~/lib/utils";
+import { fetchWithRetry, snakeToPretty } from "~/lib/utils";
 import type { Region, Theme } from "~/types/widget";
 
 const widgetTypes: string[] = ["box"];
@@ -35,7 +35,7 @@ export default function WidgetBuilder({ region, accountId }: WidgetBuilderProps)
   const [numMatches, setNumMatches] = useState(10);
 
   useEffect(() => {
-    fetch("https://data.deadlock-api.com/v1/commands/available-variables")
+    fetchWithRetry("https://data.deadlock-api.com/v1/commands/available-variables")
       .then((res) => res.json())
       .then((data: Variable[]) => setAvailableVariables(data))
       .catch((err) => console.error("Failed to fetch available variables:", err));

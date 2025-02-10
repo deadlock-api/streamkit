@@ -1,6 +1,6 @@
 import { type FC, useEffect, useState } from "react";
 import { DEFAULT_LABELS, DEFAULT_VARIABLES, THEME_STYLES, UPDATE_INTERVAL_MS } from "~/constants/widget";
-import { cn, snakeToPretty } from "~/lib/utils";
+import { cn, fetchWithRetry, snakeToPretty } from "~/lib/utils";
 import type { BoxWidgetProps, Region, Stat } from "~/types/widget";
 import { MatchHistory } from "./MatchHistory";
 import { StatDisplay } from "./StatDisplay";
@@ -58,7 +58,7 @@ export const BoxWidget: FC<BoxWidgetProps> = ({
         if (value) url.searchParams.append(key, value);
       });
 
-      const response = await fetch(url);
+      const response = await fetchWithRetry(url);
       if (response.ok) {
         const data = await response.json();
         if (JSON.stringify(data) === JSON.stringify(stats)) return;

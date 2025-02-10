@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useDebouncedState } from "~/lib/utils";
+import { fetchWithRetry, useDebouncedState } from "~/lib/utils";
 import { ChatBotInstructions } from "./ChatBotInstructions";
 import { CommandPreview } from "./CommandPreview";
 import { ExtraArguments } from "./ExtraArguments";
@@ -26,7 +26,7 @@ export default function CommandBuilder({ region, accountId }: CommandBuilderProp
   const [previewError, setPreviewError] = useState("");
 
   useEffect(() => {
-    fetch("https://data.deadlock-api.com/v1/commands/available-variables")
+    fetchWithRetry("https://data.deadlock-api.com/v1/commands/available-variables")
       .then((res) => res.json())
       .then((data: Variable[]) => setVariables(data.filter((v) => !v.name.endsWith("_img"))))
       .catch((err) => console.error("Failed to fetch available variables:", err));
@@ -70,7 +70,7 @@ export default function CommandBuilder({ region, accountId }: CommandBuilderProp
     if (debouncedGeneratedUrl) {
       setPreview(null);
       setPreviewError("");
-      fetch(debouncedGeneratedUrl)
+      fetchWithRetry(debouncedGeneratedUrl)
         .then((res) => {
           if (!res.ok) {
             throw new Error("Failed to fetch preview");
