@@ -34,6 +34,7 @@ export default function Widget() {
       const showHeader = searchParams.get("showHeader") !== "false";
       const showBranding = searchParams.get("showBranding") !== "false";
       const showMatchHistory = searchParams.get("showMatchHistory") !== "false";
+      const matchHistoryShowsToday = searchParams.get("matchHistoryShowsToday") !== "false";
       const numMatches = Number.parseInt(searchParams.get("numMatches") ?? "10", 10);
       const extraArgs = Object.fromEntries(
         Array.from(searchParams.entries()).filter(
@@ -52,6 +53,7 @@ export default function Widget() {
           showHeader={showHeader}
           showBranding={showBranding}
           showMatchHistory={showMatchHistory}
+          matchHistoryShowsToday={matchHistoryShowsToday}
           numMatches={numMatches}
         />
       );

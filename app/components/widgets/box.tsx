@@ -16,6 +16,7 @@ export const BoxWidget: FC<BoxWidgetProps> = ({
   refreshInterval = UPDATE_INTERVAL_MS,
   showBranding = true,
   showMatchHistory = false,
+  matchHistoryShowsToday = true,
   numMatches = 10,
 }) => {
   const [stats, setStats] = useState<Record<string, string> | null>(null);
@@ -25,6 +26,10 @@ export const BoxWidget: FC<BoxWidgetProps> = ({
 
   // Always include steam_account_name in API call if showHeader is true
   const apiVariables = showHeader ? Array.from(new Set([...variables, "steam_account_name"])) : variables;
+
+  if (matchHistoryShowsToday) {
+    apiVariables.push("matches_today");
+  }
 
   // Filter out steam_account_name from display variables
   const displayVariables = variables.filter((v) => v !== "steam_account_name");
@@ -94,12 +99,17 @@ export const BoxWidget: FC<BoxWidgetProps> = ({
 
   const shouldShowHeader = showHeader && stats?.steam_account_name;
 
+  let numMatchesToShow: number = numMatches;
+  if (matchHistoryShowsToday && stats?.matches_today) {
+    numMatchesToShow = Number.parseInt(stats?.matches_today);
+  }
+
   return (
     <div className="inline-block">
       {showMatchHistory && (
         <div className="flex">
           <div className="grow-1 w-0 overflow-clip max-w-min">
-            <MatchHistory refresh={refreshChildren} numMatches={numMatches} accountId={accountId} />
+            <MatchHistory refresh={refreshChildren} numMatches={numMatchesToShow} accountId={accountId} />
           </div>
         </div>
       )}

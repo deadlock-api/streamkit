@@ -31,6 +31,7 @@ export default function WidgetBuilder({ region, accountId }: WidgetBuilderProps)
   const [showHeader, setShowHeader] = useState(true);
   const [showBranding, setShowBranding] = useState(true);
   const [showMatchHistory, setShowMatchHistory] = useState(true);
+  const [matchHistoryShowsToday, setMatchHistoryShowsToday] = useState(true);
   const [numMatches, setNumMatches] = useState(10);
 
   useEffect(() => {
@@ -50,6 +51,7 @@ export default function WidgetBuilder({ region, accountId }: WidgetBuilderProps)
     url.searchParams.set("showHeader", showHeader.toString());
     url.searchParams.set("showBranding", showBranding.toString());
     url.searchParams.set("showMatchHistory", showMatchHistory.toString());
+    url.searchParams.set("matchHistoryShowsToday", matchHistoryShowsToday.toString());
     url.searchParams.set("numMatches", numMatches.toString());
     for (const [arg, value] of Object.entries(extraArgs)) {
       if (value) url.searchParams.set(arg, value);
@@ -68,6 +70,7 @@ export default function WidgetBuilder({ region, accountId }: WidgetBuilderProps)
             showHeader={showHeader}
             showBranding={showBranding}
             showMatchHistory={showMatchHistory}
+            matchHistoryShowsToday={matchHistoryShowsToday}
             numMatches={numMatches}
           />,
         );
@@ -85,6 +88,7 @@ export default function WidgetBuilder({ region, accountId }: WidgetBuilderProps)
     theme,
     showHeader,
     showBranding,
+    matchHistoryShowsToday,
     showMatchHistory,
     numMatches,
   ]);
@@ -161,28 +165,45 @@ export default function WidgetBuilder({ region, accountId }: WidgetBuilderProps)
             </label>
           </div>
 
-          <div className="flex items-center gap-2">
-            <input
-              type="checkbox"
-              id="showMatchHistory"
-              checked={showMatchHistory}
-              onChange={(e) => setShowMatchHistory(e.target.checked)}
-              className="rounded border-gray-300 text-blue-500 focus:ring-blue-500"
-            />
-            <label htmlFor="showMatchHistory" className="text-sm font-medium text-gray-700">
-              Show Recent Matches
-            </label>
-            <input
-              type="range"
-              min={1}
-              max={50}
-              disabled={!showMatchHistory}
-              id="numMatches"
-              value={numMatches}
-              onChange={(e) => setNumMatches(e.target.valueAsNumber)}
-              className="rounded border-gray-300 bg-gray-200 w-min"
-            />
-            <span className="text-sm font-medium text-gray-700">{numMatches} Matches</span>
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                id="showMatchHistory"
+                checked={showMatchHistory}
+                onChange={(e) => setShowMatchHistory(e.target.checked)}
+                className="rounded border-gray-300 text-blue-500 focus:ring-blue-500"
+              />
+              <label htmlFor="showMatchHistory" className="text-sm font-medium text-gray-700">
+                Show Recent Matches
+              </label>
+            </div>
+            <div className="ml-6 flex items-center gap-2">
+              <input
+                type="checkbox"
+                id="matchHistoryShowsToday"
+                checked={matchHistoryShowsToday}
+                disabled={!showMatchHistory}
+                onChange={(e) => setMatchHistoryShowsToday(e.target.checked)}
+                className="rounded border-gray-300 text-blue-500 focus:ring-blue-500"
+              />
+              <label htmlFor="matchHistoryShowsToday" className="text-sm font-medium text-gray-700">
+                Show Todays Matches
+              </label>
+            </div>
+            <div className="ml-6 flex items-center gap-2">
+              <input
+                type="range"
+                min={1}
+                max={50}
+                disabled={!showMatchHistory || matchHistoryShowsToday}
+                id="numMatches"
+                value={numMatches}
+                onChange={(e) => setNumMatches(e.target.valueAsNumber)}
+                className="rounded border-gray-300 bg-gray-200 w-min"
+              />
+              <span className="text-sm font-medium text-gray-700">{numMatches} Matches</span>
+            </div>
           </div>
         </div>
 

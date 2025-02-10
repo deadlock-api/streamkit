@@ -25,6 +25,7 @@ export type BoxWidgetProps = {
   refreshInterval?: number;
   showBranding?: boolean;
   showMatchHistory?: boolean;
+  matchHistoryShowsToday?: boolean;
   numMatches?: number;
 };
 
