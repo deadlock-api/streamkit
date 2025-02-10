@@ -1,6 +1,7 @@
+import { useQuery } from "@tanstack/react-query";
 import { type FC, useEffect, useState } from "react";
 import { DEFAULT_LABELS, DEFAULT_VARIABLES, THEME_STYLES, UPDATE_INTERVAL_MS } from "~/constants/widget";
-import { cn, fetchWithRetry, snakeToPretty } from "~/lib/utils";
+import { cn, snakeToPretty } from "~/lib/utils";
 import type { BoxWidgetProps, Region, Stat } from "~/types/widget";
 import { MatchHistory } from "./MatchHistory";
 import { StatDisplay } from "./StatDisplay";
@@ -43,49 +44,40 @@ export const BoxWidget: FC<BoxWidgetProps> = ({
     apiVariables: string[],
     extraArgs: Record<string, string>,
   ) => {
-    if (!region || !accountId) {
-      setError("Region and Account ID are required");
-      setLoading(false);
-      return;
-    }
+    const url = new URL(`https://data.deadlock-api.com/v1/commands/${region}/${accountId}/resolve-variables`);
+    url.searchParams.append("variables", apiVariables.join(","));
 
-    try {
-      const url = new URL(`https://data.deadlock-api.com/v1/commands/${region}/${accountId}/resolve-variables`);
-      url.searchParams.append("variables", apiVariables.join(","));
-
-      // biome-ignore lint/complexity/noForEach: <explanation>
-      Object.entries(extraArgs).forEach(([key, value]) => {
-        if (value) url.searchParams.append(key, value);
-      });
-
-      const response = await fetchWithRetry(url);
-      if (response.ok) {
-        const data = await response.json();
-        if (JSON.stringify(data) === JSON.stringify(stats)) return;
-        setRefreshChildren((prev) => prev + 1);
-        setStats(data);
-        setError(null);
-      } else {
-        setStats(null);
-        setError(`Failed to fetch stats: ${response.status} ${response.statusText}`);
-      }
-    } catch (err) {
-      setStats(null);
-      setError(err instanceof Error ? err.message : "Failed to fetch stats");
-    } finally {
-      setLoading(false);
-    }
+    // biome-ignore lint/complexity/noForEach: <explanation>
+    Object.entries(extraArgs).forEach(([key, value]) => {
+      if (value) url.searchParams.append(key, value);
+    });
+    const res = await fetch(url);
+    return await res.json();
   };
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-  useEffect(() => {
-    fetchStats(region, accountId, apiVariables, extraArgs);
+  const {
+    data,
+    isLoading: statsLoading,
+    error: statsError,
+  } = useQuery<Record<string, string>>({
+    queryKey: ["stats", region, accountId, apiVariables, extraArgs],
+    queryFn: () => fetchStats(region, accountId, apiVariables, extraArgs),
+    staleTime: refreshInterval - 10000,
+    refetchInterval: refreshInterval,
+  });
 
-    if (refreshInterval > 0) {
-      const intervalId = setInterval(() => fetchStats(region, accountId, apiVariables, extraArgs), refreshInterval);
-      return () => clearInterval(intervalId);
+  useEffect(() => {
+    setLoading(statsLoading);
+    if (data) {
+      setRefreshChildren((prev) => prev + 1);
+      setStats(data);
+      setError(null);
     }
-  }, [region, accountId, apiVariables, extraArgs, refreshInterval]);
+    if (statsError) {
+      setStats(null);
+      setError(`Failed to fetch stats: ${statsError.message}`);
+    }
+  }, [data, statsLoading, statsError]);
 
   const getStatDisplays = (): Stat[] => {
     if (!stats) return [];
@@ -108,7 +100,10 @@ export const BoxWidget: FC<BoxWidgetProps> = ({
     <div className="inline-block">
       {showMatchHistory && (
         <div className="flex">
-          <div className="grow-1 w-0 overflow-clip">
+          <div
+            className="grow-1 w-0 overflow-clip
+          "
+          >
             <MatchHistory theme={theme} refresh={refreshChildren} numMatches={numMatchesToShow} accountId={accountId} />
           </div>
         </div>
@@ -166,17 +161,6 @@ export const BoxWidget: FC<BoxWidgetProps> = ({
                 <div className="absolute inset-0 rounded-full border-2 border-blue-500/20 animate-ping" />
                 <div className="absolute inset-[2px] rounded-full border-2 border-transparent border-t-blue-500 animate-spin" />
               </div>
-            </div>
-          ) : error ? (
-            <div className="text-center py-2">
-              <p className="text-red-400 font-medium text-xs">{error}</p>
-              <button
-                type="button"
-                onClick={() => fetchStats(region, accountId, apiVariables, extraArgs)}
-                className="mt-2 px-3 py-1 text-xs font-medium text-white bg-red-500/20 hover:bg-red-500/30 rounded-md transition-colors"
-              >
-                Retry
-              </button>
             </div>
           ) : stats ? (
             <>

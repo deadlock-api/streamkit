@@ -1,6 +1,6 @@
 interface CommandPreviewProps {
   preview: string | null;
-  previewError: string;
+  previewError: string | null;
 }
 
 export function CommandPreview({ preview, previewError }: CommandPreviewProps) {

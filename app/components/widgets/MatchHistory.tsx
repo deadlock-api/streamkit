@@ -1,6 +1,8 @@
+import { useQuery } from "@tanstack/react-query";
 import type { FC } from "react";
 import { useEffect, useState } from "react";
-import { cn, fetchWithRetry } from "~/lib/utils";
+import { UPDATE_INTERVAL_MS } from "~/constants/widget";
+import { cn } from "~/lib/utils";
 import type { Hero, Match, MatchHistoryProps } from "~/types/match-history";
 
 export const MatchHistory: FC<MatchHistoryProps> = ({ theme, numMatches, accountId, refresh }) => {
@@ -8,63 +10,58 @@ export const MatchHistory: FC<MatchHistoryProps> = ({ theme, numMatches, account
   const [heroes, setHeroes] = useState<Map<number, string>>(new Map());
   const [loading, setLoading] = useState(true);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: Refresh is used to trigger a refresh from the parent
+  const {
+    data: heroesData,
+    isLoading: loadingHeroes,
+    error: heroesError,
+  } = useQuery<Hero[]>({
+    queryKey: ["heroes"],
+    queryFn: () => fetch("https://assets.deadlock-api.com/v2/heroes").then((res) => res.json()),
+    staleTime: Number.POSITIVE_INFINITY,
+  });
+
+  const {
+    data: matchesData,
+    isLoading: loadingMatches,
+    error: matchesError,
+  } = useQuery<{ matches: Match[] }>({
+    queryKey: ["match-history", accountId],
+    queryFn: () =>
+      fetch(`https://data.deadlock-api.com/v2/players/${accountId}/match-history`).then((res) => res.json()),
+    staleTime: UPDATE_INTERVAL_MS - 10000,
+    refetchInterval: UPDATE_INTERVAL_MS,
+  });
+
   useEffect(() => {
-    const fetchHeroes = async () => {
-      try {
-        const response = await fetchWithRetry("https://assets.deadlock-api.com/v2/heroes");
-        const heroesData: Hero[] = await response.json();
-        const heroMap = new Map(heroesData.map((hero) => [hero.id, hero.images.icon_hero_card_webp]));
-        setHeroes(heroMap);
-      } catch (error) {
-        console.error("Failed to fetch heroes:", error);
-      }
-    };
+    if (heroesData) setHeroes(new Map(heroesData.map((h) => [h.id, h.images.icon_hero_card_webp])));
+    if (heroesError) {
+      console.error("Failed to fetch heroes:", heroesError);
+      setHeroes(new Map());
+    }
+  }, [heroesData, heroesError]);
 
-    const fetchMatches = async () => {
-      try {
-        const response = await fetchWithRetry(`https://data.deadlock-api.com/v2/players/${accountId}/match-history`);
-        const data = await response.json();
-        const recentMatches = data.matches.slice(0, numMatches ?? 10);
-        setMatches(recentMatches);
-      } catch (error) {
-        console.error("Failed to fetch match history:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
+    if (matchesData) setMatches(matchesData.matches.slice(0, numMatches ?? 10).reverse());
+    if (matchesError) {
+      console.error("Failed to fetch matches:", matchesError);
+      setMatches([]);
+    }
+  }, [refresh, matchesData, matchesError, numMatches]);
 
-    fetchHeroes().then(() => fetchMatches());
-  }, [refresh, accountId, numMatches]);
+  useEffect(() => {
+    setLoading(loadingHeroes || loadingMatches);
+  }, [loadingHeroes, loadingMatches]);
 
-  if (loading || matches.length === 0) return null;
+  if (loading) return null;
 
   return (
     <div
       className={cn(
-        "flex gap-0.5 justify-start items-center h-9 rounded-t-xl pt-1",
+        "flex gap-0.5 justify-end items-center h-9 rounded-t-xl pt-1",
         theme === "light" ? "bg-white" : theme === "dark" ? "bg-[#1A1B1E]" : "text-white",
       )}
     >
-      <div
-        className={cn(
-          "min-w-6 w-6 h-8 text-center bg-transparent rounded-t-xl flex items-center justify-center",
-          theme === "light" ? "bg-white" : theme === "dark" ? "bg-[#1A1B1E]" : "text-white",
-        )}
-      >
-        <div className="w-3.5 h-3.5">
-          <svg
-            className={theme === "dark" ? "text-white" : "text-black"}
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <title>Match History</title>
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="4" d="M9 5l7 7-7 7" />
-          </svg>
-        </div>
-      </div>
       {[...matches].map((match) => {
         const heroImage = heroes.get(match.hero_id);
         if (!heroImage) return null;
@@ -90,6 +87,25 @@ export const MatchHistory: FC<MatchHistoryProps> = ({ theme, numMatches, account
           </div>
         );
       })}
+      <div
+        className={cn(
+          "min-w-6 w-6 h-8 text-center bg-transparent rounded-t-xl flex items-center justify-center",
+          theme === "light" ? "bg-white" : theme === "dark" ? "bg-[#1A1B1E]" : "text-white",
+        )}
+      >
+        <div className="w-3.5 h-3.5">
+          <svg
+            className={theme === "dark" ? "text-white" : "text-black"}
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <title>Match History</title>
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="4" d="M15 5l-7 7 7 7" />
+          </svg>
+        </div>
+      </div>
     </div>
   );
 };

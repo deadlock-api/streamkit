@@ -1,5 +1,6 @@
+import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
-import { fetchWithRetry, useDebouncedState } from "~/lib/utils";
+import { useDebouncedState } from "~/lib/utils";
 import { ChatBotInstructions } from "./ChatBotInstructions";
 import { CommandPreview } from "./CommandPreview";
 import { ExtraArguments } from "./ExtraArguments";
@@ -23,14 +24,21 @@ export default function CommandBuilder({ region, accountId }: CommandBuilderProp
   const [extraArgs, setExtraArgs] = useState<{ [key: string]: string }>({});
   const [variables, setVariables] = useState<Variable[]>([]);
   const [preview, setPreview] = useState<string | null>(null);
-  const [previewError, setPreviewError] = useState("");
+  const [previewError, setPreviewError] = useState<string | null>(null);
+
+  const { data, error } = useQuery<Variable[]>({
+    queryKey: ["available-variables"],
+    queryFn: () => fetch("https://data.deadlock-api.com/v1/commands/available-variables").then((res) => res.json()),
+    staleTime: Number.POSITIVE_INFINITY,
+  });
 
   useEffect(() => {
-    fetchWithRetry("https://data.deadlock-api.com/v1/commands/available-variables")
-      .then((res) => res.json())
-      .then((data: Variable[]) => setVariables(data.filter((v) => !v.name.endsWith("_img"))))
-      .catch((err) => console.error("Failed to fetch available variables:", err));
-  }, []);
+    if (data) setVariables(data.filter((v) => !v.name.endsWith("_img")));
+    if (error) {
+      setVariables([]);
+      console.error(error);
+    }
+  }, [data, error]);
 
   const generateUrl = (steamId: string, region: string, template: string) => {
     if (!steamId || !region) {
@@ -66,23 +74,29 @@ export default function CommandBuilder({ region, accountId }: CommandBuilderProp
     setTemplate(newTemplate);
   };
 
+  const { data: previewData, error: previewRequestError } = useQuery<string>({
+    queryKey: ["preview", debouncedGeneratedUrl],
+    queryFn: async () => {
+      if (!debouncedGeneratedUrl) return "";
+      const res = await fetch(debouncedGeneratedUrl);
+      if (!res.ok) {
+        throw new Error(`Failed to fetch preview: ${res.statusText}`);
+      }
+      return await res.text();
+    },
+    staleTime: 60 * 1000,
+  });
+
   useEffect(() => {
-    if (debouncedGeneratedUrl) {
-      setPreview(null);
-      setPreviewError("");
-      fetchWithRetry(debouncedGeneratedUrl)
-        .then((res) => {
-          if (!res.ok) {
-            throw new Error("Failed to fetch preview");
-          }
-          return res.text();
-        })
-        .then((data) => setPreview(data))
-        .catch(() => setPreviewError("Failed to load preview. Please check the generated URL."));
-    } else {
+    if (previewData) {
+      setPreview(previewData);
+      setPreviewError(null);
+    } else if (previewRequestError) {
+      console.error(`Failed to fetch preview: ${previewRequestError}`);
+      setPreviewError("Failed to load preview. Please check the generated URL.");
       setPreview(null);
     }
-  }, [debouncedGeneratedUrl]);
+  }, [previewData, previewRequestError]);
 
   const handleExtraArgChange = (arg: string, value: string) => {
     setExtraArgs({ ...extraArgs, [arg]: value });
