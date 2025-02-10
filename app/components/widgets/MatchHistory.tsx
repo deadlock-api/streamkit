@@ -52,8 +52,8 @@ export const MatchHistory: FC<MatchHistoryProps> = ({ numMatches, accountId, ref
             <img
               src={heroImage}
               alt={`Match ${isWin ? "Win" : "Loss"}`}
-              className="aspect-square rounded-[2px] object-cover ml-auto mr-auto"
-              style={{ width: "80%" }}
+              className="rounded-[2px] object-cover ml-auto mr-auto h-auto w-auto"
+              style={{ maxWidth: "80%" }}
             />
             <div
               className={cn(
