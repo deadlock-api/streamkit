@@ -17,7 +17,7 @@ interface WidgetBuilderProps {
 type RGB = `rgb(${number}, ${number}, ${number})`;
 type RGBA = `rgba(${number}, ${number}, ${number}, ${number})`;
 type HEX = `#${string}`;
-type PreviewBackground = "image" | RGB | RGBA | HEX;
+type PreviewBackgroundColor = RGB | RGBA | HEX;
 
 export default function WidgetBuilder({ region, accountId }: WidgetBuilderProps) {
   const [widgetType, setWidgetType] = useState<string>(widgetTypes[0]);
@@ -25,7 +25,8 @@ export default function WidgetBuilder({ region, accountId }: WidgetBuilderProps)
   const [opacity, setOpacity] = useState<number>(100);
   const [widgetUrl, setWidgetUrl] = useState<string | null>(null);
   const [widgetPreview, setWidgetPreview] = useState<ReactElement | null>(null);
-  const [widgetPreviewBackground, setWidgetPreviewBackground] = useState<PreviewBackground>("#f3f4f6");
+  const [widgetPreviewBackgroundImage, setWidgetPreviewBackgroundImage] = useState<boolean>(true);
+  const [widgetPreviewBackgroundColor, setWidgetPreviewBackgroundColor] = useState<PreviewBackgroundColor>("#f3f4f6");
   const [variables, setVariables] = useState<string[]>(DEFAULT_VARIABLES);
   const [labels, setLabels] = useState<string[]>(DEFAULT_LABELS);
   const [extraArgs, setExtraArgs] = useState<{ [key: string]: string }>({});
@@ -345,25 +346,45 @@ export default function WidgetBuilder({ region, accountId }: WidgetBuilderProps)
       <div className="space-y-2">
         <h3 className="text-sm font-medium text-gray-700">Preview</h3>
         <div
-          className="p-4 rounded-lg  flex items-center justify-center"
-          style={{ backgroundColor: widgetPreviewBackground }}
+          className="p-4 rounded-lg  flex items-center justify-center bg-cover"
+          style={
+            widgetPreviewBackgroundImage
+              ? {
+                  background: "url('deadlock-background.webp'), url('deadlock-background.png')",
+                  backgroundSize: "cover",
+                  backgroundRepeat: "no-repeat",
+                }
+              : { backgroundColor: widgetPreviewBackgroundColor }
+          }
         >
           {widgetPreview}
         </div>
       </div>
 
       <div className="space-y-2">
-        <label htmlFor="preview-bg-color-picker" className="text-sm font-medium text-gray-700">
-          Preview Background Color
-        </label>
         <div className="flex items-center gap-2">
           <input
-            type="color"
-            id="preview-bg-color-picker"
-            value={widgetPreviewBackground}
-            onChange={(e) => setWidgetPreviewBackground(e.target.value as PreviewBackground)}
-            className="rounded-md border border-gray-300"
+            type="checkbox"
+            id="preview-bg-image-toggle"
+            checked={widgetPreviewBackgroundImage}
+            value={widgetPreviewBackgroundImage ? 1 : 0}
+            onChange={(e) => setWidgetPreviewBackgroundImage(e.target.checked)}
+            className="rounded-md border border-gray-300 w-8"
           />
+          <label htmlFor="preview-bg-image-toggle">Show Image</label>
+          {!widgetPreviewBackgroundImage && (
+            <>
+              <label htmlFor="preview-bg-color-picker">Background Color</label>
+              <input
+                type="color"
+                id="preview-bg-color-picker"
+                disabled={widgetPreviewBackgroundImage}
+                value={widgetPreviewBackgroundColor}
+                onChange={(e) => setWidgetPreviewBackgroundColor(e.target.value as PreviewBackgroundColor)}
+                className="rounded-md border border-gray-300"
+              />
+            </>
+          )}
         </div>
       </div>
     </div>
