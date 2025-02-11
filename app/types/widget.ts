@@ -21,7 +21,6 @@ export type BoxWidgetProps = {
   labels?: string[];
   extraArgs?: Record<string, string>;
   theme?: Theme;
-  opacity?: number;
   showHeader?: boolean;
   refreshInterval?: number;
   showBranding?: boolean;

@@ -14,7 +14,6 @@ export type Hero = {
 
 export type MatchHistoryProps = {
   theme: string;
-  opacity: number;
   numMatches?: number;
   accountId: string;
   refresh: number;

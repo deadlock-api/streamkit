@@ -50,12 +50,11 @@ export default function Widget() {
       const variables = searchParams.get("vars")?.split(",");
       const labels = searchParams.get("labels")?.split(",") ?? variables?.map(snakeToPretty);
       const theme = (searchParams.get("theme") ?? "dark") as Theme;
-      const opacity = Number.parseFloat(searchParams.get("opacity") ?? "100");
       const showHeader = searchParams.get("showHeader") !== "false";
       const showBranding = searchParams.get("showBranding") !== "false";
       const showMatchHistory = searchParams.get("showMatchHistory") !== "false";
       const matchHistoryShowsToday = searchParams.get("matchHistoryShowsToday") !== "false";
-      const numMatches = Number.parseInt(searchParams.get("numMatches") ?? "10");
+      const numMatches = Number.parseInt(searchParams.get("numMatches") ?? "10", 10);
       const extraArgs = Object.fromEntries(
         Array.from(searchParams.entries()).filter(
           ([key]) =>
@@ -80,7 +79,6 @@ export default function Widget() {
           labels={labels}
           extraArgs={extraArgs}
           theme={theme}
-          opacity={opacity}
           showHeader={showHeader}
           showBranding={showBranding}
           showMatchHistory={showMatchHistory}
