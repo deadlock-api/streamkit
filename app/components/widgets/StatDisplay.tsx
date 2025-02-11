@@ -3,7 +3,7 @@ import { THEME_STYLES } from "~/constants/widget";
 import { cn } from "~/lib/utils";
 import type { StatDisplayProps } from "~/types/widget";
 
-export const StatDisplay: FC<StatDisplayProps> = ({ stat, theme = "default", className }) => {
+export const StatDisplay: FC<StatDisplayProps> = ({ stat, theme = "dark", className }) => {
   const { variable, label, value, prefix, suffix } = stat;
 
   return (

@@ -10,7 +10,7 @@ export type Stat = {
   suffix?: string;
 };
 
-export type Theme = "default" | "dark" | "glass" | "light";
+export type Theme = "dark" | "glass" | "light";
 
 export type Region = "Europe" | "Asia" | "NAmerica" | "SAmerica" | "Oceania";
 

@@ -49,7 +49,7 @@ export default function Widget() {
     case "box": {
       const variables = searchParams.get("vars")?.split(",");
       const labels = searchParams.get("labels")?.split(",") ?? variables?.map(snakeToPretty);
-      const theme = (searchParams.get("theme") || "dark") as Theme;
+      const theme = (searchParams.get("theme") ?? "dark") as Theme;
       const opacity = Number.parseFloat(searchParams.get("opacity") ?? "100");
       const showHeader = searchParams.get("showHeader") !== "false";
       const showBranding = searchParams.get("showBranding") !== "false";
