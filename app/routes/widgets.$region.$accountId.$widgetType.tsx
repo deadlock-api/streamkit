@@ -1,6 +1,7 @@
 import type { MetaFunction } from "@remix-run/node";
 import { useParams, useSearchParams } from "@remix-run/react";
-import { useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
 import { BoxWidget } from "~/components/widgets/box";
 import { snakeToPretty } from "~/lib/utils";
 import type { Region, Theme } from "~/types/widget";
@@ -11,7 +12,25 @@ export const meta: MetaFunction = () => {
 
 export default function Widget() {
   const { region, accountId, widgetType } = useParams();
+  const [version, setVersion] = useState<number | null>(null);
   const [searchParams] = useSearchParams();
+
+  const { data: fetchedVersion, error: versionError } = useQuery<number>({
+    queryKey: ["version", widgetType],
+    queryFn: () =>
+      fetch("https://data.deadlock-api.com/v1/commands/widget-versions")
+        .then((res) => res.json())
+        .then((data) => (widgetType ? data[widgetType] : data)),
+    staleTime: (5 * 60 - 10) * 1000,
+    refetchInterval: 5 * 60 * 1000,
+    refetchIntervalInBackground: true,
+  });
+
+  useEffect(() => {
+    if (!fetchedVersion) return;
+    if (version === null) setVersion(fetchedVersion);
+    else if (fetchedVersion > version) window.location.reload();
+  }, [fetchedVersion, version]);
 
   useEffect(() => {
     document.body.style.backgroundColor = "transparent";
