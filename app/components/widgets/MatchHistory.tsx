@@ -42,7 +42,7 @@ export const MatchHistory: FC<MatchHistoryProps> = ({ theme, numMatches, account
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
-    if (matchesData) setMatches(matchesData.matches.slice(0, numMatches ?? 10).reverse());
+    if (matchesData) setMatches(matchesData.matches.slice(0, numMatches ?? 10));
     if (matchesError) {
       console.error("Failed to fetch matches:", matchesError);
       setMatches([]);
@@ -58,7 +58,7 @@ export const MatchHistory: FC<MatchHistoryProps> = ({ theme, numMatches, account
   return (
     <div
       className={cn(
-        "flex gap-0.5 justify-end items-center h-9 rounded-t-xl pt-1",
+        "flex gap-0.5 justify-start items-center h-9 rounded-t-xl pt-1",
         theme === "light" ? "bg-white" : theme === "dark" ? "bg-[#1A1B1E]" : "text-white",
       )}
     >
