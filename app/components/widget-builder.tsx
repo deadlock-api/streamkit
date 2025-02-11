@@ -22,6 +22,7 @@ type PreviewBackground = "image" | RGB | RGBA | HEX;
 export default function WidgetBuilder({ region, accountId }: WidgetBuilderProps) {
   const [widgetType, setWidgetType] = useState<string>(widgetTypes[0]);
   const [theme, setTheme] = useState<Theme>("dark");
+  const [opacity, setOpacity] = useState<number>(100);
   const [widgetUrl, setWidgetUrl] = useState<string | null>(null);
   const [widgetPreview, setWidgetPreview] = useState<ReactElement | null>(null);
   const [widgetPreviewBackground, setWidgetPreviewBackground] = useState<PreviewBackground>("#f3f4f6");
@@ -56,6 +57,7 @@ export default function WidgetBuilder({ region, accountId }: WidgetBuilderProps)
     if (variables.length > 0) url.searchParams.set("vars", variables.join(","));
     if (labels.length > 0) url.searchParams.set("labels", labels.join(","));
     url.searchParams.set("theme", theme);
+    url.searchParams.set("opacity", opacity.toString());
     url.searchParams.set("showHeader", showHeader.toString());
     url.searchParams.set("showBranding", showBranding.toString());
     url.searchParams.set("showMatchHistory", showMatchHistory.toString());
@@ -75,6 +77,7 @@ export default function WidgetBuilder({ region, accountId }: WidgetBuilderProps)
             labels={labels}
             extraArgs={extraArgs}
             theme={theme}
+            opacity={opacity}
             showHeader={showHeader}
             showBranding={showBranding}
             showMatchHistory={showMatchHistory}
@@ -94,6 +97,7 @@ export default function WidgetBuilder({ region, accountId }: WidgetBuilderProps)
     labels,
     extraArgs,
     theme,
+    opacity,
     showHeader,
     showBranding,
     matchHistoryShowsToday,
@@ -144,6 +148,25 @@ export default function WidgetBuilder({ region, accountId }: WidgetBuilderProps)
               </option>
             ))}
           </select>
+        </div>
+
+        <div>
+          <label htmlFor="opacity" className="block text-sm font-medium text-gray-700">
+            Opacity
+          </label>
+          <div className="flex items-center gap-2">
+            <input
+              id="opacity"
+              type="range"
+              min={0}
+              max={100}
+              step={5}
+              value={opacity}
+              onChange={(e) => setOpacity(Number.parseInt(e.target.value))}
+              className="rounded border-gray-300 bg-gray-200 w-min"
+            />
+            <span className="text-sm font-medium text-gray-700">{opacity.toFixed(0)}%</span>
+          </div>
         </div>
 
         <div className="space-y-4">

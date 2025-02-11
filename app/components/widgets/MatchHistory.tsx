@@ -5,7 +5,7 @@ import { UPDATE_INTERVAL_MS } from "~/constants/widget";
 import { cn } from "~/lib/utils";
 import type { Hero, Match, MatchHistoryProps } from "~/types/match-history";
 
-export const MatchHistory: FC<MatchHistoryProps> = ({ theme, numMatches, accountId, refresh }) => {
+export const MatchHistory: FC<MatchHistoryProps> = ({ theme, opacity, numMatches, accountId, refresh }) => {
   const [matches, setMatches] = useState<Match[]>([]);
   const [heroes, setHeroes] = useState<Map<number, string>>(new Map());
   const [loading, setLoading] = useState(true);
@@ -62,6 +62,7 @@ export const MatchHistory: FC<MatchHistoryProps> = ({ theme, numMatches, account
         "flex gap-0.5 justify-start items-center h-9 rounded-t-xl pt-1",
         theme === "light" ? "bg-white" : theme === "dark" ? "bg-[#1A1B1E]" : "text-white",
       )}
+      style={{ opacity: opacity / 100 }}
     >
       {[...matches].map((match) => {
         const heroImage = heroes.get(match.hero_id);

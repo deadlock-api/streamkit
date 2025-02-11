@@ -13,6 +13,7 @@ export const BoxWidget: FC<BoxWidgetProps> = ({
   labels = DEFAULT_LABELS,
   extraArgs = {},
   theme = "default",
+  opacity = 100,
   showHeader = true,
   refreshInterval = UPDATE_INTERVAL_MS,
   showBranding = true,
@@ -97,7 +98,13 @@ export const BoxWidget: FC<BoxWidgetProps> = ({
             className="grow-1 w-0 overflow-clip
           "
           >
-            <MatchHistory theme={theme} refresh={refreshChildren} numMatches={numMatchesToShow} accountId={accountId} />
+            <MatchHistory
+              theme={theme}
+              opacity={opacity}
+              refresh={refreshChildren}
+              numMatches={numMatchesToShow}
+              accountId={accountId}
+            />
           </div>
         </div>
       )}
@@ -115,6 +122,7 @@ export const BoxWidget: FC<BoxWidgetProps> = ({
           "shadow-lg",
           THEME_STYLES[theme].container,
         )}
+        style={{ opacity: opacity / 100 }}
       >
         {shouldShowHeader && (
           <div
