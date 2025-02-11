@@ -345,20 +345,22 @@ export default function WidgetBuilder({ region, accountId }: WidgetBuilderProps)
 
       <div className="space-y-2">
         <h3 className="text-sm font-medium text-gray-700">Preview</h3>
-        <div
-          className="p-4 rounded-lg  flex items-center justify-center bg-cover"
-          style={
-            widgetPreviewBackgroundImage
-              ? {
-                  background: "url('deadlock-background.webp'), url('deadlock-background.png')",
-                  backgroundSize: "cover",
-                  backgroundRepeat: "no-repeat",
-                }
-              : { backgroundColor: widgetPreviewBackgroundColor }
-          }
-        >
-          {widgetPreview}
-        </div>
+        {widgetPreview && (
+          <div
+            className="p-4 rounded-lg  flex items-center justify-center bg-cover"
+            style={
+              widgetPreviewBackgroundImage
+                ? {
+                    background: "url('deadlock-background.webp'), url('deadlock-background.png')",
+                    backgroundSize: "cover",
+                    backgroundRepeat: "no-repeat",
+                  }
+                : { backgroundColor: widgetPreviewBackgroundColor }
+            }
+          >
+            {widgetPreview}
+          </div>
+        )}
       </div>
 
       <div className="space-y-2">
