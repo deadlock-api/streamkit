@@ -87,25 +87,6 @@ export const MatchHistory: FC<MatchHistoryProps> = ({ theme, numMatches, account
           </div>
         );
       })}
-      <div
-        className={cn(
-          "min-w-6 w-6 h-8 text-center bg-transparent rounded-t-xl flex items-center justify-center",
-          theme === "light" ? "bg-white" : theme === "dark" ? "bg-[#1A1B1E]" : "text-white",
-        )}
-      >
-        <div className="w-3.5 h-3.5">
-          <svg
-            className={theme === "dark" ? "text-white" : "text-black"}
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <title>Match History</title>
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="4" d="M15 5l-7 7 7 7" />
-          </svg>
-        </div>
-      </div>
     </div>
   );
 };
