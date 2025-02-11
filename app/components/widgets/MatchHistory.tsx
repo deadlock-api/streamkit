@@ -30,6 +30,7 @@ export const MatchHistory: FC<MatchHistoryProps> = ({ theme, numMatches, account
       fetch(`https://data.deadlock-api.com/v2/players/${accountId}/match-history`).then((res) => res.json()),
     staleTime: UPDATE_INTERVAL_MS - 10000,
     refetchInterval: UPDATE_INTERVAL_MS,
+    refetchIntervalInBackground: true,
   });
 
   useEffect(() => {

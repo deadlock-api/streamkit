@@ -57,6 +57,7 @@ export const BoxWidget: FC<BoxWidgetProps> = ({
     queryFn: () => fetchStats(region, accountId, variables, extraArgs),
     staleTime: refreshInterval - 10000,
     refetchInterval: refreshInterval,
+    refetchIntervalInBackground: true,
   });
 
   useEffect(() => {
