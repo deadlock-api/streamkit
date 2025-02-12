@@ -305,23 +305,25 @@ export default function WidgetBuilder({ region, accountId }: WidgetBuilderProps)
       </div>
 
       <div className="space-y-6">
-        <div>
-          <label htmlFor="opacity" className="block text-sm font-medium text-gray-700">
-            Background Opacity
-          </label>
-          <div className="mt-1 flex items-center gap-2">
-            <input
-              type="range"
-              id="opacity"
-              min="0"
-              max="100"
-              value={opacity}
-              onChange={(e) => setOpacity(Number(e.target.value))}
-              className="w-full h-2 rounded-lg appearance-none cursor-pointer bg-gray-200"
-            />
-            <span className="text-sm text-gray-600 min-w-[3ch]">{opacity}%</span>
+        {theme !== "glass" && (
+          <div>
+            <label htmlFor="opacity" className="block text-sm font-medium text-gray-700">
+              Background Opacity
+            </label>
+            <div className="mt-1 flex items-center gap-2">
+              <input
+                type="range"
+                id="opacity"
+                min="0"
+                max="100"
+                value={opacity}
+                onChange={(e) => setOpacity(Number(e.target.value))}
+                className="w-full h-2 rounded-lg appearance-none cursor-pointer bg-gray-200"
+              />
+              <span className="text-sm text-gray-600 min-w-[3ch]">{opacity}%</span>
+            </div>
           </div>
-        </div>
+        )}
 
         <div className="space-y-2">
           <h3 className="text-sm font-medium text-gray-700">Preview</h3>
