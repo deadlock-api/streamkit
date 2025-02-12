@@ -31,7 +31,7 @@ export const StatDisplay: FC<StatDisplayProps> = ({ stat, theme = "dark", classN
           <span
             className={cn(
               "text-[11px] font-medium tracking-wide uppercase text-center",
-              theme === "light" ? "text-gray-500" : "text-white/60",
+              theme === "light" ? "text-gray-800" : "text-white/60",
             )}
           >
             {label}
