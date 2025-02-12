@@ -4,26 +4,24 @@ import { cn } from "~/lib/utils";
 import type { StatDisplayProps } from "~/types/widget";
 
 export const StatDisplay: FC<StatDisplayProps> = ({ stat, theme = "dark", className }) => {
-  const { variable, label, value, prefix, suffix } = stat;
+  const { variable, label, value, prefix, suffix, opacity = 100 } = stat;
 
   return (
     <div
+      style={{ "--bg-opacity": opacity / 100 } as React.CSSProperties}
       className={
         !variable.endsWith("_img")
           ? cn(
-              "flex flex-col items-center p-2.5 rounded-lg transition-all duration-200",
+              "flex flex-col items-center p-2.5 rounded-lg",
               theme === "light"
-                ? "bg-gradient-to-br from-gray-50 to-white border-gray-200/50"
+                ? "[background:rgba(240,240,240,var(--bg-opacity))]"
                 : theme === "glass"
                   ? "bg-white/5 hover:bg-white/10 backdrop-blur-sm border border-white/[0.05]"
-                  : "bg-gradient-to-br from-[#25262B] to-[#2C2E33] border-white/[0.03]",
-              theme === "light" && "border",
-              "relative",
-              "min-w-fit",
-              THEME_STYLES[theme].stat,
+                  : "[background:rgba(38,39,43,var(--bg-opacity))] border-white/[0.03]",
+              "relative min-w-fit",
               className,
             )
-          : cn("flex flex-col items-center p-2.5 rounded-lg transition-all duration-200")
+          : cn("flex flex-col items-center p-2.5 rounded-lg")
       }
     >
       {variable.endsWith("_img") && value ? (

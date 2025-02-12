@@ -55,6 +55,7 @@ export default function Widget() {
       const showMatchHistory = searchParams.get("showMatchHistory") !== "false";
       const matchHistoryShowsToday = searchParams.get("matchHistoryShowsToday") !== "false";
       const numMatches = Number.parseInt(searchParams.get("numMatches") ?? "10", 10);
+      const opacity = Number.parseInt(searchParams.get("opacity") ?? "100", 10);
       const extraArgs = Object.fromEntries(
         Array.from(searchParams.entries()).filter(
           ([key]) =>
@@ -67,6 +68,7 @@ export default function Widget() {
               "numMatches",
               "matchHistoryShowsToday",
               "showMatchHistory",
+              "opacity",
             ].includes(key),
         ),
       );
@@ -84,6 +86,7 @@ export default function Widget() {
           showMatchHistory={showMatchHistory}
           matchHistoryShowsToday={matchHistoryShowsToday}
           numMatches={numMatches}
+          opacity={opacity}
         />
       );
     }

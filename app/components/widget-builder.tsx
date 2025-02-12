@@ -35,6 +35,7 @@ export default function WidgetBuilder({ region, accountId }: WidgetBuilderProps)
   const [showMatchHistory, setShowMatchHistory] = useState(true);
   const [matchHistoryShowsToday, setMatchHistoryShowsToday] = useState(false);
   const [numMatches, setNumMatches] = useState(10);
+  const [opacity, setOpacity] = useState(100);
 
   const { data, error } = useQuery<Variable[]>({
     queryKey: ["available-variables"],
@@ -62,6 +63,7 @@ export default function WidgetBuilder({ region, accountId }: WidgetBuilderProps)
     url.searchParams.set("showMatchHistory", showMatchHistory.toString());
     url.searchParams.set("matchHistoryShowsToday", matchHistoryShowsToday.toString());
     url.searchParams.set("numMatches", numMatches.toString());
+    url.searchParams.set("opacity", opacity.toString());
     for (const [arg, value] of Object.entries(extraArgs)) {
       if (value) url.searchParams.set(arg, value);
     }
@@ -81,6 +83,7 @@ export default function WidgetBuilder({ region, accountId }: WidgetBuilderProps)
             showMatchHistory={showMatchHistory}
             matchHistoryShowsToday={matchHistoryShowsToday}
             numMatches={numMatches}
+            opacity={opacity}
           />,
         );
         break;
@@ -100,6 +103,7 @@ export default function WidgetBuilder({ region, accountId }: WidgetBuilderProps)
     matchHistoryShowsToday,
     showMatchHistory,
     numMatches,
+    opacity,
   ]);
 
   const themes: { value: Theme; label: string }[] = [
@@ -110,70 +114,76 @@ export default function WidgetBuilder({ region, accountId }: WidgetBuilderProps)
 
   return (
     <div className="mt-4 space-y-6">
-      <div className="max-w-2xl space-y-6">
-        <div>
-          <label htmlFor="type" className="block text-sm font-medium text-gray-700">
-            Type
-          </label>
-          <select
-            id="type"
-            value={widgetType}
-            onChange={(e) => setWidgetType(e.target.value)}
-            className="mt-1 block rounded-md border border-gray-300 bg-white px-3 py-2 shadow-xs focus:border-blue-500 focus:outline-hidden focus:ring-1 focus:ring-blue-500 text-black pr-6"
-          >
-            {widgetTypes.map((w) => (
-              <option key={w} value={w}>
-                {w}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div>
-          <label htmlFor="theme" className="block text-sm font-medium text-gray-700">
-            Theme
-          </label>
-          <select
-            id="theme"
-            value={theme}
-            onChange={(e) => setTheme(e.target.value as Theme)}
-            className="mt-1 block rounded-md border border-gray-300 bg-white px-3 py-2 shadow-xs focus:border-blue-500 focus:outline-hidden focus:ring-1 focus:ring-blue-500 text-black pr-6"
-          >
-            {themes.map(({ value, label }) => (
-              <option key={value} value={value}>
-                {label}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div className="space-y-4">
-          <div className="flex items-center gap-2">
-            <input
-              type="checkbox"
-              id="showHeader"
-              checked={showHeader}
-              onChange={(e) => setShowHeader(e.target.checked)}
-              className="rounded border-gray-300 text-blue-500 focus:ring-blue-500"
-            />
-            <label htmlFor="showHeader" className="text-sm font-medium text-gray-700">
-              Show Player Name Header
+      <div className="space-y-6">
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label htmlFor="type" className="block text-sm font-medium text-gray-700">
+              Type
             </label>
+            <select
+              id="type"
+              value={widgetType}
+              onChange={(e) => setWidgetType(e.target.value)}
+              className="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 shadow-xs focus:border-blue-500 focus:outline-hidden focus:ring-1 focus:ring-blue-500 text-black"
+            >
+              {widgetTypes.map((w) => (
+                <option key={w} value={w}>
+                  {w}
+                </option>
+              ))}
+            </select>
           </div>
 
-          <div className="flex items-center gap-2">
-            <input
-              type="checkbox"
-              id="showBranding"
-              checked={showBranding}
-              onChange={(e) => setShowBranding(e.target.checked)}
-              className="rounded border-gray-300 text-blue-500 focus:ring-blue-500"
-            />
-            <label htmlFor="showBranding" className="text-sm font-medium text-gray-700">
-              Show &#34;Widget by deadlock-api.com&#34;
+          <div>
+            <label htmlFor="theme" className="block text-sm font-medium text-gray-700">
+              Theme
             </label>
+            <select
+              id="theme"
+              value={theme}
+              onChange={(e) => setTheme(e.target.value as Theme)}
+              className="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 shadow-xs focus:border-blue-500 focus:outline-hidden focus:ring-1 focus:ring-blue-500 text-black"
+            >
+              {themes.map(({ value, label }) => (
+                <option key={value} value={value}>
+                  {label}
+                </option>
+              ))}
+            </select>
           </div>
+        </div>
 
+        <div className="grid grid-cols-2 gap-4">
+          <div className="flex flex-col gap-2">
+            <div className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                id="showHeader"
+                checked={showHeader}
+                onChange={(e) => setShowHeader(e.target.checked)}
+                className="rounded border-gray-300 text-blue-500 focus:ring-blue-500"
+              />
+              <label htmlFor="showHeader" className="text-sm font-medium text-gray-700">
+                Show Player Name Header
+              </label>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                id="showBranding"
+                checked={showBranding}
+                onChange={(e) => setShowBranding(e.target.checked)}
+                className="rounded border-gray-300 text-blue-500 focus:ring-blue-500"
+              />
+              <label htmlFor="showBranding" className="text-sm font-medium text-gray-700">
+                Show Branding
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 gap-4">
           <div className="space-y-2">
             <div className="flex items-center gap-2">
               <input
@@ -200,19 +210,20 @@ export default function WidgetBuilder({ region, accountId }: WidgetBuilderProps)
                 Show Todays Matches
               </label>
             </div>
-            <div className="ml-6 flex items-center gap-2">
-              <input
-                type="range"
-                min={1}
-                max={50}
-                disabled={!showMatchHistory || matchHistoryShowsToday}
-                id="numMatches"
-                value={numMatches}
-                onChange={(e) => setNumMatches(e.target.valueAsNumber)}
-                className="rounded border-gray-300 bg-gray-200 w-min"
-              />
-              <span className="text-sm font-medium text-gray-700">{numMatches} Matches</span>
-            </div>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <input
+              type="range"
+              min={1}
+              max={50}
+              disabled={!showMatchHistory || matchHistoryShowsToday}
+              id="numMatches"
+              value={numMatches}
+              onChange={(e) => setNumMatches(e.target.valueAsNumber)}
+              className="rounded border-gray-300 bg-gray-200 w-full"
+            />
+            <span className="text-sm font-medium text-gray-700 whitespace-nowrap">{numMatches} Matches</span>
           </div>
         </div>
 
@@ -298,71 +309,95 @@ export default function WidgetBuilder({ region, accountId }: WidgetBuilderProps)
         </div>
       </div>
 
-      <div>
-        <h3 className="block text-sm font-medium text-gray-700">Generated URL</h3>
-        {widgetUrl ? (
-          <div className="relative mt-1">
-            <div className="break-all rounded-md border border-gray-300 bg-gray-50 p-3 pr-24 text-sm text-gray-600">
-              {widgetUrl}
-            </div>
-            <button
-              type="button"
-              onClick={() => navigator.clipboard.writeText(widgetUrl)}
-              className="absolute right-2 top-1/2 -translate-y-1/2 rounded-md bg-blue-500 px-3 py-1 text-sm font-medium text-white transition hover:bg-blue-600 focus:outline-hidden focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+      <div className="space-y-6">
+        <div>
+          <label htmlFor="opacity" className="block text-sm font-medium text-gray-700">
+            Background Opacity
+          </label>
+          <div className="mt-1 flex items-center gap-2">
+            <input
+              type="range"
+              id="opacity"
+              min="0"
+              max="100"
+              value={opacity}
+              onChange={(e) => setOpacity(Number(e.target.value))}
+              className="w-full h-2 rounded-lg appearance-none cursor-pointer bg-gray-200"
+            />
+            <span className="text-sm text-gray-600 min-w-[3ch]">{opacity}%</span>
+          </div>
+        </div>
+
+        <div className="space-y-2">
+          <h3 className="text-sm font-medium text-gray-700">Preview</h3>
+          {widgetPreview && (
+            <div
+              className="p-4 rounded-lg flex items-center justify-center bg-cover"
+              style={
+                widgetPreviewBackgroundImage
+                  ? {
+                      background: "url('deadlock-background.webp'), url('deadlock-background.png')",
+                      backgroundSize: "cover",
+                      backgroundRepeat: "no-repeat",
+                    }
+                  : { backgroundColor: widgetPreviewBackgroundColor }
+              }
             >
-              Copy
-            </button>
-          </div>
-        ) : (
-          <div className="rounded-md border border-gray-300 bg-gray-50 p-3 text-sm text-gray-600">
-            No URL available yet. Fill in the fields to generate a URL.
-          </div>
-        )}
-      </div>
+              {widgetPreview}
+            </div>
+          )}
 
-      <div className="space-y-2">
-        <h3 className="text-sm font-medium text-gray-700">Preview</h3>
-        {widgetPreview && (
-          <div
-            className="p-4 rounded-lg  flex items-center justify-center bg-cover"
-            style={
-              widgetPreviewBackgroundImage
-                ? {
-                    background: "url('deadlock-background.webp'), url('deadlock-background.png')",
-                    backgroundSize: "cover",
-                    backgroundRepeat: "no-repeat",
-                  }
-                : { backgroundColor: widgetPreviewBackgroundColor }
-            }
-          >
-            {widgetPreview}
-          </div>
-        )}
-      </div>
-
-      <div className="space-y-2">
-        <div className="flex items-center gap-2">
-          <input
-            type="checkbox"
-            id="preview-bg-image-toggle"
-            checked={widgetPreviewBackgroundImage}
-            value={widgetPreviewBackgroundImage ? 1 : 0}
-            onChange={(e) => setWidgetPreviewBackgroundImage(e.target.checked)}
-            className="rounded-md border border-gray-300 w-8"
-          />
-          <label htmlFor="preview-bg-image-toggle">Show Image</label>
-          {!widgetPreviewBackgroundImage && (
-            <>
-              <label htmlFor="preview-bg-color-picker">Background Color</label>
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2">
               <input
-                type="color"
-                id="preview-bg-color-picker"
-                disabled={widgetPreviewBackgroundImage}
-                value={widgetPreviewBackgroundColor}
-                onChange={(e) => setWidgetPreviewBackgroundColor(e.target.value as PreviewBackgroundColor)}
-                className="rounded-md border border-gray-300"
+                type="checkbox"
+                id="preview-bg-image-toggle"
+                checked={widgetPreviewBackgroundImage}
+                value={widgetPreviewBackgroundImage ? 1 : 0}
+                onChange={(e) => setWidgetPreviewBackgroundImage(e.target.checked)}
+                className="rounded-md border border-gray-300 w-4 h-4"
               />
-            </>
+              <label htmlFor="preview-bg-image-toggle" className="text-sm text-gray-700">
+                Show Image
+              </label>
+            </div>
+            {!widgetPreviewBackgroundImage && (
+              <div className="flex items-center gap-2">
+                <label htmlFor="preview-bg-color-picker" className="text-sm text-gray-700">
+                  Background Color
+                </label>
+                <input
+                  type="color"
+                  id="preview-bg-color-picker"
+                  disabled={widgetPreviewBackgroundImage}
+                  value={widgetPreviewBackgroundColor}
+                  onChange={(e) => setWidgetPreviewBackgroundColor(e.target.value as PreviewBackgroundColor)}
+                  className="rounded-md border border-gray-300 w-8 h-8 p-0"
+                />
+              </div>
+            )}
+          </div>
+        </div>
+
+        <div>
+          <h3 className="block text-sm font-medium text-gray-700 mb-2">Generated URL</h3>
+          {widgetUrl ? (
+            <div className="relative mt-1">
+              <div className="break-all rounded-md border border-gray-300 bg-gray-50 p-3 pr-24 text-sm text-gray-600">
+                {widgetUrl}
+              </div>
+              <button
+                type="button"
+                onClick={() => navigator.clipboard.writeText(widgetUrl)}
+                className="absolute right-2 top-1/2 -translate-y-1/2 rounded-md bg-blue-500 px-3 py-1 text-sm font-medium text-white transition hover:bg-blue-600 focus:outline-hidden focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+              >
+                Copy
+              </button>
+            </div>
+          ) : (
+            <div className="rounded-md border border-gray-300 bg-gray-50 p-3 text-sm text-gray-600">
+              No URL available yet. Fill in the fields to generate a URL.
+            </div>
           )}
         </div>
       </div>

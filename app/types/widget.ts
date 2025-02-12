@@ -8,6 +8,7 @@ export type Stat = {
   color?: string;
   prefix?: string;
   suffix?: string;
+  opacity?: number;
 };
 
 export type Theme = "dark" | "glass" | "light";
@@ -27,6 +28,7 @@ export type BoxWidgetProps = {
   showMatchHistory?: boolean;
   matchHistoryShowsToday?: boolean;
   numMatches?: number;
+  opacity?: number;
 };
 
 export type StatDisplayProps = {

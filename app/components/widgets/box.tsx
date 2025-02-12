@@ -19,6 +19,7 @@ export const BoxWidget: FC<BoxWidgetProps> = ({
   showMatchHistory = false,
   matchHistoryShowsToday = true,
   numMatches = 10,
+  opacity = 100,
 }) => {
   const [stats, setStats] = useState<Record<string, string> | null>(null);
   const [loading, setLoading] = useState(true);
@@ -79,6 +80,7 @@ export const BoxWidget: FC<BoxWidgetProps> = ({
       variable,
       value: stats[variable],
       label: displayLabels[index] || snakeToPretty(variable),
+      opacity,
     }));
   };
 
@@ -89,27 +91,52 @@ export const BoxWidget: FC<BoxWidgetProps> = ({
     numMatchesToShow = Number.parseInt(stats?.matches_today);
   }
 
+  const getBackgroundStyle = () => {
+    if (theme === "glass") return "bg-black/10 backdrop-blur-md";
+
+    if (theme === "light") {
+      return cn("[background:rgba(255,255,255,var(--bg-opacity))]", "border-gray-100/5");
+    }
+
+    return cn("[background:rgba(26,27,30,var(--bg-opacity))]", "border-white/[0.03]");
+  };
+
+  const getHeaderStyle = () => {
+    if (theme === "glass") return "bg-white/5";
+
+    if (theme === "light") {
+      return cn(
+        "[background:linear-gradient(to_right,rgba(255,255,255,var(--bg-opacity)),rgba(249,250,251,var(--bg-opacity)))]",
+        "border-b border-gray-900/5",
+      );
+    }
+
+    return cn(
+      "[background:linear-gradient(to_right,rgba(26,27,30,var(--bg-opacity)),rgba(37,38,43,var(--bg-opacity)))]",
+      "border-b border-white/[0.03]",
+    );
+  };
+
   return (
-    <div className="inline-block">
+    <div className="inline-block" style={{ "--bg-opacity": opacity / 100 } as React.CSSProperties}>
       {showMatchHistory && (
         <div className="flex">
-          <div
-            className="grow-1 w-0 overflow-clip
-          "
-          >
-            <MatchHistory theme={theme} refresh={refreshChildren} numMatches={numMatchesToShow} accountId={accountId} />
+          <div className="grow-1 w-0 overflow-clip">
+            <MatchHistory
+              theme={theme}
+              refresh={refreshChildren}
+              numMatches={numMatchesToShow}
+              accountId={accountId}
+              opacity={opacity}
+            />
           </div>
         </div>
       )}
       <div
         className={cn(
           "inline-flex flex-col",
-          "rounded-b-xl transition-all duration-300",
-          theme === "light"
-            ? "bg-gradient-to-br from-white via-gray-50 to-white border-gray-200/50"
-            : theme === "glass"
-              ? "bg-black/10 backdrop-blur-md"
-              : "bg-gradient-to-br from-[#1A1B1E] via-[#1E1F23] to-[#25262B] border-white/[0.03]",
+          "rounded-b-xl",
+          getBackgroundStyle(),
           theme !== "glass" && "border",
           showMatchHistory ? "border-t-0" : "rounded-t-xl",
           "shadow-lg",
@@ -121,11 +148,7 @@ export const BoxWidget: FC<BoxWidgetProps> = ({
             className={cn(
               !showMatchHistory && "rounded-t-xl",
               "px-4 py-3",
-              theme === "light"
-                ? "bg-gradient-to-r from-white to-gray-50 border-b border-gray-200/50"
-                : theme === "glass"
-                  ? "bg-white/5"
-                  : "bg-gradient-to-r from-[#1A1B1E] to-[#25262B] border-b border-white/[0.03]",
+              getHeaderStyle(),
               "relative",
               THEME_STYLES[theme].header,
             )}

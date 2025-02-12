@@ -12,9 +12,10 @@ export type Hero = {
   };
 };
 
-export type MatchHistoryProps = {
-  theme: string;
+export interface MatchHistoryProps {
+  theme: "light" | "dark" | "glass";
   numMatches?: number;
   accountId: string;
-  refresh: number;
-};
+  refresh?: number;
+  opacity?: number;
+}
