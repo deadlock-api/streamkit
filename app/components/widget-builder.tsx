@@ -153,51 +153,47 @@ export default function WidgetBuilder({ region, accountId }: WidgetBuilderProps)
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
-          <div className="flex flex-col gap-2">
-            <div className="flex items-center gap-2">
-              <input
-                type="checkbox"
-                id="showHeader"
-                checked={showHeader}
-                onChange={(e) => setShowHeader(e.target.checked)}
-                className="rounded border-gray-300 text-blue-500 focus:ring-blue-500"
-              />
-              <label htmlFor="showHeader" className="text-sm font-medium text-gray-700">
-                Show Player Name Header
-              </label>
-            </div>
-
-            <div className="flex items-center gap-2">
-              <input
-                type="checkbox"
-                id="showBranding"
-                checked={showBranding}
-                onChange={(e) => setShowBranding(e.target.checked)}
-                className="rounded border-gray-300 text-blue-500 focus:ring-blue-500"
-              />
-              <label htmlFor="showBranding" className="text-sm font-medium text-gray-700">
-                Show Branding
-              </label>
-            </div>
+        <div className="flex flex-col gap-3">
+          <div className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              id="showHeader"
+              checked={showHeader}
+              onChange={(e) => setShowHeader(e.target.checked)}
+              className="rounded border-gray-300 text-blue-500 focus:ring-blue-500"
+            />
+            <label htmlFor="showHeader" className="text-sm font-medium text-gray-700">
+              Show Player Name Header
+            </label>
           </div>
-        </div>
 
-        <div className="grid grid-cols-2 gap-4">
-          <div className="space-y-2">
+          <div className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              id="showBranding"
+              checked={showBranding}
+              onChange={(e) => setShowBranding(e.target.checked)}
+              className="rounded border-gray-300 text-blue-500 focus:ring-blue-500"
+            />
+            <label htmlFor="showBranding" className="text-sm font-medium text-gray-700">
+              Show Branding
+            </label>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              id="showMatchHistory"
+              checked={showMatchHistory}
+              onChange={(e) => setShowMatchHistory(e.target.checked)}
+              className="rounded border-gray-300 text-blue-500 focus:ring-blue-500"
+            />
+            <label htmlFor="showMatchHistory" className="text-sm font-medium text-gray-700">
+              Show Recent Matches
+            </label>
+          </div>
+          <div className="ml-6 space-y-2">
             <div className="flex items-center gap-2">
-              <input
-                type="checkbox"
-                id="showMatchHistory"
-                checked={showMatchHistory}
-                onChange={(e) => setShowMatchHistory(e.target.checked)}
-                className="rounded border-gray-300 text-blue-500 focus:ring-blue-500"
-              />
-              <label htmlFor="showMatchHistory" className="text-sm font-medium text-gray-700">
-                Show Recent Matches
-              </label>
-            </div>
-            <div className="ml-6 flex items-center gap-2">
               <input
                 type="checkbox"
                 id="matchHistoryShowsToday"
@@ -210,20 +206,19 @@ export default function WidgetBuilder({ region, accountId }: WidgetBuilderProps)
                 Show Todays Matches
               </label>
             </div>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <input
-              type="range"
-              min={1}
-              max={50}
-              disabled={!showMatchHistory || matchHistoryShowsToday}
-              id="numMatches"
-              value={numMatches}
-              onChange={(e) => setNumMatches(e.target.valueAsNumber)}
-              className="rounded border-gray-300 bg-gray-200 w-full"
-            />
-            <span className="text-sm font-medium text-gray-700 whitespace-nowrap">{numMatches} Matches</span>
+            <div className="flex items-center gap-2">
+              <input
+                type="range"
+                min={1}
+                max={50}
+                disabled={!showMatchHistory || matchHistoryShowsToday}
+                id="numMatches"
+                value={numMatches}
+                onChange={(e) => setNumMatches(e.target.valueAsNumber)}
+                className="rounded border-gray-300 bg-gray-200 w-min"
+              />
+              <span className="text-sm font-medium text-gray-700">{numMatches} Matches</span>
+            </div>
           </div>
         </div>
 
