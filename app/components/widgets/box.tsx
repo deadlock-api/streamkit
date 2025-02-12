@@ -87,8 +87,8 @@ export const BoxWidget: FC<BoxWidgetProps> = ({
   const shouldShowHeader = showHeader && stats?.steam_account_name;
 
   let numMatchesToShow: number = numMatches;
-  if (matchHistoryShowsToday && stats?.matches_today) {
-    numMatchesToShow = Number.parseInt(stats?.matches_today);
+  if (matchHistoryShowsToday) {
+    numMatchesToShow = Number.parseInt(stats?.matches_today ?? "0");
   }
 
   const getBackgroundStyle = () => {
