@@ -3,8 +3,9 @@ import { useParams, useSearchParams } from "@remix-run/react";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { BoxWidget } from "~/components/widgets/box";
+import { RawWidget } from "~/components/widgets/raw";
 import { snakeToPretty } from "~/lib/utils";
-import type { Region, Theme } from "~/types/widget";
+import type { Color, Region, Theme } from "~/types/widget";
 
 export const meta: MetaFunction = () => {
   return [{ title: "Deadlock Stats Widget" }, { name: "description", content: "Stats widget powered by Deadlock API" }];
@@ -87,6 +88,24 @@ export default function Widget() {
           matchHistoryShowsToday={matchHistoryShowsToday}
           numMatches={numMatches}
           opacity={opacity}
+        />
+      );
+    }
+    case "raw": {
+      const variable = searchParams.get("variable");
+      const fontColor = (searchParams.get("fontColor") as Color) ?? "#FFFFFF";
+      const extraArgs = Object.fromEntries(
+        Array.from(searchParams.entries()).filter(([key]) => !["variable", "fontColor"].includes(key)),
+      );
+      console.log(extraArgs);
+      if (!variable) return <div className="text-red-500">Variable is required</div>;
+      return (
+        <RawWidget
+          region={region as Region}
+          accountId={accountId}
+          variable={variable}
+          fontColor={fontColor}
+          extraArgs={extraArgs}
         />
       );
     }

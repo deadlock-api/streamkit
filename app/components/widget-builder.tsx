@@ -3,11 +3,12 @@ import { type ReactElement, useEffect, useState } from "react";
 import type { Variable } from "~/components/command/CommandBuilder";
 import { ExtraArguments } from "~/components/widgets/ExtraArguments";
 import { BoxWidget } from "~/components/widgets/box";
+import { RawWidget } from "~/components/widgets/raw";
 import { DEFAULT_LABELS, DEFAULT_VARIABLES } from "~/constants/widget";
 import { snakeToPretty } from "~/lib/utils";
-import type { Region, Theme } from "~/types/widget";
+import type { Color, Region, Theme } from "~/types/widget";
 
-const widgetTypes: string[] = ["box"];
+const widgetTypes: string[] = ["box", "raw"];
 
 interface WidgetBuilderProps {
   region: string;
@@ -27,6 +28,8 @@ export default function WidgetBuilder({ region, accountId }: WidgetBuilderProps)
   const [widgetPreviewBackgroundImage, setWidgetPreviewBackgroundImage] = useState<boolean>(true);
   const [widgetPreviewBackgroundColor, setWidgetPreviewBackgroundColor] = useState<PreviewBackgroundColor>("#f3f4f6");
   const [variables, setVariables] = useState<string[]>(DEFAULT_VARIABLES);
+  const [variable, setVariable] = useState<string>("wins_losses_today");
+  const [fontColor, setFontColor] = useState<Color>("#ffffff");
   const [labels, setLabels] = useState<string[]>(DEFAULT_LABELS);
   const [extraArgs, setExtraArgs] = useState<{ [key: string]: string }>({});
   const [availableVariables, setAvailableVariables] = useState<Variable[]>([]);
@@ -55,21 +58,21 @@ export default function WidgetBuilder({ region, accountId }: WidgetBuilderProps)
     if (!accountId || !region) return;
 
     const url = new URL(`https://streamkit.deadlock-api.com/widgets/${region}/${accountId}/${widgetType}`);
-    if (variables.length > 0) url.searchParams.set("vars", variables.join(","));
-    if (labels.length > 0) url.searchParams.set("labels", labels.join(","));
-    url.searchParams.set("theme", theme);
-    url.searchParams.set("showHeader", showHeader.toString());
-    url.searchParams.set("showBranding", showBranding.toString());
-    url.searchParams.set("showMatchHistory", showMatchHistory.toString());
-    url.searchParams.set("matchHistoryShowsToday", matchHistoryShowsToday.toString());
-    url.searchParams.set("numMatches", numMatches.toString());
-    url.searchParams.set("opacity", opacity.toString());
     for (const [arg, value] of Object.entries(extraArgs)) {
       if (value) url.searchParams.set(arg, value);
     }
-    setWidgetUrl(url.toString());
     switch (widgetType) {
       case "box":
+        if (variables.length > 0) url.searchParams.set("vars", variables.join(","));
+        if (labels.length > 0) url.searchParams.set("labels", labels.join(","));
+        url.searchParams.set("theme", theme);
+        url.searchParams.set("showHeader", showHeader.toString());
+        url.searchParams.set("showBranding", showBranding.toString());
+        url.searchParams.set("showMatchHistory", showMatchHistory.toString());
+        url.searchParams.set("matchHistoryShowsToday", matchHistoryShowsToday.toString());
+        url.searchParams.set("numMatches", numMatches.toString());
+        url.searchParams.set("opacity", opacity.toString());
+        setWidgetUrl(url.toString());
         setWidgetPreview(
           <BoxWidget
             region={region as Region}
@@ -87,6 +90,20 @@ export default function WidgetBuilder({ region, accountId }: WidgetBuilderProps)
           />,
         );
         break;
+      case "raw":
+        url.searchParams.set("fontColor", fontColor);
+        url.searchParams.set("variable", variable);
+        setWidgetUrl(url.toString());
+        setWidgetPreview(
+          <RawWidget
+            region={region as Region}
+            accountId={accountId}
+            variable={variable}
+            fontColor={fontColor}
+            extraArgs={extraArgs}
+          />,
+        );
+        break;
       default:
         setWidgetPreview(null);
     }
@@ -95,6 +112,8 @@ export default function WidgetBuilder({ region, accountId }: WidgetBuilderProps)
     accountId,
     widgetType,
     variables,
+    variable,
+    fontColor,
     labels,
     extraArgs,
     theme,
@@ -134,178 +153,224 @@ export default function WidgetBuilder({ region, accountId }: WidgetBuilderProps)
             </select>
           </div>
 
-          <div>
-            <label htmlFor="theme" className="block text-sm font-medium text-gray-700">
-              Theme
-            </label>
-            <select
-              id="theme"
-              value={theme}
-              onChange={(e) => setTheme(e.target.value as Theme)}
-              className="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 shadow-xs focus:border-blue-500 focus:outline-hidden focus:ring-1 focus:ring-blue-500 text-black"
-            >
-              {themes.map(({ value, label }) => (
-                <option key={value} value={value}>
-                  {label}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
-
-        <div className="flex flex-col gap-3">
-          <div className="flex items-center gap-2">
-            <input
-              type="checkbox"
-              id="showHeader"
-              checked={showHeader}
-              onChange={(e) => setShowHeader(e.target.checked)}
-              className="rounded border-gray-300 text-blue-500 focus:ring-blue-500"
-            />
-            <label htmlFor="showHeader" className="text-sm font-medium text-gray-700">
-              Show Player Name Header
-            </label>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <input
-              type="checkbox"
-              id="showBranding"
-              checked={showBranding}
-              onChange={(e) => setShowBranding(e.target.checked)}
-              className="rounded border-gray-300 text-blue-500 focus:ring-blue-500"
-            />
-            <label htmlFor="showBranding" className="text-sm font-medium text-gray-700">
-              Show Branding
-            </label>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <input
-              type="checkbox"
-              id="showMatchHistory"
-              checked={showMatchHistory}
-              onChange={(e) => setShowMatchHistory(e.target.checked)}
-              className="rounded border-gray-300 text-blue-500 focus:ring-blue-500"
-            />
-            <label htmlFor="showMatchHistory" className="text-sm font-medium text-gray-700">
-              Show Recent Matches
-            </label>
-          </div>
-          <div className="ml-6 space-y-2">
-            <div className="flex items-center gap-2">
-              <input
-                type="checkbox"
-                id="matchHistoryShowsToday"
-                checked={matchHistoryShowsToday}
-                disabled={!showMatchHistory}
-                onChange={(e) => setMatchHistoryShowsToday(e.target.checked)}
-                className="rounded border-gray-300 text-blue-500 focus:ring-blue-500"
-              />
-              <label htmlFor="matchHistoryShowsToday" className="text-sm font-medium text-gray-700">
-                Show Todays Matches
+          {widgetType === "box" && (
+            <div>
+              <label htmlFor="theme" className="block text-sm font-medium text-gray-700">
+                Theme
               </label>
+              <select
+                id="theme"
+                value={theme}
+                onChange={(e) => setTheme(e.target.value as Theme)}
+                className="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 shadow-xs focus:border-blue-500 focus:outline-hidden focus:ring-1 focus:ring-blue-500 text-black"
+              >
+                {themes.map(({ value, label }) => (
+                  <option key={value} value={value}>
+                    {label}
+                  </option>
+                ))}
+              </select>
             </div>
-            <div className="flex items-center gap-2">
+          )}
+        </div>
+
+        {widgetType === "raw" && (
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label htmlFor="variable" className="block text-sm font-medium text-gray-700">
+                Variable
+              </label>
+              <select
+                id="variable"
+                value={variable}
+                onChange={(e) => setVariable(e.target.value)}
+                className="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 shadow-xs focus:border-blue-500 focus:outline-hidden focus:ring-1 focus:ring-blue-500 text-black"
+              >
+                <option value="">Select a variable</option>
+                {availableVariables.map((v) => (
+                  <option key={v.name} value={v.name} title={v.description}>
+                    {v.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label htmlFor="fontColor" className="block text-sm font-medium text-gray-700">
+                Font Color
+              </label>
               <input
-                type="range"
-                min={1}
-                max={50}
-                disabled={!showMatchHistory || matchHistoryShowsToday}
-                id="numMatches"
-                value={numMatches}
-                onChange={(e) => setNumMatches(e.target.valueAsNumber)}
-                className="rounded border-gray-300 bg-gray-200 w-min"
+                type="color"
+                id="fontColor"
+                value={fontColor}
+                onChange={(e) => setFontColor(e.target.value as Color)}
+                className="mt-1 block w-full h-10 rounded-md border border-gray-300 bg-white px-3 py-2 shadow-xs focus:border-blue-500 focus:outline-hidden focus:ring-1 focus:ring-blue-500 text-black"
               />
-              <span className="text-sm font-medium text-gray-700">{numMatches} Matches</span>
             </div>
+            <ExtraArguments
+              extraArgs={availableVariables.filter((v) => variable === v.name).flatMap((v) => v.extra_args ?? [])}
+              extraValues={extraArgs || {}}
+              onChange={(arg, value) => setExtraArgs({ ...extraArgs, [arg]: value })}
+            />
           </div>
-        </div>
+        )}
 
-        <div>
-          <h3 className="block text-sm font-medium text-gray-700 mb-2">Variables and Labels</h3>
-          <div className="space-y-3">
-            {!variables ? (
-              <div className="flex justify-center py-4">
-                <div className="h-6 w-6 animate-spin rounded-full border-2 border-gray-300 border-t-blue-600" />
+        {widgetType === "box" && (
+          <>
+            <div className="flex flex-col gap-3">
+              <div className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  id="showHeader"
+                  checked={showHeader}
+                  onChange={(e) => setShowHeader(e.target.checked)}
+                  className="rounded border-gray-300 text-blue-500 focus:ring-blue-500"
+                />
+                <label htmlFor="showHeader" className="text-sm font-medium text-gray-700">
+                  Show Player Name Header
+                </label>
               </div>
-            ) : (
-              <>
-                <div className="space-y-3">
-                  {variables.map((variable, index) => (
-                    // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-                    <div key={index}>
-                      <div className="flex gap-3">
-                        <select
-                          value={variable}
-                          onChange={(e) => {
-                            const newVariables = [...variables];
-                            newVariables[index] = e.target.value;
-                            const newLabels = [...labels];
-                            newLabels[index] = e.target.value ? snakeToPretty(e.target.value) : "";
 
-                            setVariables(newVariables);
-                            setLabels(newLabels);
-                          }}
-                          className="block w-1/2 rounded-md border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-                        >
-                          <option value="">Select a variable</option>
-                          {availableVariables.map((v) => (
-                            <option key={v.name} value={v.name} title={v.description}>
-                              {v.name}
-                            </option>
-                          ))}
-                        </select>
-                        <input
-                          type="text"
-                          value={labels[index]}
-                          onChange={(e) => {
-                            const newLabels = [...labels];
-                            newLabels[index] = e.target.value;
-                            setLabels(newLabels);
-                          }}
-                          className="block w-1/2 rounded-md border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-                          placeholder="Label (optional)"
-                        />
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setVariables(variables.filter((_, i) => i !== index));
-                            setLabels(labels.filter((_, i) => i !== index));
-                          }}
-                          className="rounded-md bg-red-500 px-3 py-2 text-white hover:bg-red-600"
-                        >
-                          Remove
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                  <ExtraArguments
-                    extraArgs={availableVariables
-                      .filter((v) => variables.includes(v.name))
-                      .flatMap((v) => v.extra_args ?? [])}
-                    extraValues={extraArgs || {}}
-                    onChange={(arg, value) => setExtraArgs({ ...extraArgs, [arg]: value })}
+              <div className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  id="showBranding"
+                  checked={showBranding}
+                  onChange={(e) => setShowBranding(e.target.checked)}
+                  className="rounded border-gray-300 text-blue-500 focus:ring-blue-500"
+                />
+                <label htmlFor="showBranding" className="text-sm font-medium text-gray-700">
+                  Show Branding
+                </label>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  id="showMatchHistory"
+                  checked={showMatchHistory}
+                  onChange={(e) => setShowMatchHistory(e.target.checked)}
+                  className="rounded border-gray-300 text-blue-500 focus:ring-blue-500"
+                />
+                <label htmlFor="showMatchHistory" className="text-sm font-medium text-gray-700">
+                  Show Recent Matches
+                </label>
+              </div>
+              <div className="ml-6 space-y-2">
+                <div className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    id="matchHistoryShowsToday"
+                    checked={matchHistoryShowsToday}
+                    disabled={!showMatchHistory}
+                    onChange={(e) => setMatchHistoryShowsToday(e.target.checked)}
+                    className="rounded border-gray-300 text-blue-500 focus:ring-blue-500"
                   />
+                  <label htmlFor="matchHistoryShowsToday" className="text-sm font-medium text-gray-700">
+                    Show Todays Matches
+                  </label>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setVariables([...variables, ""]);
-                    setLabels([...labels, ""]);
-                  }}
-                  className="rounded-md bg-blue-500 px-3 py-2 text-white hover:bg-blue-600"
-                >
-                  Add Variable
-                </button>
-              </>
-            )}
-          </div>
-        </div>
+                <div className="flex items-center gap-2">
+                  <input
+                    type="range"
+                    min={1}
+                    max={50}
+                    disabled={!showMatchHistory || matchHistoryShowsToday}
+                    id="numMatches"
+                    value={numMatches}
+                    onChange={(e) => setNumMatches(e.target.valueAsNumber)}
+                    className="rounded border-gray-300 bg-gray-200 w-min"
+                  />
+                  <span className="text-sm font-medium text-gray-700">{numMatches} Matches</span>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <h3 className="block text-sm font-medium text-gray-700 mb-2">Variables and Labels</h3>
+              <div className="space-y-3">
+                {!variables ? (
+                  <div className="flex justify-center py-4">
+                    <div className="h-6 w-6 animate-spin rounded-full border-2 border-gray-300 border-t-blue-600" />
+                  </div>
+                ) : (
+                  <>
+                    <div className="space-y-3">
+                      {variables.map((variable, index) => (
+                        // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+                        <div key={index}>
+                          <div className="flex gap-3">
+                            <select
+                              value={variable}
+                              onChange={(e) => {
+                                const newVariables = [...variables];
+                                newVariables[index] = e.target.value;
+                                const newLabels = [...labels];
+                                newLabels[index] = e.target.value ? snakeToPretty(e.target.value) : "";
+
+                                setVariables(newVariables);
+                                setLabels(newLabels);
+                              }}
+                              className="block w-1/2 rounded-md border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                            >
+                              <option value="">Select a variable</option>
+                              {availableVariables.map((v) => (
+                                <option key={v.name} value={v.name} title={v.description}>
+                                  {v.name}
+                                </option>
+                              ))}
+                            </select>
+                            <input
+                              type="text"
+                              value={labels[index]}
+                              onChange={(e) => {
+                                const newLabels = [...labels];
+                                newLabels[index] = e.target.value;
+                                setLabels(newLabels);
+                              }}
+                              className="block w-1/2 rounded-md border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                              placeholder="Label (optional)"
+                            />
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setVariables(variables.filter((_, i) => i !== index));
+                                setLabels(labels.filter((_, i) => i !== index));
+                              }}
+                              className="rounded-md bg-red-500 px-3 py-2 text-white hover:bg-red-600"
+                            >
+                              Remove
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                      <ExtraArguments
+                        extraArgs={availableVariables
+                          .filter((v) => variables.includes(v.name))
+                          .flatMap((v) => v.extra_args ?? [])}
+                        extraValues={extraArgs || {}}
+                        onChange={(arg, value) => setExtraArgs({ ...extraArgs, [arg]: value })}
+                      />
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setVariables([...variables, ""]);
+                        setLabels([...labels, ""]);
+                      }}
+                      className="rounded-md bg-blue-500 px-3 py-2 text-white hover:bg-blue-600"
+                    >
+                      Add Variable
+                    </button>
+                  </>
+                )}
+              </div>
+            </div>
+          </>
+        )}
       </div>
 
       <div className="space-y-6">
-        {theme !== "glass" && (
+        {theme !== "glass" && widgetType === "box" && (
           <div>
             <label htmlFor="opacity" className="block text-sm font-medium text-gray-700">
               Background Opacity
