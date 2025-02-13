@@ -1,5 +1,4 @@
 import type { FC } from "react";
-import { THEME_STYLES } from "~/constants/widget";
 import { cn } from "~/lib/utils";
 import type { StatDisplayProps } from "~/types/widget";
 
