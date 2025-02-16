@@ -503,11 +503,30 @@ export default function WidgetBuilder({ region, accountId }: WidgetBuilderProps)
             className="flex items-center bg-blue-500 text-white text-sm font-bold px-4 py-3 max-w-lg ml-auto mr-auto rounded"
             role="alert"
           >
-            <svg className="fill-current w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+            <svg className="fill-current w-5 h-5 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
               <title>Info</title>
               <path d="M12.432 0c1.34 0 2.01.912 2.01 1.957 0 1.305-1.164 2.512-2.679 2.512-1.269 0-2.009-.75-1.974-1.99C9.789 1.436 10.67 0 12.432 0zM8.309 20c-1.058 0-1.833-.652-1.093-3.524l1.214-5.092c.211-.814.246-1.141 0-1.141-.317 0-1.689.562-2.502 1.117l-.528-.88c2.572-2.186 5.531-3.467 6.801-3.467 1.057 0 1.233 1.273.705 3.23l-1.391 5.352c-.246.945-.141 1.271.106 1.271.317 0 1.357-.392 2.379-1.207l.6.814C12.098 19.02 9.365 20 8.309 20z" />
             </svg>
             <p className="block sm:inline">
+              Follow the steps below to add the widget to your stream:
+              <ol className="list-decimal list-inside ml-2">
+                <li>Add a new browser source in OBS.</li>
+                <li>Paste the generated URL into the URL field.</li>
+                <li>Adjust the width and height to your liking.</li>
+                <li>Tick the "Deactivate when not showing" box.</li>
+                <li>Click "OK" to add the widget to your stream.</li>
+              </ol>
+            </p>
+          </div>
+          <div
+            className="flex items-center bg-orange-500 text-white text-sm font-bold px-4 py-3 max-w-lg ml-auto mr-auto rounded "
+            role="alert"
+          >
+            <svg className="fill-current w-5 h-5 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+              <title>Warn</title>
+              <path d="M10 0C4.48 0 0 4.48 0 10s4.48 10 10 10 10-4.48 10-10S15.52 0 10 0zm1 15H9v-2h2v2zm0-4H9V5h2v6z" />
+            </svg>
+            <p className="block sm:inline text-white">
               Old OBS-Versions might cause issues.
               <br />
               Please update to the latest version if you encounter any issues!
