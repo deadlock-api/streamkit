@@ -43,7 +43,6 @@ export type RawWidgetProps = {
   suffix?: string;
   extraArgs?: Record<string, string>;
   fontColor: Color;
-  fontColorLikeRank: boolean;
   refreshInterval?: number;
 };
 

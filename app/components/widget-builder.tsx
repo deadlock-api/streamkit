@@ -31,7 +31,6 @@ export default function WidgetBuilder({ region, accountId }: WidgetBuilderProps)
   const [variable, setVariable] = useState<string>("wins_losses_today");
   const [prefix, setPrefix] = useState<string>("Score: ");
   const [suffix, setSuffix] = useState<string>("");
-  const [fontColorLikeRank, setFontColorLikeRank] = useState<boolean>(true);
   const [fontColor, setFontColor] = useState<Color>("#ffffff");
   const [labels, setLabels] = useState<string[]>(DEFAULT_LABELS);
   const [extraArgs, setExtraArgs] = useState<{ [key: string]: string }>({});
@@ -96,7 +95,6 @@ export default function WidgetBuilder({ region, accountId }: WidgetBuilderProps)
       case "raw":
         url.searchParams.set("fontColor", fontColor);
         url.searchParams.set("variable", variable);
-        url.searchParams.set("fontColorLikeRank", fontColorLikeRank.toString());
         url.searchParams.set("prefix", prefix);
         url.searchParams.set("suffix", suffix);
         setWidgetUrl(url.toString());
@@ -106,7 +104,6 @@ export default function WidgetBuilder({ region, accountId }: WidgetBuilderProps)
             accountId={accountId}
             variable={variable}
             fontColor={fontColor}
-            fontColorLikeRank={fontColorLikeRank}
             extraArgs={extraArgs}
             prefix={prefix}
             suffix={suffix}
@@ -134,7 +131,6 @@ export default function WidgetBuilder({ region, accountId }: WidgetBuilderProps)
     opacity,
     prefix,
     suffix,
-    fontColorLikeRank,
   ]);
 
   const themes: { value: Theme; label: string }[] = [
@@ -188,23 +184,37 @@ export default function WidgetBuilder({ region, accountId }: WidgetBuilderProps)
 
         {widgetType === "raw" && (
           <>
-            <div className="w-fit">
-              <label htmlFor="variable" className="block text-sm font-medium text-gray-700">
-                Variable
-              </label>
-              <select
-                id="variable"
-                value={variable}
-                onChange={(e) => setVariable(e.target.value)}
-                className="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 shadow-xs focus:border-blue-500 focus:outline-hidden focus:ring-1 focus:ring-blue-500 text-black"
-              >
-                <option value="">Select a variable</option>
-                {availableVariables.map((v) => (
-                  <option key={v.name} value={v.name} title={v.description}>
-                    {v.name}
-                  </option>
-                ))}
-              </select>
+            <div className="grid grid-cols-2 items-center w-full gap-4">
+              <div>
+                <label htmlFor="variable" className="block text-sm font-medium text-gray-700">
+                  Variable
+                </label>
+                <select
+                  id="variable"
+                  value={variable}
+                  onChange={(e) => setVariable(e.target.value)}
+                  className="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 shadow-xs focus:border-blue-500 focus:outline-hidden focus:ring-1 focus:ring-blue-500 text-black"
+                >
+                  <option value="">Select a variable</option>
+                  {availableVariables.map((v) => (
+                    <option key={v.name} value={v.name} title={v.description}>
+                      {v.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label htmlFor="fontColor" className="block text-sm font-medium text-gray-700">
+                  Font Color
+                </label>
+                <input
+                  type="color"
+                  id="fontColor"
+                  value={fontColor}
+                  onChange={(e) => setFontColor(e.target.value as Color)}
+                  className="mt-1 block w-full h-10 rounded-md border border-gray-300 bg-white px-3 py-2 shadow-xs focus:border-blue-500 focus:outline-hidden focus:ring-1 focus:ring-blue-500 text-black disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-gray-200"
+                />
+              </div>
             </div>
             <div className="grid grid-cols-2 items-center w-full gap-4">
               <div>
@@ -229,32 +239,6 @@ export default function WidgetBuilder({ region, accountId }: WidgetBuilderProps)
                   value={suffix}
                   onChange={(e) => setSuffix(e.target.value)}
                   className="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 shadow-xs focus:border-blue-500 focus:outline-hidden focus:ring-1 focus:ring-blue-500 text-black"
-                />
-              </div>
-            </div>
-            <div className="grid grid-cols-2 items-center w-full gap-4">
-              <div className="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  id="fontColorLikeRank"
-                  checked={fontColorLikeRank}
-                  onChange={(e) => setFontColorLikeRank(e.target.checked)}
-                  className="block rounded-md border border-gray-300 bg-white px-3 py-2 shadow-xs focus:border-blue-500 focus:outline-hidden text-black"
-                />
-                <label htmlFor="fontColor" className="block text-sm font-medium text-gray-700">
-                  Font Color Like Rank (if available)
-                </label>
-              </div>
-              <div>
-                <label htmlFor="fontColor" className="block text-sm font-medium text-gray-700">
-                  Font Color
-                </label>
-                <input
-                  type="color"
-                  id="fontColor"
-                  value={fontColor}
-                  onChange={(e) => setFontColor(e.target.value as Color)}
-                  className="mt-1 block w-full h-10 rounded-md border border-gray-300 bg-white px-3 py-2 shadow-xs focus:border-blue-500 focus:outline-hidden focus:ring-1 focus:ring-blue-500 text-black disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-gray-200"
                 />
               </div>
             </div>
