@@ -40,11 +40,6 @@ export const RawWidget: FC<RawWidgetProps> = ({
     refetchIntervalInBackground: true,
   });
 
-  const { data: ranksData } = useQuery<Record<string, string | number>[]>({
-    queryKey: ["ranks"],
-    queryFn: () => fetch("https://assets.deadlock-api.com/v2/ranks").then((res) => res.json()),
-  });
-
   useEffect(() => {
     setLoading(statsLoading);
     if (data) {
