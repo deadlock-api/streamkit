@@ -1,3 +1,4 @@
+import { useSearchParams } from "@remix-run/react";
 import { useQuery } from "@tanstack/react-query";
 import { type ReactElement, useEffect, useState } from "react";
 import type { Variable } from "~/components/command/CommandBuilder";
@@ -21,7 +22,8 @@ type HEX = `#${string}`;
 type PreviewBackgroundColor = RGB | RGBA | HEX;
 
 export default function WidgetBuilder({ region, accountId }: WidgetBuilderProps) {
-  const [widgetType, setWidgetType] = useState<string>(widgetTypes[0]);
+  const [searchParams] = useSearchParams();
+  const [widgetType, setWidgetType] = useState<string>(searchParams.get("widget-type") ?? widgetTypes[0]);
   const [theme, setTheme] = useState<Theme>("dark");
   const [widgetUrl, setWidgetUrl] = useState<string | null>(null);
   const [widgetPreview, setWidgetPreview] = useState<ReactElement | null>(null);
