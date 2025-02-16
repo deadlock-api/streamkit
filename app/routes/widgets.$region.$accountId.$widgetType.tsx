@@ -93,6 +93,9 @@ export default function Widget() {
     }
     case "raw": {
       const variable = searchParams.get("variable");
+      const prefix = searchParams.get("prefix") ?? "";
+      const suffix = searchParams.get("suffix") ?? "";
+      const fontColorLikeRank = searchParams.get("fontColorLikeRank") === "true";
       const fontColor = (searchParams.get("fontColor") as Color) ?? "#FFFFFF";
       const extraArgs = Object.fromEntries(
         Array.from(searchParams.entries()).filter(([key]) => !["variable", "fontColor"].includes(key)),
@@ -105,7 +108,10 @@ export default function Widget() {
           accountId={accountId}
           variable={variable}
           fontColor={fontColor}
+          fontColorLikeRank={fontColorLikeRank}
           extraArgs={extraArgs}
+          prefix={prefix}
+          suffix={suffix}
         />
       );
     }

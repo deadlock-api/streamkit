@@ -29,6 +29,9 @@ export default function WidgetBuilder({ region, accountId }: WidgetBuilderProps)
   const [widgetPreviewBackgroundColor, setWidgetPreviewBackgroundColor] = useState<PreviewBackgroundColor>("#f3f4f6");
   const [variables, setVariables] = useState<string[]>(DEFAULT_VARIABLES);
   const [variable, setVariable] = useState<string>("wins_losses_today");
+  const [prefix, setPrefix] = useState<string>("Score: ");
+  const [suffix, setSuffix] = useState<string>("");
+  const [fontColorLikeRank, setFontColorLikeRank] = useState<boolean>(true);
   const [fontColor, setFontColor] = useState<Color>("#ffffff");
   const [labels, setLabels] = useState<string[]>(DEFAULT_LABELS);
   const [extraArgs, setExtraArgs] = useState<{ [key: string]: string }>({});
@@ -93,6 +96,9 @@ export default function WidgetBuilder({ region, accountId }: WidgetBuilderProps)
       case "raw":
         url.searchParams.set("fontColor", fontColor);
         url.searchParams.set("variable", variable);
+        url.searchParams.set("fontColorLikeRank", fontColorLikeRank.toString());
+        url.searchParams.set("prefix", prefix);
+        url.searchParams.set("suffix", suffix);
         setWidgetUrl(url.toString());
         setWidgetPreview(
           <RawWidget
@@ -100,7 +106,10 @@ export default function WidgetBuilder({ region, accountId }: WidgetBuilderProps)
             accountId={accountId}
             variable={variable}
             fontColor={fontColor}
+            fontColorLikeRank={fontColorLikeRank}
             extraArgs={extraArgs}
+            prefix={prefix}
+            suffix={suffix}
           />,
         );
         break;
@@ -123,6 +132,9 @@ export default function WidgetBuilder({ region, accountId }: WidgetBuilderProps)
     showMatchHistory,
     numMatches,
     opacity,
+    prefix,
+    suffix,
+    fontColorLikeRank,
   ]);
 
   const themes: { value: Theme; label: string }[] = [
@@ -175,8 +187,8 @@ export default function WidgetBuilder({ region, accountId }: WidgetBuilderProps)
         </div>
 
         {widgetType === "raw" && (
-          <div className="grid grid-cols-2 gap-4">
-            <div>
+          <>
+            <div className="w-fit">
               <label htmlFor="variable" className="block text-sm font-medium text-gray-700">
                 Variable
               </label>
@@ -194,24 +206,64 @@ export default function WidgetBuilder({ region, accountId }: WidgetBuilderProps)
                 ))}
               </select>
             </div>
-            <div>
-              <label htmlFor="fontColor" className="block text-sm font-medium text-gray-700">
-                Font Color
-              </label>
-              <input
-                type="color"
-                id="fontColor"
-                value={fontColor}
-                onChange={(e) => setFontColor(e.target.value as Color)}
-                className="mt-1 block w-full h-10 rounded-md border border-gray-300 bg-white px-3 py-2 shadow-xs focus:border-blue-500 focus:outline-hidden focus:ring-1 focus:ring-blue-500 text-black"
-              />
+            <div className="grid grid-cols-2 items-center w-full gap-4">
+              <div>
+                <label htmlFor="prefix" className="block text-sm font-medium text-gray-700">
+                  Prefix
+                </label>
+                <input
+                  type="text"
+                  id="prefix"
+                  value={prefix}
+                  onChange={(e) => setPrefix(e.target.value)}
+                  className="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 shadow-xs focus:border-blue-500 focus:outline-hidden focus:ring-1 focus:ring-blue-500 text-black"
+                />
+              </div>
+              <div>
+                <label htmlFor="suffix" className="block text-sm font-medium text-gray-700">
+                  Suffix
+                </label>
+                <input
+                  type="text"
+                  id="suffix"
+                  value={suffix}
+                  onChange={(e) => setSuffix(e.target.value)}
+                  className="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 shadow-xs focus:border-blue-500 focus:outline-hidden focus:ring-1 focus:ring-blue-500 text-black"
+                />
+              </div>
+            </div>
+            <div className="grid grid-cols-2 items-center w-full gap-4">
+              <div className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  id="fontColorLikeRank"
+                  checked={fontColorLikeRank}
+                  onChange={(e) => setFontColorLikeRank(e.target.checked)}
+                  className="block rounded-md border border-gray-300 bg-white px-3 py-2 shadow-xs focus:border-blue-500 focus:outline-hidden text-black"
+                />
+                <label htmlFor="fontColor" className="block text-sm font-medium text-gray-700">
+                  Font Color Like Rank (if available)
+                </label>
+              </div>
+              <div>
+                <label htmlFor="fontColor" className="block text-sm font-medium text-gray-700">
+                  Font Color
+                </label>
+                <input
+                  type="color"
+                  id="fontColor"
+                  value={fontColor}
+                  onChange={(e) => setFontColor(e.target.value as Color)}
+                  className="mt-1 block w-full h-10 rounded-md border border-gray-300 bg-white px-3 py-2 shadow-xs focus:border-blue-500 focus:outline-hidden focus:ring-1 focus:ring-blue-500 text-black disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-gray-200"
+                />
+              </div>
             </div>
             <ExtraArguments
               extraArgs={availableVariables.filter((v) => variable === v.name).flatMap((v) => v.extra_args ?? [])}
               extraValues={extraArgs || {}}
               onChange={(arg, value) => setExtraArgs({ ...extraArgs, [arg]: value })}
             />
-          </div>
+          </>
         )}
 
         {widgetType === "box" && (

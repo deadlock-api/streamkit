@@ -39,8 +39,11 @@ export type RawWidgetProps = {
   region: Region;
   accountId: string;
   variable: string;
+  prefix?: string;
+  suffix?: string;
   extraArgs?: Record<string, string>;
   fontColor: Color;
+  fontColorLikeRank: boolean;
   refreshInterval?: number;
 };
 
