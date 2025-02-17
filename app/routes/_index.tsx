@@ -1,5 +1,6 @@
 import type { MetaFunction } from "@remix-run/node";
 import { useSearchParams } from "@remix-run/react";
+import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import CommandBuilder from "~/components/command/CommandBuilder";
 import WidgetBuilder from "~/components/widget-builder";
@@ -41,6 +42,22 @@ export default function Index() {
     }
   };
 
+  const fetchSteamName = async (region: string, steamId: string) => {
+    const url = new URL(`https://data.deadlock-api.com/v1/commands/${region}/${steamId}/resolve-variables`);
+    url.searchParams.append("variables", "steam_account_name");
+    const res = await fetch(url);
+    return (await res.json()).steam_account_name;
+  };
+
+  const {
+    data: steamAccountName,
+    isLoading: steamAccountLoading,
+    error: steamAccountError,
+  } = useQuery<string>({
+    queryKey: ["steamName", region, steamId],
+    queryFn: () => fetchSteamName(region, steamId),
+  });
+
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="mx-auto max-w-[90rem] rounded-lg bg-white p-8 shadow-md space-y-6">
@@ -58,7 +75,7 @@ export default function Index() {
             Steam ID3
           </label>
           <input
-            type="text"
+            type="number"
             id="steamid"
             value={steamId}
             onChange={(e) => setSteamId(e.target.value)}
@@ -87,6 +104,45 @@ export default function Index() {
               </option>
             ))}
           </select>
+        </div>
+
+        <div className="max-w-[700px] mx-auto">
+          {steamAccountLoading ? (
+            <div
+              className="flex items-center bg-blue-500 text-white text-sm font-bold px-4 py-3 max-w-lg ml-auto mr-auto rounded"
+              role="alert"
+            >
+              <svg className="fill-current w-5 h-5 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                <title>Loading</title>
+                <path
+                  fillRule="evenodd"
+                  clipRule="evenodd"
+                  d="M10 0C4.48 0 0 4.48 0 10s4.48 10 10 10 10-4.48 10-10S15.52 0 10 0zm1 15H9v-2h2v2zm0-4H9V5h2v6z"
+                />
+              </svg>
+              <p className="block sm:inline">Fetching Steam account...</p>
+            </div>
+          ) : steamAccountError || !steamAccountName ? (
+            <div
+              className="flex items-center bg-orange-500 text-white text-sm font-bold px-4 py-3 max-w-lg ml-auto mr-auto rounded "
+              role="alert"
+            >
+              <svg className="fill-current w-5 h-5 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                <title>Warn</title>
+                <path d="M10 0C4.48 0 0 4.48 0 10s4.48 10 10 10 10-4.48 10-10S15.52 0 10 0zm1 15H9v-2h2v2zm0-4H9V5h2v6z" />
+              </svg>
+              <p className="block sm:inline text-white">
+                Failed to fetch Steam account name. Please make sure you entered a valid Steam ID3 and region.
+              </p>
+            </div>
+          ) : (
+            <p className="text-sm text-gray-500">
+              Found Steam account:{" "}
+              <span className="font-bold text-gray-900">
+                {steamAccountName} ({steamId})
+              </span>
+            </p>
+          )}
         </div>
 
         <div className="flex flex-wrap gap-x-6">

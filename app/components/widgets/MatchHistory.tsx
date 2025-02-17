@@ -43,7 +43,7 @@ export const MatchHistory: FC<MatchHistoryProps> = ({ theme, numMatches, account
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
-    if (matchesData) setMatches(matchesData.matches.slice(0, numMatches ?? 10));
+    if (matchesData?.matches) setMatches(matchesData.matches.slice(0, numMatches ?? 10));
     if (matchesError) {
       console.error("Failed to fetch matches:", matchesError);
       setMatches([]);
