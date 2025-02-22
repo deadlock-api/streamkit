@@ -63,13 +63,11 @@ export const BoxWidget: FC<BoxWidgetProps> = ({
 
   useEffect(() => {
     setLoading(statsLoading);
-    if (data) {
+    if (statsError) {
+      console.error(`Failed to fetch stats: ${statsError}`);
+    } else if (data) {
       setRefreshChildren((prev) => prev + 1);
       setStats(data);
-    }
-    if (statsError) {
-      setStats(null);
-      console.error(`Failed to fetch stats: ${statsError}`);
     }
   }, [data, statsLoading, statsError]);
 
