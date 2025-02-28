@@ -36,6 +36,7 @@ export const BoxWidget: FC<BoxWidgetProps> = ({
     region: Region,
     accountId: string,
     variables: string[],
+    auxiliaryVariables: string[],
     extraArgs: Record<string, string>,
   ) => {
     const url = new URL(`https://data.deadlock-api.com/v1/commands/${region}/${accountId}/resolve-variables`);
@@ -55,7 +56,7 @@ export const BoxWidget: FC<BoxWidgetProps> = ({
     error: statsError,
   } = useQuery<Record<string, string>>({
     queryKey: ["stats", region, accountId, variables, auxiliaryVariables, extraArgs],
-    queryFn: () => fetchStats(region, accountId, variables, extraArgs),
+    queryFn: () => fetchStats(region, accountId, variables, auxiliaryVariables, extraArgs),
     staleTime: refreshInterval - 10000,
     refetchInterval: refreshInterval,
     refetchIntervalInBackground: true,
