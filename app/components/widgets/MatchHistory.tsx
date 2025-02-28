@@ -24,10 +24,10 @@ export const MatchHistory: FC<MatchHistoryProps> = ({ theme, numMatches, account
     data: matchesData,
     isLoading: loadingMatches,
     error: matchesError,
-  } = useQuery<{ matches: Match[] }>({
+  } = useQuery<Match[]>({
     queryKey: ["match-history", accountId],
     queryFn: () =>
-      fetch(`https://data.deadlock-api.com/v2/players/${accountId}/match-history`).then((res) => res.json()),
+      fetch(`https://api.deadlock-api.com/v1/players/${accountId}/match-history`).then((res) => res.json()),
     staleTime: UPDATE_INTERVAL_MS - 10000,
     refetchInterval: UPDATE_INTERVAL_MS,
     refetchIntervalInBackground: true,
@@ -45,8 +45,8 @@ export const MatchHistory: FC<MatchHistoryProps> = ({ theme, numMatches, account
   useEffect(() => {
     if (matchesError) {
       console.error("Failed to fetch matches:", matchesError);
-    } else if (matchesData?.matches) {
-      setMatches(matchesData.matches.slice(0, numMatches ?? 10));
+    } else if (matchesData) {
+      setMatches(matchesData?.slice(0, numMatches ?? 10));
     }
   }, [refresh, matchesData, matchesError, numMatches]);
 
