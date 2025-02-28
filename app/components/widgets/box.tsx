@@ -54,7 +54,7 @@ export const BoxWidget: FC<BoxWidgetProps> = ({
     isLoading: statsLoading,
     error: statsError,
   } = useQuery<Record<string, string>>({
-    queryKey: ["stats", region, accountId, variables, extraArgs],
+    queryKey: ["stats", region, accountId, variables, auxiliaryVariables, extraArgs],
     queryFn: () => fetchStats(region, accountId, variables, extraArgs),
     staleTime: refreshInterval - 10000,
     refetchInterval: refreshInterval,
