@@ -46,7 +46,7 @@ export default function WidgetBuilder({ region, accountId }: WidgetBuilderProps)
 
   const { data, error } = useQuery<Variable[]>({
     queryKey: ["available-variables"],
-    queryFn: () => fetch("https://data.deadlock-api.com/v1/commands/available-variables").then((res) => res.json()),
+    queryFn: () => fetch("https://api.deadlock-api.com/v1/commands/variables/available").then((res) => res.json()),
     staleTime: Number.POSITIVE_INFINITY,
   });
 

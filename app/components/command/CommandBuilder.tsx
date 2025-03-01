@@ -28,7 +28,7 @@ export default function CommandBuilder({ region, accountId }: CommandBuilderProp
 
   const { data, error } = useQuery<Variable[]>({
     queryKey: ["available-variables"],
-    queryFn: () => fetch("https://data.deadlock-api.com/v1/commands/available-variables").then((res) => res.json()),
+    queryFn: () => fetch("https://api.deadlock-api.com/v1/commands/variables/available").then((res) => res.json()),
     staleTime: Number.POSITIVE_INFINITY,
   });
 
@@ -44,8 +44,10 @@ export default function CommandBuilder({ region, accountId }: CommandBuilderProp
     if (!steamId || !region) {
       return "";
     }
-    const baseUrl = "https://data.deadlock-api.com/v1/commands";
-    const url = new URL(`${baseUrl}/${region}/${steamId}/resolve`);
+    const baseUrl = "https://api.deadlock-api.com/v1/commands";
+    const url = new URL(`${baseUrl}/resolve`);
+    url.searchParams.set("region", region);
+    url.searchParams.set("account_id", steamId);
     if (template) {
       url.searchParams.set("template", template);
     }

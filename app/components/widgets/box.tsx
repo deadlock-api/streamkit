@@ -39,7 +39,9 @@ export const BoxWidget: FC<BoxWidgetProps> = ({
     auxiliaryVariables: string[],
     extraArgs: Record<string, string>,
   ) => {
-    const url = new URL(`https://data.deadlock-api.com/v1/commands/${region}/${accountId}/resolve-variables`);
+    const url = new URL("https://api.deadlock-api.com/v1/commands/variables/resolve");
+    url.searchParams.append("region", region);
+    url.searchParams.append("account_id", accountId);
     url.searchParams.append("variables", [...variables, ...auxiliaryVariables].join(","));
 
     // biome-ignore lint/complexity/noForEach: <explanation>

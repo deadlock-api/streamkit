@@ -17,7 +17,9 @@ export const RawWidget: FC<RawWidgetProps> = ({
   const [loading, setLoading] = useState(true);
 
   const fetchStats = async (region: Region, accountId: string, variable: string, extraArgs: Record<string, string>) => {
-    const url = new URL(`https://data.deadlock-api.com/v1/commands/${region}/${accountId}/resolve-variables`);
+    const url = new URL("https://api.deadlock-api.com/v1/commands/variables/resolve");
+    url.searchParams.append("region", region);
+    url.searchParams.append("account_id", accountId);
     url.searchParams.append("variables", [variable].join(","));
 
     // biome-ignore lint/complexity/noForEach: <explanation>

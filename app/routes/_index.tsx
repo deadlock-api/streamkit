@@ -45,7 +45,9 @@ export default function Index() {
   const fetchSteamName = async (region: string, steamId: string) => {
     if (!steamId) return null;
     if (!region) return null;
-    const url = new URL(`https://data.deadlock-api.com/v1/commands/${region}/${steamId}/resolve-variables`);
+    const url = new URL("https://api.deadlock-api.com/v1/commands/variables/resolve");
+    url.searchParams.append("region", region);
+    url.searchParams.append("account_id", steamId);
     url.searchParams.append("variables", "steam_account_name");
     const res = await fetch(url);
     return (await res.json()).steam_account_name;
