@@ -71,7 +71,16 @@ export default function Index() {
           <a href="https://deadlock-api.com" className="text-blue-600 hover:underline" target="_blank" rel="noreferrer">
             Deadlock API
           </a>{" "}
-          project.
+          project. Support us on{" "}
+          <a
+            href="https://www.patreon.com/c/user?u=68961896"
+            className="text-blue-600 hover:underline"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Patreon
+          </a>
+          .
         </h2>
 
         <div className="max-w-[700px] mx-auto">
