@@ -70,7 +70,7 @@ export const BoxWidget: FC<BoxWidgetProps> = ({
       console.error(`Failed to fetch stats: ${statsError}`);
     } else if (data) {
       setRefreshChildren((prev) => prev + 1);
-      setStats(data);
+      setStats(Object.fromEntries(Object.entries(data).filter(([_, value]) => value !== null)));
     }
   }, [data, statsLoading, statsError]);
 
