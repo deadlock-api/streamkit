@@ -1,4 +1,4 @@
-import type { LinksFunction } from "@remix-run/node";
+import type { LinksFunction, MetaFunction } from "@remix-run/node";
 import { Links, Meta, Outlet, Scripts, ScrollRestoration } from "@remix-run/react";
 
 import "./tailwind.css";
@@ -29,10 +29,14 @@ export function Layout({ children }: { children: React.ReactNode }) {
         />
         <meta name="robots" content="index, follow" />
         <meta name="author" content="Deadlock API" />
-        <meta name="og:title" content="Deadlock API - Streamkit" />
+        <meta name="og:title" content="Deadlock API - Chat Command Builder - Widget Builder" />
         <meta name="og:description" content="Create custom Deadlock chat commands and widgets for your stream." />
         <meta name="og:url" content="https://streamkit.deadlock-api.com/" />
-        <Meta />
+        <title>Deadlock API - Chat Command Builder and Widget Builder</title>
+        <meta
+          name="description"
+          content="Create custom deadlock chat commands and widgets for your stream. Works with StreamElements, Fossabot, Nightbot, and more!"
+        />
         <Links />
       </head>
       <body>

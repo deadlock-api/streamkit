@@ -1,20 +1,8 @@
-import type { MetaFunction } from "@remix-run/node";
 import { useSearchParams } from "@remix-run/react";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import CommandBuilder from "~/components/command/CommandBuilder";
 import WidgetBuilder from "~/components/widget-builder";
-
-export const meta: MetaFunction = () => {
-  return [
-    { title: "Deadlock API - Chat Command Builder - Widget Builder" },
-    {
-      name: "description",
-      content:
-        "Create custom deadlock chat commands and widgets for your stream. Works with StreamElements, Fossabot, Nightbot, and more!",
-    },
-  ];
-};
 
 const regions = ["Europe", "Asia", "NAmerica", "SAmerica", "Oceania"] as const;
 
