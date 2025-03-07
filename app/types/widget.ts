@@ -45,9 +45,3 @@ export type RawWidgetProps = {
   fontColor: Color;
   refreshInterval?: number;
 };
-
-export type StatDisplayProps = {
-  stat: Stat;
-  className?: string;
-  theme?: Theme;
-};
