@@ -1,13 +1,12 @@
-import { type FC } from "react";
 import { BoxBrandingProps } from "./BoxBranding.types";
 
 /**
  * Component for displaying the branding section of the BoxWidget
  */
-export const BoxBranding: FC<BoxBrandingProps> = ({ 
+export const BoxBranding = ({ 
   show,
   themeClasses,
-}) => {
+}: BoxBrandingProps) => {
   if (!show) return null;
 
   return (

@@ -1,4 +1,4 @@
-import { type FC, useMemo } from "react";
+import { useMemo } from "react";
 import { DEFAULT_LABELS, DEFAULT_VARIABLES, UPDATE_INTERVAL_MS } from "~/constants/widget";
 import { useStats } from "~/hooks/useStats";
 import { useWidgetTheme } from "~/hooks/useWidgetTheme";
@@ -9,7 +9,10 @@ import { BoxBranding } from "./BoxBranding";
 import { BoxHeader } from "./BoxHeader";
 import { BoxStats } from "./BoxStats";
 
-export const BoxWidget: FC<BoxWidgetProps> = ({
+/**
+ * Main BoxWidget component that displays player stats in a structured layout
+ */
+export const BoxWidget = ({
   region,
   accountId,
   variables = DEFAULT_VARIABLES,
@@ -23,7 +26,7 @@ export const BoxWidget: FC<BoxWidgetProps> = ({
   matchHistoryShowsToday = true,
   numMatches = 10,
   opacity = 100,
-}) => {
+}: BoxWidgetProps) => {
   // Prepare auxiliary variables based on settings
   const auxiliaryVariables = useMemo(() => {
     const vars: string[] = [];

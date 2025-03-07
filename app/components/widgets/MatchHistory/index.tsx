@@ -2,18 +2,18 @@ import { type FC } from "react";
 import { cn } from "~/lib/utils";
 import { MatchHistoryProps } from "./MatchHistory.types";
 import { MatchItem } from "./MatchItem";
-import { useMatchHistory } from "./useMatchHistory";
+import { useMatchHistory } from "~/hooks/useMatchHistory";
 
 /**
  * Component for displaying a player's match history
  */
-export const MatchHistory: FC<MatchHistoryProps> = ({ 
+export const MatchHistory = ({ 
   theme, 
   numMatches = 10, 
   accountId, 
   refresh = 0, 
   opacity = 100 
-}) => {
+}: MatchHistoryProps) => {
   const { matches, heroes, loading } = useMatchHistory({
     accountId,
     numMatches,

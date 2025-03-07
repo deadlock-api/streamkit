@@ -5,7 +5,7 @@ import { MatchItemProps } from "./MatchItem.types";
 /**
  * Component that displays a single match with hero image and win/loss indicator
  */
-export const MatchItem: FC<MatchItemProps> = ({ match, heroImage }) => {
+export const MatchItem = ({ match, heroImage }: MatchItemProps) => {
   const isWin = match.match_result === match.player_team;
 
   return (

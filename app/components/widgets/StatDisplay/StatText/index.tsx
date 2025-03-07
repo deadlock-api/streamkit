@@ -5,7 +5,7 @@ import { StatTextProps } from "./StatText.types";
 /**
  * Component for displaying statistic text with label, value, prefix, and suffix
  */
-export const StatText: FC<StatTextProps> = ({ label, value, prefix, suffix, theme }) => {
+export const StatText = ({ label, value, prefix, suffix, theme }: StatTextProps) => {
   return (
     <>
       <span

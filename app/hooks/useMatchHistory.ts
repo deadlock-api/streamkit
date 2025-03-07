@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { UPDATE_INTERVAL_MS } from "~/constants/widget";
-import { Hero, Match, UseMatchHistoryResult } from "./MatchHistory.types";
+import { Hero, Match, UseMatchHistoryResult } from "~/components/widgets/MatchHistory/MatchHistory.types";
 
 interface UseMatchHistoryParams {
   accountId: string;

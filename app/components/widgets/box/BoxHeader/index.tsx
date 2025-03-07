@@ -1,15 +1,13 @@
-import { type FC } from "react";
 import { BoxHeaderProps } from "./BoxHeader.types";
 
 /**
  * Component for displaying the header section of the BoxWidget
  */
-export const BoxHeader: FC<BoxHeaderProps> = ({
+export const BoxHeader = ({
   userName,
-  theme,
   showMatchHistory,
   themeClasses,
-}) => {
+}: BoxHeaderProps) => {
   if (!userName) return null;
 
   return (
