@@ -1,5 +1,3 @@
-import { Theme } from "~/types/widget";
-
 /**
  * Props for the BoxHeader component
  */

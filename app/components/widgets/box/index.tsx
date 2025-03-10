@@ -3,11 +3,37 @@ import { MatchHistory } from "~/components/widgets/MatchHistory";
 import { DEFAULT_LABELS, DEFAULT_VARIABLES, UPDATE_INTERVAL_MS } from "~/constants/widget";
 import { useStats } from "~/hooks/useStats";
 import { useWidgetTheme } from "~/hooks/useWidgetTheme";
-import type { BoxWidgetProps } from "~/types/widget";
-import { calculateMatchesToShow, createStatDisplays } from "~/utils/statsUtils";
+import { snakeToPretty } from "~/lib/utils";
+import type { BoxWidgetProps, Stat } from "~/types/widget";
 import { BoxBranding } from "./BoxBranding";
 import { BoxHeader } from "./BoxHeader";
 import { BoxStats } from "./BoxStats";
+
+export const createStatDisplays = (
+  stats: Record<string, string> | null,
+  variables: string[],
+  displayLabels: string[],
+  opacity = 100,
+): Stat[] => {
+  if (!stats) return [];
+
+  return variables.map((variable, index) => ({
+    variable,
+    value: stats[variable],
+    label: displayLabels[index] || snakeToPretty(variable),
+    opacity,
+  }));
+};
+
+export const calculateMatchesToShow = (
+  numMatches: number,
+  matchHistoryShowsToday: boolean,
+  stats: Record<string, string> | null,
+): number => {
+  if (!matchHistoryShowsToday) return numMatches;
+
+  return Number.parseInt(stats?.matches_today ?? "0");
+};
 
 /**
  * Main BoxWidget component that displays player stats in a structured layout
@@ -54,14 +80,16 @@ export const BoxWidget = ({
   const themeStyles = useWidgetTheme(theme, opacity);
 
   // Calculate number of matches to show
-  const numMatchesToShow = useMemo(() => {
-    return calculateMatchesToShow(numMatches, matchHistoryShowsToday, stats);
-  }, [numMatches, matchHistoryShowsToday, stats]);
+  const numMatchesToShow = useMemo(
+    () => calculateMatchesToShow(numMatches, matchHistoryShowsToday, stats),
+    [numMatches, matchHistoryShowsToday, stats],
+  );
 
   // Create stat display objects
-  const statDisplays = useMemo(() => {
-    return createStatDisplays(stats, variables, displayLabels, opacity);
-  }, [stats, variables, displayLabels, opacity]);
+  const statDisplays = useMemo(
+    () => createStatDisplays(stats, variables, displayLabels, opacity),
+    [stats, variables, displayLabels, opacity],
+  );
 
   // Determine if header should be shown
   const shouldShowHeader = showHeader && stats?.steam_account_name;

@@ -1,4 +1,3 @@
-import type { FC } from "react";
 import { useMatchHistory } from "~/hooks/useMatchHistory";
 import { cn } from "~/lib/utils";
 import type { MatchHistoryProps } from "./MatchHistory.types";
@@ -28,7 +27,7 @@ export const MatchHistory = ({ theme, numMatches = 10, accountId, refresh = 0, o
             : "[background:rgba(26,27,30,var(--bg-opacity))]",
       )}
     >
-      {[...matches].map((match) => {
+      {matches.map((match) => {
         const heroImage = heroes.get(match.hero_id);
         if (!heroImage) return null;
 
