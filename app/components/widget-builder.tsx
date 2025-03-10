@@ -153,7 +153,7 @@ export default function WidgetBuilder({ region, accountId }: WidgetBuilderProps)
               id="type"
               value={widgetType}
               onChange={(e) => setWidgetType(e.target.value)}
-              className="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 shadow-xs focus:border-blue-500 focus:outline-hidden focus:ring-1 focus:ring-blue-500 text-black"
+              className="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 shadow focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 text-black"
             >
               {widgetTypes.map((w) => (
                 <option key={w} value={w}>
@@ -172,7 +172,7 @@ export default function WidgetBuilder({ region, accountId }: WidgetBuilderProps)
                 id="theme"
                 value={theme}
                 onChange={(e) => setTheme(e.target.value as Theme)}
-                className="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 shadow-xs focus:border-blue-500 focus:outline-hidden focus:ring-1 focus:ring-blue-500 text-black"
+                className="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 shadow focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 text-black"
               >
                 {themes.map(({ value, label }) => (
                   <option key={value} value={value}>
@@ -195,7 +195,7 @@ export default function WidgetBuilder({ region, accountId }: WidgetBuilderProps)
                   id="variable"
                   value={variable}
                   onChange={(e) => setVariable(e.target.value)}
-                  className="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 shadow-xs focus:border-blue-500 focus:outline-hidden focus:ring-1 focus:ring-blue-500 text-black"
+                  className="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 shadow focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 text-black"
                 >
                   <option value="">Select a variable</option>
                   {availableVariables.map((v) => (
@@ -214,7 +214,7 @@ export default function WidgetBuilder({ region, accountId }: WidgetBuilderProps)
                   id="fontColor"
                   value={fontColor}
                   onChange={(e) => setFontColor(e.target.value as Color)}
-                  className="mt-1 block w-full h-10 rounded-md border border-gray-300 bg-white px-3 py-2 shadow-xs focus:border-blue-500 focus:outline-hidden focus:ring-1 focus:ring-blue-500 text-black disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-gray-200"
+                  className="mt-1 block w-full h-10 rounded-md border border-gray-300 bg-white px-3 py-2 shadow focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 text-black disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-gray-200"
                 />
               </div>
             </div>
@@ -228,7 +228,7 @@ export default function WidgetBuilder({ region, accountId }: WidgetBuilderProps)
                   id="prefix"
                   value={prefix}
                   onChange={(e) => setPrefix(e.target.value)}
-                  className="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 shadow-xs focus:border-blue-500 focus:outline-hidden focus:ring-1 focus:ring-blue-500 text-black"
+                  className="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 shadow focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 text-black"
                 />
               </div>
               <div>
@@ -240,7 +240,7 @@ export default function WidgetBuilder({ region, accountId }: WidgetBuilderProps)
                   id="suffix"
                   value={suffix}
                   onChange={(e) => setSuffix(e.target.value)}
-                  className="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 shadow-xs focus:border-blue-500 focus:outline-hidden focus:ring-1 focus:ring-blue-500 text-black"
+                  className="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 shadow focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 text-black"
                 />
               </div>
             </div>
@@ -489,7 +489,7 @@ export default function WidgetBuilder({ region, accountId }: WidgetBuilderProps)
               <button
                 type="button"
                 onClick={() => navigator.clipboard.writeText(widgetUrl)}
-                className="absolute right-2 top-1/2 -translate-y-1/2 rounded-md bg-blue-500 px-3 py-1 text-sm font-medium text-white transition hover:bg-blue-600 focus:outline-hidden focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                className="absolute right-2 top-1/2 -translate-y-1/2 rounded-md bg-blue-500 px-3 py-1 text-sm font-medium text-white transition hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
               >
                 Copy
               </button>

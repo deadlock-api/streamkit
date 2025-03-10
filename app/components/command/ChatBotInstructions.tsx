@@ -19,7 +19,7 @@ export function ChatBotInstructions({ generatedUrl }: ChatBotInstructionsProps) 
         </p>
         <ul className="space-y-4">
           {chatBots.map(({ name, command }) => (
-            <li key={name} className="flex items-center justify-between rounded-md bg-white p-3 shadow-sm">
+            <li key={name} className="flex items-center justify-between rounded-md bg-white p-3 shadow">
               <div>
                 <strong>{name}:</strong> <code className="text-blue-600 whitespace-pre-wrap break-all">{command}</code>
               </div>
@@ -27,7 +27,7 @@ export function ChatBotInstructions({ generatedUrl }: ChatBotInstructionsProps) 
                 id={`copy-${name}`}
                 type="button"
                 onClick={() => navigator.clipboard.writeText(command)}
-                className="ml-4 rounded bg-blue-500 px-3 py-1 text-white hover:bg-blue-600 focus:outline-hidden focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                className="ml-4 rounded bg-blue-500 px-3 py-1 text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
               >
                 Copy
               </button>

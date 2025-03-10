@@ -20,7 +20,7 @@ export function ExtraArguments({ extraArgs, usedArgs, onExtraArgChange }: ExtraA
               type="text"
               value={extraArgs[arg] || ""}
               onChange={(e) => onExtraArgChange(arg, e.target.value)}
-              className="w-24 rounded-md border border-gray-300 px-2 py-1 shadow-xs focus:border-blue-500 focus:outline-hidden focus:ring-1 focus:ring-blue-500"
+              className="w-24 rounded-md border border-gray-300 px-2 py-1 shadow focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
             />
           </div>
         ))}

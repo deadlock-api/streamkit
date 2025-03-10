@@ -122,7 +122,7 @@ export const BoxWidget: FC<BoxWidgetProps> = ({
     <div className="inline-block" style={{ "--bg-opacity": opacity / 100 } as React.CSSProperties}>
       {showMatchHistory && (
         <div className="flex">
-          <div className="grow-1 w-0 overflow-clip">
+          <div className="grow w-0 overflow-clip">
             <MatchHistory
               theme={theme}
               refresh={refreshChildren}
@@ -192,7 +192,7 @@ export const BoxWidget: FC<BoxWidgetProps> = ({
                   <div
                     className={cn(
                       "h-px flex-1 bg-gradient-to-r from-transparent to-transparent",
-                      theme === "light" ? "via-gray-200/50" : theme === "glass" ? "via-white/10" : "via-white/5",
+                      theme === "light" ? "via-black/50" : theme === "glass" ? "via-white/30" : "via-white/50",
                     )}
                   />
                   <a
@@ -230,7 +230,7 @@ export const BoxWidget: FC<BoxWidgetProps> = ({
                   <div
                     className={cn(
                       "h-px flex-1 bg-gradient-to-r from-transparent to-transparent",
-                      theme === "light" ? "via-gray-200/50" : theme === "glass" ? "via-white/10" : "via-white/5",
+                      theme === "light" ? "via-black/50" : theme === "glass" ? "via-white/30" : "via-white/50",
                     )}
                   />
                 </div>

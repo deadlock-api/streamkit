@@ -15,7 +15,7 @@ export const StatDisplay: FC<StatDisplayProps> = ({ stat, theme = "dark", classN
               theme === "light"
                 ? "[background:rgba(240,240,240,var(--bg-opacity))]"
                 : theme === "glass"
-                  ? "bg-white/5 hover:bg-white/10 backdrop-blur-sm border border-white/[0.05]"
+                  ? "bg-white/5 hover:bg-white/10 backdrop-blur border border-white/[0.05]"
                   : "[background:rgba(38,39,43,var(--bg-opacity))] border-white/[0.03]",
               "relative min-w-fit",
               className,
