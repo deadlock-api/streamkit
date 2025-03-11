@@ -2,8 +2,6 @@
  * Props for the BoxBranding component
  */
 export interface BoxBrandingProps {
-  /** Whether to show the branding section */
-  show: boolean;
   /** Theme-related class names */
   themeClasses: {
     /** Class name for the branding divider */

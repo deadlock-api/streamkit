@@ -114,24 +114,14 @@ export const BoxWidget = ({
           <BoxHeader
             userName={stats?.steam_account_name || ""}
             showMatchHistory={showMatchHistory}
-            themeClasses={{
-              headerClasses: themeStyles.headerClasses,
-              userNameClasses: themeStyles.userNameClasses,
-            }}
+            themeClasses={themeStyles}
           />
         )}
 
         <div className="p-2 w-fit space-y-1">
           <BoxStats stats={statDisplays} theme={theme} loading={loading} />
 
-          <BoxBranding
-            show={showBranding && !loading && !!stats}
-            themeClasses={{
-              brandingDividerClasses: themeStyles.brandingDividerClasses,
-              brandingLinkClasses: themeStyles.brandingLinkClasses,
-              brandingTextClasses: themeStyles.brandingTextClasses,
-            }}
-          />
+          {showBranding && <BoxBranding themeClasses={themeStyles} />}
         </div>
       </div>
     </div>

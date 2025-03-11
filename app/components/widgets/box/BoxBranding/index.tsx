@@ -3,9 +3,7 @@ import type { BoxBrandingProps } from "./BoxBranding.types";
 /**
  * Component for displaying the branding section of the BoxWidget
  */
-export const BoxBranding = ({ show, themeClasses }: BoxBrandingProps) => {
-  if (!show) return null;
-
+export const BoxBranding = ({ themeClasses }: BoxBrandingProps) => {
   return (
     <div className="flex items-center justify-center gap-1.5 pt-1">
       <div className={themeClasses.brandingDividerClasses} />
