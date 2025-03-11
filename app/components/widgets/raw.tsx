@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { type FC, useEffect, useState } from "react";
 import { UPDATE_INTERVAL_MS } from "~/constants/widget";
-import type { Color, RawWidgetProps, Region } from "~/types/widget";
+import type { RawWidgetProps, Region } from "~/types/widget";
 
 export const RawWidget: FC<RawWidgetProps> = ({
   region,
