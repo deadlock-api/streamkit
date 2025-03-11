@@ -71,7 +71,7 @@ export const useWidgetTheme = (theme: Theme, opacity = 100) => {
     const getBrandingDividerClasses = () => {
       return cn(
         "h-px flex-1 bg-gradient-to-r from-transparent to-transparent",
-        theme === "light" ? "via-gray-200/50" : theme === "glass" ? "via-white/10" : "via-white/5",
+        theme === "light" ? "via-gray-800/50" : theme === "glass" ? "via-white/20" : "via-white/50",
       );
     };
 
