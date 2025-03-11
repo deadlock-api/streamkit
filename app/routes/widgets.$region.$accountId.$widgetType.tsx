@@ -28,10 +28,10 @@ export default function Widget() {
   });
 
   useEffect(() => {
-    if (!fetchedVersion) return;
+    if (!fetchedVersion || versionError) return;
     if (version === null) setVersion(fetchedVersion);
     else if (fetchedVersion > version) window.location.reload();
-  }, [fetchedVersion, version]);
+  }, [fetchedVersion, version, versionError]);
 
   useEffect(() => {
     document.body.style.backgroundColor = "transparent";
