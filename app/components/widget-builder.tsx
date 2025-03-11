@@ -1,7 +1,7 @@
 import { useSearchParams } from "@remix-run/react";
 import { useQuery } from "@tanstack/react-query";
 import { type ReactElement, useEffect, useState } from "react";
-import type { Variable } from "~/components/command/CommandBuilder";
+import type { CommandVariable } from "~/components/command/CommandBuilder";
 import { ExtraArguments } from "~/components/widgets/ExtraArguments";
 import { BoxWidget } from "~/components/widgets/box";
 import { RawWidget } from "~/components/widgets/raw";

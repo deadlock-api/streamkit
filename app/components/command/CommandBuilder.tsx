@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { useDebouncedState } from "~/lib/utils";
+import type { CommandBuilderProps, CommandVariable } from "~/types/command";
 import { ChatBotInstructions } from "./ChatBotInstructions";
 import { CommandPreview } from "./CommandPreview";
 import { ExtraArguments } from "./ExtraArguments";
@@ -8,25 +9,14 @@ import { TemplateInput } from "./TemplateInput";
 import { UrlDisplay } from "./UrlDisplay";
 import { VariablesList } from "./VariablesList";
 
-export interface Variable {
-  name: string;
-  description: string;
-  extra_args?: string[];
-}
-
-export interface CommandBuilderProps {
-  region: string;
-  accountId: string;
-}
-
 export default function CommandBuilder({ region, accountId }: CommandBuilderProps) {
   const [template, debouncedTemplate, setTemplate] = useDebouncedState("", 500);
   const [extraArgs, setExtraArgs] = useState<{ [key: string]: string }>({});
-  const [variables, setVariables] = useState<Variable[]>([]);
+  const [variables, setVariables] = useState<CommandVariable[]>([]);
   const [preview, setPreview] = useState<string | null>(null);
   const [previewError, setPreviewError] = useState<string | null>(null);
 
-  const { data, error } = useQuery<Variable[]>({
+  const { data, error } = useQuery<CommandVariable[]>({
     queryKey: ["available-variables"],
     queryFn: () => fetch("https://api.deadlock-api.com/v1/commands/variables/available").then((res) => res.json()),
     staleTime: Number.POSITIVE_INFINITY,
