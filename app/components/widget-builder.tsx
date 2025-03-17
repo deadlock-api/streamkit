@@ -311,7 +311,7 @@ export default function WidgetBuilder({ region, accountId }: WidgetBuilderProps)
                   <input
                     type="range"
                     min={1}
-                    max={50}
+                    max={20}
                     disabled={!showMatchHistory || matchHistoryShowsToday}
                     id="numMatches"
                     value={numMatches}
