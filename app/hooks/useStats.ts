@@ -73,10 +73,8 @@ export const useStats = ({
       setRefreshTrigger((prev) => prev + 1);
       // Update stats with new data
       const newStats = { ...stats };
-      for (const variable of variables) {
-        if (data[variable] !== undefined && data[variable] !== null) {
-          newStats[variable] = data[variable];
-        }
+      for (const [key, value] of Object.entries(data)) {
+        if (value) newStats[key] = value;
       }
       setStats(newStats);
     }
