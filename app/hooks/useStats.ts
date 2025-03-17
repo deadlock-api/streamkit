@@ -64,13 +64,21 @@ export const useStats = ({
     refetchIntervalInBackground: true,
   });
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: stats is not a dependency
   useEffect(() => {
     setLoading(statsLoading);
     if (statsError) {
       console.error(`Failed to fetch stats: ${statsError}`);
     } else if (data) {
       setRefreshTrigger((prev) => prev + 1);
-      setStats(Object.fromEntries(Object.entries(data).filter(([_, value]) => value !== null)));
+      // Update stats with new data
+      const newStats = { ...stats };
+      for (const variable of variables) {
+        if (data[variable] !== undefined && data[variable] !== null) {
+          newStats[variable] = data[variable];
+        }
+      }
+      setStats(newStats);
     }
   }, [data, statsLoading, statsError]);
 
