@@ -1,4 +1,5 @@
 import { StatDisplay } from "~/components/widgets/StatDisplay";
+import { cn } from "~/lib/utils";
 import type { BoxStatsProps } from "./BoxStats.types";
 
 /**
@@ -21,9 +22,20 @@ export const BoxStats = ({ stats, theme, loading }: BoxStatsProps) => {
   }
 
   return (
-    <div className="flex flex-nowrap gap-1 p-2">
+    <div className="flex flex-nowrap gap-1 p-1 items-stretch">
       {stats.map((stat, index) => (
-        <StatDisplay key={`${stat.variable}-${index}`} stat={stat} theme={theme} />
+        <>
+          <StatDisplay key={`${stat.variable}-${index}`} stat={stat} theme={theme} />
+          {index < stats.length - 1 && (
+            <div
+              key={`${stat.variable}-${index}-divider`}
+              className={cn(
+                "w-px flex-1 bg-gradient-to-b from-transparent to-transparent",
+                theme === "light" ? "via-black/50" : "via-white/50",
+              )}
+            />
+          )}
+        </>
       ))}
     </div>
   );
