@@ -4,8 +4,6 @@
 export interface BoxBrandingProps {
   /** Theme-related class names */
   themeClasses: {
-    /** Class name for the branding divider */
-    brandingDividerClasses: string;
     /** Class name for the branding link */
     brandingLinkClasses: string;
     /** Class names for the branding text */

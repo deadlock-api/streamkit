@@ -9,7 +9,6 @@ interface ThemeStyles {
   containerClasses: (showMatchHistory?: boolean) => string;
   headerClasses: (showMatchHistory?: boolean) => string;
   statClasses: string;
-  brandingDividerClasses: string;
   brandingLinkClasses: string;
   brandingTextClasses: {
     primary: string;
@@ -68,22 +67,8 @@ export const useWidgetTheme = (theme: Theme, opacity = 100) => {
       );
     };
 
-    const getBrandingDividerClasses = () => {
-      return cn(
-        "h-px flex-1 bg-gradient-to-r from-transparent to-transparent",
-        theme === "light" ? "via-gray-800/50" : theme === "glass" ? "via-white/20" : "via-white/50",
-      );
-    };
-
     const getBrandingLinkClasses = () => {
-      return cn(
-        "group flex items-center gap-1.5 px-3 py-1.5 rounded-full transition-all",
-        theme === "light"
-          ? "bg-gray-100/50 hover:bg-gray-100"
-          : theme === "glass"
-            ? "bg-white/5 hover:bg-white/10"
-            : "bg-white/[0.02] hover:bg-white/[0.04]",
-      );
+      return cn("group flex flex-nowrap gap-1.5 rounded-full transition-all items-center");
     };
 
     const getUserNameClasses = () => {
@@ -96,7 +81,6 @@ export const useWidgetTheme = (theme: Theme, opacity = 100) => {
       containerClasses: getContainerClasses,
       headerClasses: getHeaderClasses,
       statClasses: THEME_STYLES[theme].stat,
-      brandingDividerClasses: getBrandingDividerClasses(),
       brandingLinkClasses: getBrandingLinkClasses(),
       brandingTextClasses: {
         primary: cn("text-[11px] font-medium transition-all", theme === "light" ? "text-gray-500" : "text-white/50"),
