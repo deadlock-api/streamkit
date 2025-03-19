@@ -1,8 +1,8 @@
 import { snakeToPretty } from "~/lib/utils";
-import type { CommandVariable } from "~/types/command";
+import type { Variable } from "~/types/command";
 
 interface VariablesListProps {
-  variables: CommandVariable[];
+  variables: Variable[];
   onVariableClick: (varName: string) => void;
 }
 

@@ -1,4 +1,4 @@
-export interface CommandVariable {
+export interface Variable {
   name: string;
   description: string;
   extra_args?: string[];

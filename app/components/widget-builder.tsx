@@ -1,12 +1,12 @@
 import { useSearchParams } from "@remix-run/react";
 import { useQuery } from "@tanstack/react-query";
 import { type ReactElement, useEffect, useState } from "react";
-import type { CommandVariable } from "~/components/command/CommandBuilder";
 import { ExtraArguments } from "~/components/widgets/ExtraArguments";
 import { BoxWidget } from "~/components/widgets/box";
 import { RawWidget } from "~/components/widgets/raw";
 import { DEFAULT_LABELS, DEFAULT_VARIABLES } from "~/constants/widget";
 import { snakeToPretty } from "~/lib/utils";
+import type { Variable } from "~/types/command";
 import type { Color, Region, Theme } from "~/types/widget";
 
 const widgetTypes: string[] = ["box", "raw"];
