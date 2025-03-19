@@ -21,7 +21,7 @@ export const BoxStats = ({ stats, theme, loading }: BoxStatsProps) => {
   }
 
   return (
-    <div className="flex flex-wrap gap-1 p-2">
+    <div className="flex flex-nowrap gap-1 p-2">
       {stats.map((stat, index) => (
         <StatDisplay key={`${stat.variable}-${index}`} stat={stat} theme={theme} />
       ))}
