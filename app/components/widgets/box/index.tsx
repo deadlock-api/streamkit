@@ -63,8 +63,11 @@ export const BoxWidget = ({
 
   // Get display labels
   const displayLabels = useMemo(() => {
+    for (const [key, value] of Object.entries(extraArgs)) {
+      labels = labels?.map((label) => label.replaceAll(`{${key}}`, value));
+    }
     return labels || variables.map((v) => v);
-  }, [labels, variables]);
+  }, [labels, variables, extraArgs]);
 
   // Fetch stats data
   const { stats, loading, refreshTrigger } = useStats({
