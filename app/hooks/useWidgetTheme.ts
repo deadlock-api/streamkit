@@ -102,7 +102,7 @@ export const useWidgetTheme = (theme: Theme, opacity = 100) => {
         primary: cn("text-[11px] font-medium transition-all", theme === "light" ? "text-gray-500" : "text-white/50"),
         secondary: cn(
           "text-[11px] font-semibold transition-all",
-          theme === "light" ? "text-gray-600 group-hover:text-gray-900" : "text-white/70 group-hover:text-white",
+          theme === "light" ? "text-black/80" : "text-white/80",
         ),
       },
       userNameClasses: getUserNameClasses(),
