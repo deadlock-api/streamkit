@@ -343,7 +343,7 @@ export default function WidgetBuilder({ region, accountId }: WidgetBuilderProps)
                                 const newVariables = [...variables];
                                 newVariables[index] = e.target.value;
                                 const newLabels = [...labels];
-                                const availableVariable = availableVariables.find((v) => v.name === variable);
+                                const availableVariable = availableVariables.find((v) => v.name === e.target.value);
                                 newLabels[index] = e.target.value
                                   ? (availableVariable?.default_label ?? snakeToPretty(e.target.value))
                                   : "";

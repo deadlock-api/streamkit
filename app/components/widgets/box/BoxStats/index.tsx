@@ -25,7 +25,7 @@ export const BoxStats = ({ stats, theme, loading }: BoxStatsProps) => {
     <div className="flex flex-nowrap gap-1 p-1 items-stretch">
       {stats.map((stat, index) => (
         <>
-          <StatDisplay key={`${stat.variable}-${index}`} stat={stat} theme={theme} />
+          <StatDisplay key={`${stat.variable}-${index}-display`} stat={stat} theme={theme} />
           {index < stats.length - 1 && (
             <div
               key={`${stat.variable}-${index}-divider`}
