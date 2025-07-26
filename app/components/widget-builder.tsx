@@ -1,8 +1,8 @@
-import { useSearchParams } from "@remix-run/react";
 import { useQuery } from "@tanstack/react-query";
 import { type ReactElement, useEffect, useState } from "react";
-import { ExtraArguments } from "~/components/widgets/ExtraArguments";
+import { useSearchParams } from "react-router";
 import { BoxWidget } from "~/components/widgets/box";
+import { ExtraArguments } from "~/components/widgets/ExtraArguments";
 import { RawWidget } from "~/components/widgets/raw";
 import { DEFAULT_LABELS, DEFAULT_VARIABLES } from "~/constants/widget";
 import { snakeToPretty } from "~/lib/utils";
@@ -409,7 +409,6 @@ export default function WidgetBuilder({ region, accountId }: WidgetBuilderProps)
           </>
         )}
       </div>
-
       <div className="space-y-6">
         {theme !== "glass" && widgetType === "box" && (
           <div>

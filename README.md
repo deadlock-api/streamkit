@@ -4,7 +4,7 @@ See https://streamkit.deadlock-api.com
 
 ## Development
 
-You can develop your SPA app just like you would a normal Remix app, via:
+You can develop your SPA app just like you would a normal React-Router app, via:
 
 ```shellscript
 pnpm run dev

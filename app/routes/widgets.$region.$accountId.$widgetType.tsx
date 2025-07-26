@@ -1,7 +1,7 @@
-import type { MetaFunction } from "@remix-run/node";
-import { useParams, useSearchParams } from "@remix-run/react";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
+import type { MetaFunction } from "react-router";
+import { useParams, useSearchParams } from "react-router";
 import { BoxWidget } from "~/components/widgets/box";
 import { RawWidget } from "~/components/widgets/raw";
 import { snakeToPretty } from "~/lib/utils";

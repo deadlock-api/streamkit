@@ -1,6 +1,6 @@
-import { useSearchParams } from "@remix-run/react";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
+import { useSearchParams } from "react-router";
 import CommandBuilder from "~/components/command/CommandBuilder";
 import WidgetBuilder from "~/components/widget-builder";
 
