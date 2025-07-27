@@ -34,9 +34,11 @@ export default function Widget() {
   }, [fetchedVersion, version, versionError]);
 
   useEffect(() => {
+    document.body.style.zoom = "3";
     document.body.style.backgroundColor = "transparent";
     document.documentElement.style.backgroundColor = "transparent";
     return () => {
+      document.body.style.zoom = ""; // Reset when navigating away
       document.documentElement.style.backgroundColor = ""; // Reset when navigating away
       document.body.style.backgroundColor = ""; // Reset when navigating away
     };
