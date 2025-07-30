@@ -83,16 +83,16 @@ export const BoxWidget = ({
   const themeStyles = useWidgetTheme(theme, opacity);
 
   // Calculate number of matches to show
-  const numMatchesToShow = useMemo(
-    () => calculateMatchesToShow(numMatches, matchHistoryShowsToday, stats),
-    [numMatches, matchHistoryShowsToday, stats],
-  );
+  const numMatchesToShow = useMemo(() => {
+    if (!stats) return 0;
+    return calculateMatchesToShow(numMatches, matchHistoryShowsToday, stats);
+  }, [numMatches, matchHistoryShowsToday, stats]);
 
   // Create stat display objects
-  const statDisplays = useMemo(
-    () => createStatDisplays(stats, variables, displayLabels, opacity),
-    [stats, variables, displayLabels, opacity],
-  );
+  const statDisplays = useMemo(() => {
+    if (!stats) return [];
+    return createStatDisplays(stats, variables, displayLabels, opacity);
+  }, [stats, variables, displayLabels, opacity]);
 
   // Determine if header should be shown
   const shouldShowHeader = showHeader && stats?.steam_account_name;

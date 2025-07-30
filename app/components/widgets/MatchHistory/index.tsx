@@ -14,6 +14,8 @@ export const MatchHistory = ({ theme, numMatches = 10, accountId, refresh = 0, o
   });
 
   if (loading) return null;
+  if (!matches || matches.length === 0) return null;
+  if (!heroes || heroes.size === 0) return null;
 
   return (
     <div
