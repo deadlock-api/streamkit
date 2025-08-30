@@ -1,4 +1,4 @@
-import React from "react";
+import { useId } from "react";
 
 interface TemplateInputProps {
   template: string;
@@ -13,7 +13,7 @@ export function TemplateInput({ template, setTemplate }: TemplateInputProps) {
       </label>
       <div className="relative mt-1">
         <textarea
-          id="template"
+          id={useId()}
           value={template}
           onChange={(e) => setTemplate(e.target.value)}
           className="block w-full rounded-md border border-gray-300 px-3 py-2 shadow focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 text-black bg-white"

@@ -32,7 +32,7 @@ export const calculateMatchesToShow = (
 ): number => {
   if (!matchHistoryShowsToday) return numMatches;
 
-  return Number.parseInt(stats?.matches_today ?? "0");
+  return Number.parseInt(stats?.matches_today ?? "0", 10);
 };
 
 /**

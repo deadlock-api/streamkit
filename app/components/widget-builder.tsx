@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { type ReactElement, useEffect, useState } from "react";
+import { type ReactElement, useEffect, useId, useState } from "react";
 import { useSearchParams } from "react-router";
 import { BoxWidget } from "~/components/widgets/box";
 import { ExtraArguments } from "~/components/widgets/ExtraArguments";
@@ -150,7 +150,6 @@ export default function WidgetBuilder({ region, accountId }: WidgetBuilderProps)
               Type
             </label>
             <select
-              id="type"
               value={widgetType}
               onChange={(e) => setWidgetType(e.target.value)}
               className="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 shadow focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 text-black"
@@ -169,7 +168,6 @@ export default function WidgetBuilder({ region, accountId }: WidgetBuilderProps)
                 Theme
               </label>
               <select
-                id="theme"
                 value={theme}
                 onChange={(e) => setTheme(e.target.value as Theme)}
                 className="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 shadow focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 text-black"
@@ -191,7 +189,6 @@ export default function WidgetBuilder({ region, accountId }: WidgetBuilderProps)
                   Variable
                 </label>
                 <select
-                  id="variable"
                   value={variable}
                   onChange={(e) => setVariable(e.target.value)}
                   className="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 shadow focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 text-black"
@@ -210,7 +207,6 @@ export default function WidgetBuilder({ region, accountId }: WidgetBuilderProps)
                 </label>
                 <input
                   type="color"
-                  id="fontColor"
                   value={fontColor}
                   onChange={(e) => setFontColor(e.target.value as Color)}
                   className="mt-1 block w-full h-10 rounded-md border border-gray-300 bg-white px-3 py-2 shadow focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 text-black disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-gray-200"
@@ -224,7 +220,6 @@ export default function WidgetBuilder({ region, accountId }: WidgetBuilderProps)
                 </label>
                 <input
                   type="text"
-                  id="prefix"
                   value={prefix}
                   onChange={(e) => setPrefix(e.target.value)}
                   className="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 shadow focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 text-black"
@@ -236,7 +231,6 @@ export default function WidgetBuilder({ region, accountId }: WidgetBuilderProps)
                 </label>
                 <input
                   type="text"
-                  id="suffix"
                   value={suffix}
                   onChange={(e) => setSuffix(e.target.value)}
                   className="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 shadow focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 text-black"
@@ -256,7 +250,6 @@ export default function WidgetBuilder({ region, accountId }: WidgetBuilderProps)
               <div className="flex items-center gap-2">
                 <input
                   type="checkbox"
-                  id="showHeader"
                   checked={showHeader}
                   onChange={(e) => setShowHeader(e.target.checked)}
                   className="rounded border-gray-300 text-blue-500 focus:ring-blue-500"
@@ -269,7 +262,6 @@ export default function WidgetBuilder({ region, accountId }: WidgetBuilderProps)
               <div className="flex items-center gap-2">
                 <input
                   type="checkbox"
-                  id="showBranding"
                   checked={showBranding}
                   onChange={(e) => setShowBranding(e.target.checked)}
                   className="rounded border-gray-300 text-blue-500 focus:ring-blue-500"
@@ -282,7 +274,6 @@ export default function WidgetBuilder({ region, accountId }: WidgetBuilderProps)
               <div className="flex items-center gap-2">
                 <input
                   type="checkbox"
-                  id="showMatchHistory"
                   checked={showMatchHistory}
                   onChange={(e) => setShowMatchHistory(e.target.checked)}
                   className="rounded border-gray-300 text-blue-500 focus:ring-blue-500"
@@ -295,7 +286,6 @@ export default function WidgetBuilder({ region, accountId }: WidgetBuilderProps)
                 <div className="flex items-center gap-2">
                   <input
                     type="checkbox"
-                    id="matchHistoryShowsToday"
                     checked={matchHistoryShowsToday}
                     disabled={!showMatchHistory}
                     onChange={(e) => setMatchHistoryShowsToday(e.target.checked)}
@@ -311,7 +301,6 @@ export default function WidgetBuilder({ region, accountId }: WidgetBuilderProps)
                     min={1}
                     max={20}
                     disabled={!showMatchHistory || matchHistoryShowsToday}
-                    id="numMatches"
                     value={numMatches}
                     onChange={(e) => setNumMatches(e.target.valueAsNumber)}
                     className="rounded border-gray-300 bg-gray-200 w-min"
@@ -429,7 +418,6 @@ export default function WidgetBuilder({ region, accountId }: WidgetBuilderProps)
             <div className="mt-1 flex items-center gap-2">
               <input
                 type="range"
-                id="opacity"
                 min="0"
                 max="100"
                 value={opacity}
@@ -464,7 +452,7 @@ export default function WidgetBuilder({ region, accountId }: WidgetBuilderProps)
             <div className="flex items-center gap-2">
               <input
                 type="checkbox"
-                id="preview-bg-image-toggle"
+                id={useId()}
                 checked={widgetPreviewBackgroundImage}
                 value={widgetPreviewBackgroundImage ? 1 : 0}
                 onChange={(e) => setWidgetPreviewBackgroundImage(e.target.checked)}
@@ -481,7 +469,6 @@ export default function WidgetBuilder({ region, accountId }: WidgetBuilderProps)
                 </label>
                 <input
                   type="color"
-                  id="preview-bg-color-picker"
                   disabled={widgetPreviewBackgroundImage}
                   value={widgetPreviewBackgroundColor}
                   onChange={(e) => setWidgetPreviewBackgroundColor(e.target.value as PreviewBackgroundColor)}

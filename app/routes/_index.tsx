@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
+import { useId, useState } from "react";
 import { useSearchParams } from "react-router";
 import CommandBuilder from "~/components/command/CommandBuilder";
 import WidgetBuilder from "~/components/widget-builder";
@@ -77,7 +77,7 @@ export default function Index() {
           </label>
           <input
             type="number"
-            id="steamid"
+            id={useId()}
             value={steamId}
             onChange={(e) => setSteamId(e.target.value)}
             className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 text-black [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
@@ -93,7 +93,7 @@ export default function Index() {
             Region
           </label>
           <select
-            id="region"
+            id={useId()}
             value={region}
             onChange={(e) => setRegion(e.target.value)}
             className="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 shadow focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 text-black"

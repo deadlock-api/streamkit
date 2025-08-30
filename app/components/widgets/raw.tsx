@@ -63,17 +63,15 @@ export const RawWidget: FC<RawWidgetProps> = ({
           </div>
         </div>
       ) : stat ? (
-        <>
-          <div className="flex gap-2 w-fit items-center">
-            <div className="text-4xl font-bold" style={{ color: fontColor }}>
-              {variable.endsWith("img") ? (
-                <img src={stat} alt={variable} className="h-20 rounded-full" />
-              ) : (
-                prefix + stat + suffix
-              )}
-            </div>
+        <div className="flex gap-2 w-fit items-center">
+          <div className="text-4xl font-bold" style={{ color: fontColor }}>
+            {variable.endsWith("img") ? (
+              <img src={stat} alt={variable} className="h-20 rounded-full" />
+            ) : (
+              prefix + stat + suffix
+            )}
           </div>
-        </>
+        </div>
       ) : null}
     </div>
   );
