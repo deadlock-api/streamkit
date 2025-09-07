@@ -12,7 +12,8 @@ const CATEGORY_SORT: Record<string, number> = {
   Leaderboard: 2,
   Overall: 3,
   Hero: 4,
-  Miscellaneous: 5,
+  Item: 5,
+  Miscellaneous: 6,
 };
 
 function sort_weight(category: string): number {
