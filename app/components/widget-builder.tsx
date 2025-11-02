@@ -396,19 +396,6 @@ export default function WidgetBuilder({ region, accountId }: WidgetBuilderProps)
           </>
         )}
       </div>
-      {(variables.includes("rank") || variables.includes("rank_img")) && (
-        <div className="text-sm text-balance text-center">
-          You can only use rank and rank_img, if you are friend with one of our bots, see:{" "}
-          <a
-            href={`https://api.deadlock-api.com/v1/players/${accountId}/card`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-blue-600 underline"
-          >
-            https://api.deadlock-api.com/v1/players/{accountId}/card
-          </a>
-        </div>
-      )}
       <div className="space-y-6">
         {theme !== "glass" && widgetType === "box" && (
           <div>

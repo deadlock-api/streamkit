@@ -97,19 +97,6 @@ export default function CommandBuilder({ region, accountId }: CommandBuilderProp
   return (
     <div className="mt-4 space-y-6">
       <TemplateInput template={template} setTemplate={setTemplate} />
-      {template.includes("{rank}") && (
-        <div className="text-sm text-balance text-center">
-          You can only use {"{rank}"}, if you are friend with one of our bots, see:{" "}
-          <a
-            href={`https://api.deadlock-api.com/v1/players/${accountId}/card`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-blue-600 underline"
-          >
-            https://api.deadlock-api.com/v1/players/{accountId}/card
-          </a>
-        </div>
-      )}
       <VariablesList variables={variables} onVariableClick={insertVariable} />
       <ExtraArguments extraArgs={extraArgs} usedArgs={usedExtraArgs()} onExtraArgChange={handleExtraArgChange} />
       <UrlDisplay generatedUrl={generatedUrl} />
