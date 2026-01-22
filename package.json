@@ -12,11 +12,12 @@
     "typecheck": "react-router typegen && tsc"
   },
   "dependencies": {
+    "@fontsource-variable/inter": "^5.2.8",
     "@react-router/fs-routes": "^7.12.0",
     "@react-router/node": "^7.12.0",
-    "@tanstack/react-query": "^5.90.16",
+    "@tanstack/react-query": "^5.90.19",
     "clsx": "^2.1.1",
-    "isbot": "^5.1.32",
+    "isbot": "^5.1.33",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
     "react-router": "^7.12.0",
@@ -27,18 +28,18 @@
     "@react-router/dev": "^7.12.0",
     "@tailwindcss/postcss": "^4.1.18",
     "@tailwindcss/vite": "^4.1.18",
-    "@types/react": "^19.2.7",
+    "@types/react": "^19.2.9",
     "@types/react-dom": "^19.2.3",
-    "@typescript-eslint/eslint-plugin": "^8.52.0",
-    "@typescript-eslint/parser": "^8.52.0",
+    "@typescript-eslint/eslint-plugin": "^8.53.1",
+    "@typescript-eslint/parser": "^8.53.1",
     "autoprefixer": "^10.4.23",
-    "lefthook": "^2.0.13",
+    "lefthook": "^2.0.15",
     "postcss": "^8.5.6",
     "tailwindcss": "^4.1.18",
     "tailwindcss-animate": "^1.0.7",
     "typescript": "^5.9.3",
     "vite": "^7.3.1",
-    "vite-tsconfig-paths": "^6.0.3"
+    "vite-tsconfig-paths": "^6.0.4"
   },
   "engines": {
     "node": ">=20.0.0"
